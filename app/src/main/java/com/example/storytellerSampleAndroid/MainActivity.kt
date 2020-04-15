@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //initialize sdk
+        Storyteller.initialize("[APIKEY]")
+
         //setup user
         val userId = UUID.randomUUID().toString()
         Storyteller.setUserDetails(UserInput(userId), {
@@ -42,8 +45,6 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //setup callbacks
         val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
         storytellerRowView.delegate = this
-
-        Storyteller.initialize("[APIKEY]")
     }
 
     override fun onChannelDismissed() {
