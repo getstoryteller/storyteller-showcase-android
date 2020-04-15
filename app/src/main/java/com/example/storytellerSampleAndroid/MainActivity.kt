@@ -1,6 +1,5 @@
 package com.example.storytellerSampleAndroid
 
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +7,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.UserInput
 import com.storyteller.services.Error
-import com.storyteller.ui.row.StoryRowCallbacks
 import com.storyteller.ui.row.StorytellerRowView
+import com.storyteller.ui.row.StorytellerRowViewDelegate
 import java.util.*
 
-class MainActivity : AppCompatActivity(), StoryRowCallbacks {
+class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
@@ -42,16 +41,22 @@ class MainActivity : AppCompatActivity(), StoryRowCallbacks {
 
         //setup callbacks
         val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
-        storytellerRowView.storyRowCallbacks = this
+        storytellerRowView.delegate = this
 
-        Storyteller.setErrorCallback {
-            Log.i("Storyteller Sample", "setErrorCallback, error $it")
-
-        }
+        Storyteller.initialize("[APIKEY]")
     }
 
-    override fun onStoriesLoadFailure(error: Error) {
-        Log.i("Storyteller Sample", "onStoriesLoadFailure $error")
+    override fun onChannelDismissed() {
+        Log.i("Storyteller Sample", "onChannelDismissed callback")
 
     }
+
+    override fun onChannelsDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+        Log.i("Storyteller Sample", "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount")
+    }
+
+    override fun onChannelsDataLoadStarted() {
+        Log.i("Storyteller Sample", "onChannelsDataLoadStarted callback")
+    }
+
 }
