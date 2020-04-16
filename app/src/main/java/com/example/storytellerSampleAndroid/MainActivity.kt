@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //initialize sdk
-        Storyteller.initialize("[APIKEY]")
+        //initialize sdk - this is not required if api key is already included in the manifest
+//        Storyteller.initialize("[APIKEY]")
 
         //setup user
         val userId = UUID.randomUUID().toString()
