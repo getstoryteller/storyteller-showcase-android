@@ -22,6 +22,9 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //initialize sdk - this is not required if api key is already included in the manifest
 //        Storyteller.initialize("[APIKEY]")
 
+        //enable sdk logging for debug
+//        Storyteller.enableLogging = true
+
         //setup user
         val userId = UUID.randomUUID().toString()
         Storyteller.setUserDetails(UserInput(userId), {
