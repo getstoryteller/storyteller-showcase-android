@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
+import com.storyteller.domain.UserActivity
+import com.storyteller.domain.UserActivityData
 import com.storyteller.domain.UserInput
 import com.storyteller.services.Error
 import com.storyteller.ui.row.StorytellerRowView
@@ -50,17 +52,20 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         storytellerRowView.delegate = this
     }
 
-    override fun onChannelDismissed() {
-        Log.i("Storyteller Sample", "onChannelDismissed callback")
-
-    }
-
-    override fun onChannelsDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+    override fun onStoryDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
         Log.i("Storyteller Sample", "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount")
     }
 
-    override fun onChannelsDataLoadStarted() {
-        Log.i("Storyteller Sample", "onChannelsDataLoadStarted callback")
+    override fun onStoryDataLoadStarted() {
+        Log.i("Storyteller Sample", "onStoryDataLoadStarted callback")
+    }
+
+    override fun onStoryDismissed() {
+        Log.i("Storyteller Sample", "onStoryDismissed callback")
+    }
+
+    override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
+        Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
     }
 
 }
