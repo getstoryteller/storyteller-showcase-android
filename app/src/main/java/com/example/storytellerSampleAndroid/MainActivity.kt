@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
-import com.storyteller.domain.UserActivity
-import com.storyteller.domain.UserActivityData
-import com.storyteller.domain.UserInput
+import com.storyteller.domain.*
 import com.storyteller.services.Error
 import com.storyteller.ui.row.StorytellerRowView
 import com.storyteller.ui.row.StorytellerRowViewDelegate
@@ -68,4 +66,7 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
     }
 
+    override fun getAdsForRow(stories: List<ClientStory>, onComplete: (AdResponse) -> Unit) {
+        Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
+    }
 }
