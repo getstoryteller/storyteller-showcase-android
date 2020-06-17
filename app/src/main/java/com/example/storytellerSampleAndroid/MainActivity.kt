@@ -66,6 +66,10 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
     }
 
+    override fun userSwipedUpToApp(swipeUpUrl: String) {
+        Log.i("Storyteller Sample", "userSwipedUpToApp: swipeUpUrl $swipeUpUrl")
+    }
+
     override fun getAdsForRow(stories: List<ClientStory>, onComplete: (AdResponse) -> Unit) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
     }
