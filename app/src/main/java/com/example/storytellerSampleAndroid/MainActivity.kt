@@ -1,11 +1,14 @@
 package com.example.storytellerSampleAndroid
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
+import com.storyteller.openPage
 import com.storyteller.services.Error
 import com.storyteller.ui.row.StorytellerRowView
 import com.storyteller.ui.row.StorytellerRowViewDelegate
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         Storyteller.setUserDetails(UserInput(userId), {
             Log.i("Storyteller Sample", "setUserDetails success $userId")
             Storyteller.reloadData({
+                handleDeepLink(intent?.data)
                 refreshLayout.isRefreshing = false
             })
         }, {
@@ -48,6 +52,11 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //setup callbacks
         val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
         storytellerRowView.delegate = this
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleDeepLink(intent?.data)
     }
 
     override fun onStoryDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
@@ -72,5 +81,15 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
 
     override fun getAdsForRow(stories: List<ClientStory>, onComplete: (AdResponse) -> Unit) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
+    }
+
+    private fun handleDeepLink(data: Uri?) {
+        if (data != null) {
+            val pageId = data.lastPathSegment
+            findViewById<StorytellerRowView>(R.id.channelRowView).openPage(
+                this,
+                pageId
+            )  { Log.e("DEBUG", "Cannot open deep link $data", it) }
+        }
     }
 }
