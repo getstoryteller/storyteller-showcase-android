@@ -75,6 +75,10 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
     }
 
+    override fun tileBecameVisible(storyIndex: Int) {
+        Log.i("Storyteller Sample", "tileBecameVisible: storyIndex $storyIndex")
+    }
+
     override fun userSwipedUpToApp(swipeUpUrl: String) {
         Log.i("Storyteller Sample", "userSwipedUpToApp: swipeUpUrl $swipeUpUrl")
     }
