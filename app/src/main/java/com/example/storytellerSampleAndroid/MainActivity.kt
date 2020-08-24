@@ -22,23 +22,24 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //initialize sdk - this is not required if api key is already included in the manifest
-//        Storyteller.initialize("[APIKEY]")
-
         //enable sdk logging for debug
-//        Storyteller.enableLogging = true
+        //Storyteller.enableLogging = true
+
+        //set callbacks
+        val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
+        storytellerRowView.delegate = this
 
         //setup user
         val userId = UUID.randomUUID().toString()
-        Storyteller.setUserDetails(UserInput(userId), {
-            Log.i("Storyteller Sample", "setUserDetails success $userId")
+        //initialize sdk
+        Storyteller.initialize("[API KEY]", {
+            Log.i("Storyteller Sample", "initialize success $userId")
+            Storyteller.setUserDetails(UserInput(userId))
             Storyteller.reloadData({
                 handleDeepLink(intent?.data)
                 refreshLayout.isRefreshing = false
             })
-        }, {
-            Log.i("Storyteller Sample", "setUserDetails failed, error $it")
-        })
+        },{ Log.i("Storyteller Sample", "initialize failed, error $it") })
 
         //setup refresh layout
         refreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout).apply {
@@ -48,10 +49,6 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
                 })
             }
         }
-
-        //setup callbacks
-        val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
-        storytellerRowView.delegate = this
     }
 
     override fun onNewIntent(intent: Intent?) {
