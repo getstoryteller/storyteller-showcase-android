@@ -25,9 +25,6 @@
                     android:host="storytellersampleapp" />
             </intent-filter>
         </activity>
-
-        <meta-data android:name="StorytellerKey"
-            android:value="[APIKEY]"/>
     </application>
 
 </manifest>
