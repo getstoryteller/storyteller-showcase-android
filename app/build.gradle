@@ -38,7 +38,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    def storyteller_version = "3.14.1"
+    def storyteller_version = "3.15.0"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 }
