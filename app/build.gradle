@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.example.storytellerSampleAndroid"
         minSdkVersion 21
@@ -38,7 +38,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    def storyteller_version = "3.17.5"
+    def storyteller_version = "4.0.0"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    implementation "com.github.chuckerteam.chucker:library:3.4.0"
 }

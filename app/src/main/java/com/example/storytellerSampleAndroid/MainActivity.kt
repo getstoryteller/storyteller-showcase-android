@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
-import com.storyteller.openPage
 import com.storyteller.services.Error
 import com.storyteller.ui.row.StorytellerRowView
 import com.storyteller.ui.row.StorytellerRowViewDelegate
@@ -32,10 +31,10 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //setup user
         val userId = UUID.randomUUID().toString()
         //initialize sdk
-        Storyteller.initialize("[API KEY]", {
+        Storyteller.initialize("[API KEY]]", {
             Log.i("Storyteller Sample", "initialize success $userId")
             Storyteller.setUserDetails(UserInput(userId))
-            Storyteller.reloadData({
+            storytellerRowView.reloadData({
                 handleDeepLink(intent?.data)
                 refreshLayout.isRefreshing = false
             })
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //setup refresh layout
         refreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout).apply {
             setOnRefreshListener {
-                Storyteller.reloadData({
+                storytellerRowView.reloadData({
                     refreshLayout.isRefreshing = false
                 })
             }
@@ -88,7 +87,6 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         if (data != null) {
             val pageId = data.lastPathSegment
             findViewById<StorytellerRowView>(R.id.channelRowView).openPage(
-                this,
                 pageId
             )  { Log.e("DEBUG", "Cannot open deep link $data", it) }
         }
