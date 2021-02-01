@@ -19,7 +19,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'https://pkgs.dev.azure.com/Storm-Ideas/_packaging/storyteller-sdk/maven/v1'
+            url 'https://pkgs.dev.azure.com/Storm-Ideas/Storyteller/_packaging/storyteller-sdk-external/maven/v1'
             credentials {
                 username "StorytellerSDK"
                 password System.getenv("STORYTELLER_SDK_LICENSE_KEY") ?:

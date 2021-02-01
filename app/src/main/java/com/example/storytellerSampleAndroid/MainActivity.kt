@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //set callbacks
         val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
         storytellerRowView.delegate = this
+        storytellerRowView.cellType = StorytellerRowViewCellType.SQUARE
 
         //setup user
         val userId = UUID.randomUUID().toString()
