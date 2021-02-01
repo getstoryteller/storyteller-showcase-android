@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
         //setup user
         val userId = UUID.randomUUID().toString()
         //initialize sdk
-        Storyteller.initialize("[API KEY]]", {
+        Storyteller.initialize("[API KEY]", {
             Log.i("Storyteller Sample", "initialize success $userId")
             Storyteller.setUserDetails(UserInput(userId))
             storytellerRowView.reloadData({
