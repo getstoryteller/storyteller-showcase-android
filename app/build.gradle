@@ -41,5 +41,4 @@ dependencies {
     def storyteller_version = "4.0.1"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-    implementation "com.github.chuckerteam.chucker:library:3.4.0"
 }
