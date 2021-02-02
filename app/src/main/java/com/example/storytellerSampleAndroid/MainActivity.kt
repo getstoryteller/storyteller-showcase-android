@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
@@ -13,21 +14,18 @@ import com.storyteller.ui.row.StorytellerRowView
 import com.storyteller.ui.row.StorytellerRowViewDelegate
 import java.util.*
 
-class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
+class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowViewDelegate {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         //enable sdk logging for debug
         //Storyteller.enableLogging = true
-
         //set callbacks
         val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
         storytellerRowView.delegate = this
-        storytellerRowView.cellType = StorytellerRowViewCellType.SQUARE
 
         //setup user
         val userId = UUID.randomUUID().toString()
@@ -47,6 +45,13 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
                 storytellerRowView.reloadData({
                     refreshLayout.isRefreshing = false
                 })
+            }
+        }
+        //change user button
+        findViewById<Button>(R.id.changeUserButton).apply {
+            setOnClickListener {
+                val freshUserId = UUID.randomUUID().toString()
+                Storyteller.setUserDetails(UserInput(freshUserId))
             }
         }
     }
