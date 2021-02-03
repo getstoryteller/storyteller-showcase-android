@@ -1,7 +1,7 @@
 # Storyteller Android Sample App
 
 <a href="https://getstoryteller.com" target="_blank">
-  <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png" width="1200" height="784">
+  <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png">
 </a>
 
 ![Gradle Compatible](https://img.shields.io/badge/Gradle-Compatible-green?logo=gradle)
