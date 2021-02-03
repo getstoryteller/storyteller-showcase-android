@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
@@ -13,13 +15,12 @@ import com.storyteller.ui.row.StorytellerRowView
 import com.storyteller.ui.row.StorytellerRowViewDelegate
 import java.util.*
 
-class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
+class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowViewDelegate {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         //enable sdk logging for debug
         //Storyteller.enableLogging = true
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
          */
         val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
         storytellerRowView.delegate = this
-        storytellerRowView.cellType = StorytellerRowViewCellType.SQUARE
 
         //setup user
         val userId = UUID.randomUUID().toString()
@@ -71,6 +71,21 @@ class MainActivity : AppCompatActivity(), StorytellerRowViewDelegate {
                 storytellerRowView.reloadData({
                     refreshLayout.isRefreshing = false
                 })
+            }
+        }
+        //setup change user button
+        findViewById<Button>(R.id.changeUserButton).apply {
+            setOnClickListener {
+                /*
+                 If you use login in your app and wish to allow users to logout and log back in as a new user
+                 (or proceed as an anonymous user) then when a user logs out you should call setUserDetails
+                 again specifying a new externalId. Note that this will reset the local store of which pages the user has viewed.
+                 For more info, see - https://docs.getstoryteller.com/documents/android-sdk/Users
+                 */
+                val freshUserId = UUID.randomUUID().toString()
+                Storyteller.setUserDetails(UserInput(freshUserId))
+
+                Toast.makeText(this@MainActivity, "New User with Id: $freshUserId", Toast.LENGTH_SHORT).show()
             }
         }
     }
