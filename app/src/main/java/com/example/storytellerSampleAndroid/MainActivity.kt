@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
+    private lateinit var storytellerRowView: StorytellerRowView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
         Assign it to the appropriate activity to receive callbacks
         For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#storytellerrowviewdelegate
          */
-        val storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
+        storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
         storytellerRowView.delegate = this
 
         //setup user
@@ -95,6 +97,21 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
         handleDeepLink(intent?.data)
     }
 
+    private fun handleDeepLink(data: Uri?) {
+        if (data != null) {
+            /*
+             If your app needs to open specific story or page e.g. when opening an activity form a deep link,
+             then you should call openStory(storyId) or openPage(pageId). It can be tested in the Sample App with adb command:
+             adb shell am start -W -a android.intent.action.VIEW -d "https://storytellersampleapp/[PAGE_ID]"
+             For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowView#openstory
+             */
+            val pageId = data.lastPathSegment
+            storytellerRowView.openPage(pageId)  { Log.e("Storyteller Sample", "Cannot open deep link $data", it)}
+            //storytellerRowView.openStory(storyId)  { }
+
+        }
+    }
+
     /*
     Called when the data loading network request is complete
     For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#error-handling
@@ -149,14 +166,5 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
      */
     override fun getAdsForRow(stories: List<ClientStory>, onComplete: (AdResponse) -> Unit) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
-    }
-
-    private fun handleDeepLink(data: Uri?) {
-        if (data != null) {
-            val pageId = data.lastPathSegment
-            findViewById<StorytellerRowView>(R.id.channelRowView).openPage(
-                pageId
-            )  { Log.e("DEBUG", "Cannot open deep link $data", it) }
-        }
     }
 }
