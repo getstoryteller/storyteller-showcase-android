@@ -157,6 +157,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
      */
     override fun userSwipedUpToApp(swipeUpUrl: String) {
         Log.i("Storyteller Sample", "userSwipedUpToApp: swipeUpUrl $swipeUpUrl")
+
+        startActivity(Intent(this, OtherActivity::class.java).apply {
+            putExtra("EXTRA_SWIPE_URL", swipeUpUrl)
+        })
     }
 
     /*
