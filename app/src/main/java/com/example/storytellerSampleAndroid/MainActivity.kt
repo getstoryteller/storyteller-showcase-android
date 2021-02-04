@@ -100,15 +100,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
     private fun handleDeepLink(data: Uri?) {
         if (data != null) {
             /*
-             If your app needs to open specific story or page e.g. when opening an activity form a deep link,
+             If your app needs to open specific story or page e.g. when opening an activity from a deep link,
              then you should call openStory(storyId) or openPage(pageId). It can be tested in the Sample App with adb command:
              adb shell am start -W -a android.intent.action.VIEW -d "https://storytellersampleapp/[PAGE_ID]"
              For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowView#openstory
              */
             val pageId = data.lastPathSegment
             storytellerRowView.openPage(pageId)  { Log.e("Storyteller Sample", "Cannot open deep link $data", it)}
-            //storytellerRowView.openStory(storyId)  { }
-
         }
     }
 
@@ -157,7 +155,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
      */
     override fun userSwipedUpToApp(swipeUpUrl: String) {
         Log.i("Storyteller Sample", "userSwipedUpToApp: swipeUpUrl $swipeUpUrl")
-
+        // Pass swipeUpUrl from SDK callback to OtherActivity where it can be accessed as an extra string value when it is started
         startActivity(Intent(this, OtherActivity::class.java).apply {
             putExtra("EXTRA_SWIPE_URL", swipeUpUrl)
         })
