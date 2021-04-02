@@ -25,6 +25,8 @@
                     android:host="storytellersampleapp" />
             </intent-filter>
         </activity>
+        <activity android:name=".OtherActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>

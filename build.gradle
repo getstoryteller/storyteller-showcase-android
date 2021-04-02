@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.61'
+    ext.kotlin_version = '1.4.21'
     repositories {
         google()
         jcenter()
@@ -19,7 +19,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'https://pkgs.dev.azure.com/Storm-Ideas/_packaging/storyteller-sdk/maven/v1'
+            url 'https://pkgs.dev.azure.com/Storm-Ideas/Storyteller/_packaging/storyteller-sdk-external/maven/v1'
             credentials {
                 username "StorytellerSDK"
                 password System.getenv("STORYTELLER_SDK_LICENSE_KEY") ?:
