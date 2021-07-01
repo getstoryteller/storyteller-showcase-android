@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
         For more info, see - https://docs.getstoryteller.com/documents/android-sdk/GettingStarted#sdk-initialization
          */
         Storyteller.initialize(
-            apiKey = "[API KEY]",
+            apiKey = "[API-KEY]",
             preloadRowData = true,
             onSuccess = {
                 Log.i("Storyteller Sample", "initialize success $userId")
@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
      */
     override fun getAdsForRow(
         stories: List<ClientStory>,
-        onComplete: (List<ClientAd?>) -> Unit
+        onComplete: (AdResponse) -> Unit
     ) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
     }
