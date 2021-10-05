@@ -2,11 +2,11 @@ package com.example.storytellerSampleAndroid
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
@@ -37,31 +37,37 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
 
         //setup user
         val userId = UUID.randomUUID().toString()
-
+        /*
+        The SDK allows to customize theme for Storyteller.
+         */
+        Storyteller.theme = UiTheme()
         /*
         The SDK requires initialization before it can be used
         This can be done by using a valid API key
         For more info, see - https://docs.getstoryteller.com/documents/android-sdk/GettingStarted#sdk-initialization
          */
-        Storyteller.initialize("[API KEY]", {
-            Log.i("Storyteller Sample", "initialize success $userId")
+        Storyteller.initialize(
+            apiKey = "[API-KEY]",
+            preloadRowData = true,
+            onSuccess = {
+                Log.i("Storyteller Sample", "initialize success $userId")
 
-            /*
-            Authenticate a user by setting details containing an UUID
-            For more info, see - https://docs.getstoryteller.com/documents/android-sdk/Users
-             */
-            Storyteller.setUserDetails(UserInput(userId))
+                /*
+                        Authenticate a user by setting details containing an UUID
+                        For more info, see - https://docs.getstoryteller.com/documents/android-sdk/Users
+                         */
+                Storyteller.setUserDetails(UserInput(userId))
 
-            /*
-            Tell the SDK to load the latest data from the API
-             */
-            storytellerRowView.reloadData({
-                handleDeepLink(intent?.data)
-                refreshLayout.isRefreshing = false
-            })
+                /* Tell the SDK to load the latest data from the API*/
+                storytellerRowView.reloadData(onComplete = {
+                    handleDeepLink(intent?.data)
+                    refreshLayout.isRefreshing = false
+                })
 
 
-        },{ Log.i("Storyteller Sample", "initialize failed, error $it") })
+            },
+            onFailure = { Log.i("Storyteller Sample", "initialize failed, error $it") }
+        )
 
         //setup refresh layout
         refreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout).apply {
@@ -87,7 +93,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
                 val freshUserId = UUID.randomUUID().toString()
                 Storyteller.setUserDetails(UserInput(freshUserId))
 
-                Toast.makeText(this@MainActivity, "New User with Id: $freshUserId", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "New User with Id: $freshUserId",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -106,7 +116,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
              For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowView#openstory
              */
             val pageId = data.lastPathSegment
-            storytellerRowView.openPage(pageId)  { Log.e("Storyteller Sample", "Cannot open deep link $data", it)}
+            storytellerRowView.openPage(pageId) {
+                Log.e(
+                    "Storyteller Sample",
+                    "Cannot open deep link $data",
+                    it
+                )
+            }
         }
     }
 
@@ -115,7 +131,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
     For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#error-handling
      */
     override fun onStoryDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
-        Log.i("Storyteller Sample", "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount")
+        Log.i(
+            "Storyteller Sample",
+            "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
+        )
     }
 
     /*
@@ -166,7 +185,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
     and the SDK requires ad data from the containing app
     For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#client-ads
      */
-    override fun getAdsForRow(stories: List<ClientStory>, onComplete: (AdResponse) -> Unit) {
+    override fun getAdsForRow(
+        stories: List<ClientStory>,
+        onComplete: (AdResponse) -> Unit
+    ) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
     }
 }
