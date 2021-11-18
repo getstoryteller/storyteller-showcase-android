@@ -11,11 +11,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
 import com.storyteller.services.Error
+import com.storyteller.ui.row.StorytellerDelegate
 import com.storyteller.ui.row.StorytellerRowView
 import com.storyteller.ui.row.StorytellerRowViewDelegate
 import java.util.*
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowViewDelegate {
+class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate, StorytellerRowViewDelegate {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
@@ -28,71 +29,47 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
         //Storyteller.enableLogging = true
 
         /*
+        The global delegate is used for data related events coming from the StoryPlayer
+        */
+        Storyteller.storytellerDelegate = this
+        /*
         The delegate is used for the SDK to manage events from a StorytellerRowView instance
         Assign it to the appropriate activity to receive callbacks
         For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#storytellerrowviewdelegate
          */
-        storytellerRowView = findViewById<StorytellerRowView>(R.id.channelRowView)
-        storytellerRowView.delegate = this
-
+        storytellerRowView = findViewById(R.id.channelRowView)
+        storytellerRowView.storytellerRowViewDelegate = this
         //setup user
         val userId = UUID.randomUUID().toString()
         /*
         The SDK allows to customize theme for Storyteller.
          */
         Storyteller.theme = UiTheme()
-        /*
-        The SDK requires initialization before it can be used
-        This can be done by using a valid API key
-        For more info, see - https://docs.getstoryteller.com/documents/android-sdk/GettingStarted#sdk-initialization
-         */
-        Storyteller.initialize(
-            apiKey = "[API-KEY]",
-            preloadRowData = true,
-            onSuccess = {
-                Log.i("Storyteller Sample", "initialize success $userId")
-
-                /*
-                        Authenticate a user by setting details containing an UUID
-                        For more info, see - https://docs.getstoryteller.com/documents/android-sdk/Users
-                         */
-                Storyteller.setUserDetails(UserInput(userId))
-
-                /* Tell the SDK to load the latest data from the API*/
-                storytellerRowView.reloadData(onComplete = {
-                    handleDeepLink(intent?.data)
-                    refreshLayout.isRefreshing = false
-                })
-
-
-            },
-            onFailure = { Log.i("Storyteller Sample", "initialize failed, error $it") }
-        )
 
         //setup refresh layout
         refreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout).apply {
             setOnRefreshListener {
-
                 /*
                 Tell the SDK to load the latest data from the API
                  */
-                storytellerRowView.reloadData({
-                    refreshLayout.isRefreshing = false
-                })
+                storytellerRowView.reloadData()
             }
         }
+
+        //initialize Storyteller!!!
+        initializeStoryteller(userId)
+
         //setup change user button
         findViewById<Button>(R.id.changeUserButton).apply {
             setOnClickListener {
                 /*
                  If you use login in your app and wish to allow users to logout and log back in as a new user
-                 (or proceed as an anonymous user) then when a user logs out you should call setUserDetails
+                 (or proceed as an anonymous user) then when a user logs out you should call initialize
                  again specifying a new externalId. Note that this will reset the local store of which pages the user has viewed.
                  For more info, see - https://docs.getstoryteller.com/documents/android-sdk/Users
                  */
                 val freshUserId = UUID.randomUUID().toString()
-                Storyteller.setUserDetails(UserInput(freshUserId))
-
+                initializeStoryteller(freshUserId)
                 Toast.makeText(
                     this@MainActivity,
                     "New User with Id: $freshUserId",
@@ -100,6 +77,24 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
                 ).show()
             }
         }
+    }
+
+    fun initializeStoryteller(userId:String){
+        /*
+           The SDK requires initialization before it can be used
+           This can be done by using a valid API key
+           For more info, see - https://docs.getstoryteller.com/documents/android-sdk/GettingStarted#sdk-initialization
+            */
+        Storyteller.initialize(
+            apiKey = "[API KEY]",
+            userInput = UserInput(userId),
+            onSuccess = {
+                Log.i("Storyteller Sample", "initialize success $userId")
+                /* Tell the SDK to load the latest data from the API*/
+                storytellerRowView.reloadData()
+            },
+            onFailure = { Log.i("Storyteller Sample", "initialize failed, error $it") }
+        )
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -135,6 +130,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerRowVi
             "Storyteller Sample",
             "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
         )
+        refreshLayout.isRefreshing = false
+        if(success){
+            handleDeepLink(intent?.data)
+        }
     }
 
     /*
