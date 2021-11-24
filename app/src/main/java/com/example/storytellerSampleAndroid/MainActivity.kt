@@ -1,9 +1,11 @@
 package com.example.storytellerSampleAndroid
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -177,6 +179,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         startActivity(Intent(this, OtherActivity::class.java).apply {
             putExtra("EXTRA_SWIPE_URL", swipeUpUrl)
         })
+    }
+
+    /*
+   Called when a user swipes up on a page which opens a web link.
+   Allows to configure WebViewClient if required.
+   For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate
+    */
+    override fun configureSwipeUpWebView(view: WebView, url: String?, favicon: Bitmap?) {
+        Log.i("Storyteller Sample", "configureSwipeUpWebView $url")
     }
 
     /*
