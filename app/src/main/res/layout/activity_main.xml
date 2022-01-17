@@ -1,34 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refreshLayout"
+    <androidx.core.widget.NestedScrollView
+
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.4"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.storyteller.ui.row.StorytellerRowView
-            android:id="@+id/channelRowView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cellType="square" />
+            android:orientation="vertical">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <TextView
+                android:paddingBottom="16dp"
+                android:textSize="32dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="RowView"
+                android:gravity="center"
+                />
 
-    <Button
-        android:id="@+id/changeUserButton"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:text="Change user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
+            <com.storyteller.ui.list.StorytellerRowView
+                android:id="@+id/channelRowView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:cellType="square" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:paddingBottom="16dp"
+                android:textSize="32dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="GridView"
+                android:gravity="center"
+                />
+            <com.storyteller.ui.list.StorytellerGridView
+                android:id="@+id/channelGridView"
+                app:columnCount="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellType="round"
+                />
+
+            <Button
+                android:id="@+id/changeUserButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Change user"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
