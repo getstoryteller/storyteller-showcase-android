@@ -13,16 +13,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
 import com.storyteller.services.Error
-import com.storyteller.ui.row.StorytellerDelegate
-import com.storyteller.ui.row.StorytellerRowView
-import com.storyteller.ui.row.StorytellerRowViewDelegate
+import com.storyteller.ui.list.StorytellerDelegate
+import com.storyteller.ui.list.StorytellerListViewDelegate
+import com.storyteller.ui.list.StorytellerRowView
+import com.storyteller.ui.list.StorytellerGridView
+
 import java.util.*
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate, StorytellerRowViewDelegate {
+class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate, StorytellerListViewDelegate {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
     private lateinit var storytellerRowView: StorytellerRowView
+
+    private lateinit var storytellerGridView: StorytellerGridView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +44,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#storytellerrowviewdelegate
          */
         storytellerRowView = findViewById(R.id.channelRowView)
-        storytellerRowView.storytellerRowViewDelegate = this
+        storytellerGridView = findViewById(R.id.channelGridView)
+
+        storytellerRowView.delegate = this
+        storytellerGridView.delegate = this
         //setup user
         val userId = UUID.randomUUID().toString()
         /*
@@ -55,6 +62,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
                 Tell the SDK to load the latest data from the API
                  */
                 storytellerRowView.reloadData()
+                storytellerGridView.reloadData()
             }
         }
 
@@ -195,7 +203,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     and the SDK requires ad data from the containing app
     For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#client-ads
      */
-    override fun getAdsForRow(
+    override fun getAdsForList(
         stories: List<ClientStory>,
         onComplete: (AdResponse) -> Unit
     ) {
