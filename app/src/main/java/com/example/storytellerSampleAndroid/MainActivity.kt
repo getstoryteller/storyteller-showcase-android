@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
            For more info, see - https://docs.getstoryteller.com/documents/android-sdk/GettingStarted#sdk-initialization
             */
         Storyteller.initialize(
-            apiKey = "[API KEY]",
+            apiKey = "3bf2d93c-7a9b-40af-9217-03409c1aadc6",
             userInput = UserInput(userId),
             onSuccess = {
                 Log.i("Storyteller Sample", "initialize success $userId")
