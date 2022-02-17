@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         /*
         The delegate is used for the SDK to manage events from a StorytellerRowView instance
         Assign it to the appropriate activity to receive callbacks
-        For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#storytellerrowviewdelegate
+        For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate
          */
         storytellerRowView = findViewById(R.id.channelRowView)
         storytellerGridView = findViewById(R.id.channelGridView)
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
                  If you use login in your app and wish to allow users to logout and log back in as a new user
                  (or proceed as an anonymous user) then when a user logs out you should call initialize
                  again specifying a new externalId. Note that this will reset the local store of which pages the user has viewed.
-                 For more info, see - https://docs.getstoryteller.com/documents/android-sdk/Users
+                 For more info, see - https://www.getstoryteller.com/documentation/android/users
                  */
                 val freshUserId = UUID.randomUUID().toString()
                 initializeStoryteller(freshUserId)
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         /*
            The SDK requires initialization before it can be used
            This can be done by using a valid API key
-           For more info, see - https://docs.getstoryteller.com/documents/android-sdk/GettingStarted#sdk-initialization
+           For more info, see initialization - https://www.getstoryteller.com/documentation/android/getting-started
             */
         Storyteller.initialize(
             apiKey = "[API KEY]",
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
              If your app needs to open specific story or page e.g. when opening an activity from a deep link,
              then you should call openStory(storyId) or openPage(pageId). It can be tested in the Sample App with adb command:
              adb shell am start -W -a android.intent.action.VIEW -d "https://storytellersampleapp/[PAGE_ID]"
-             For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowView#openstory
+             For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view
              */
             val pageId = data.lastPathSegment
             storytellerRowView.openPage(pageId) {
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
 
     /*
     Called when the data loading network request is complete
-    For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#error-handling
+    For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate
      */
     override fun onStoryDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
         Log.i(
@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
 
     /*
      Called when an analytics event is triggered
-     For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#analytics
+     For more info, see - https://www.getstoryteller.com/documentation/android/analytics
      */
     override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
         Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
 
     /*
     Called whenever a tile is visible in the story view
-    For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#tile-visibility
+    For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate
      */
     override fun tileBecameVisible(storyIndex: Int) {
         Log.i("Storyteller Sample", "tileBecameVisible: storyIndex $storyIndex")
@@ -179,7 +179,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     /*
     Called when a user swipes up on a page which should direct the user
     to a specific place within the integrating app.
-    For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#swiping-up-to-the-integrating-app
+    For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate
      */
     override fun userSwipedUpToApp(swipeUpUrl: String) {
         Log.i("Storyteller Sample", "userSwipedUpToApp: swipeUpUrl $swipeUpUrl")
@@ -201,7 +201,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     /*
     Called when the tenant is configured to request ads from the containing app
     and the SDK requires ad data from the containing app
-    For more info, see - https://docs.getstoryteller.com/documents/android-sdk/StorytellerRowViewDelegate#client-ads
+    For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate
      */
     override fun getAdsForList(
         stories: List<ClientStory>,
