@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.Toast
@@ -30,7 +31,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //make layout stable during system UI changes like hiding/showing status bar
+        window.decorView.systemUiVisibility =
+            window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         //enable sdk logging for debug
         //Storyteller.enableLogging = true
 
