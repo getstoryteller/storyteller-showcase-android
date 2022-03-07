@@ -21,13 +21,22 @@ import com.storyteller.ui.list.StorytellerGridView
 
 import java.util.*
 
-class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate, StorytellerListViewDelegate {
+class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate,
+    StorytellerListViewDelegate {
 
     private lateinit var refreshLayout: SwipeRefreshLayout
 
     private lateinit var storytellerRowView: StorytellerRowView
 
     private lateinit var storytellerGridView: StorytellerGridView
+
+    init {
+        /*
+         The SDK allows to customize theme for Storyteller.
+         Make sure that global theme is initialized before views are being inflated or created.
+         */
+        Storyteller.theme = UiTheme()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +62,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         storytellerGridView.delegate = this
         //setup user
         val userId = UUID.randomUUID().toString()
-        /*
-        The SDK allows to customize theme for Storyteller.
-         */
-        Storyteller.theme = UiTheme()
 
         //setup refresh layout
         refreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout).apply {
@@ -92,7 +97,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         }
     }
 
-    fun initializeStoryteller(userId:String){
+    fun initializeStoryteller(userId: String) {
         /*
            The SDK requires initialization before it can be used
            This can be done by using a valid API key
@@ -144,7 +149,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
             "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
         )
         refreshLayout.isRefreshing = false
-        if(success){
+        if (success) {
             handleDeepLink(intent?.data)
         }
     }
