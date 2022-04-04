@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
 import com.storyteller.Storyteller
 import com.storyteller.domain.*
 import com.storyteller.services.Error
@@ -29,14 +30,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     private lateinit var storytellerRowView: StorytellerRowView
 
     private lateinit var storytellerGridView: StorytellerGridView
-
-    init {
-        /*
-         The SDK allows to customize theme for Storyteller.
-         Make sure that global theme is initialized before views are being inflated or created.
-         */
-        Storyteller.theme = UiTheme()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +53,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
 
         storytellerRowView.delegate = this
         storytellerGridView.delegate = this
+
+        storytellerGridView.reloadData()
+        storytellerRowView.reloadData()
         //setup user
         val userId = UUID.randomUUID().toString()
 
@@ -87,33 +83,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
                  For more info, see - https://www.getstoryteller.com/documentation/android/users
                  */
                 val freshUserId = UUID.randomUUID().toString()
-                initializeStoryteller(freshUserId)
+                initializeStoryteller(freshUserId, onSuccess =
+                {
+                    storytellerGridView.reloadData()
+                    storytellerRowView.reloadData()
+                    Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
+                },
+                    onFailure = {
+                        Log.e("Storyteller Sample", "initialize failed $it}")
+                    })
                 Toast.makeText(
-                    this@MainActivity,
-                    "New User with Id: $freshUserId",
-                    Toast.LENGTH_SHORT
+                    context, "New User with Id: $freshUserId", Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
-    fun initializeStoryteller(userId: String) {
-        /*
-           The SDK requires initialization before it can be used
-           This can be done by using a valid API key
-           For more info, see - https://www.getstoryteller.com/documentation/android/getting-started#SDKInitialization
-            */
-        Storyteller.initialize(
-            apiKey = "[API KEY]",
-            userInput = UserInput(userId),
-            onSuccess = {
-                Log.i("Storyteller Sample", "initialize success $userId")
-                /* Tell the SDK to load the latest data from the API*/
-                storytellerRowView.reloadData()
-            },
-            onFailure = { Log.i("Storyteller Sample", "initialize failed, error $it") }
-        )
-    }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
