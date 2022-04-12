@@ -39,7 +39,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     
-    def storyteller_version = "7.0.2"
+    def storyteller_version = "7.0.3"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
 
     testImplementation 'junit:junit:4.13.1'
