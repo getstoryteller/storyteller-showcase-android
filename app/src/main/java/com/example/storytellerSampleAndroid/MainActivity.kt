@@ -128,10 +128,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     Called when the data loading network request is complete
     For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#ErrorHandling
      */
-    override fun onStoryDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+    override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
         Log.i(
             "Storyteller Sample",
-            "onChannelsDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
+            "onDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
         )
         refreshLayout.isRefreshing = false
         if (success) {
@@ -142,15 +142,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     /*
     Called when the network request to load data for all stories has started
      */
-    override fun onStoryDataLoadStarted() {
-        Log.i("Storyteller Sample", "onStoryDataLoadStarted callback")
+    override fun onDataLoadStarted() {
+        Log.i("Storyteller Sample", "onDataLoadStarted callback")
     }
 
     /*
-    Called when any story has been dismissed
+    Called when story player has been dismissed
      */
-    override fun onStoryDismissed() {
-        Log.i("Storyteller Sample", "onStoryDismissed callback")
+    override fun onPlayerDismissed() {
+        Log.i("Storyteller Sample", "onPlayerDismissed callback")
     }
 
     /*
@@ -165,8 +165,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     Called whenever a tile is visible in the story view
     For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#TileVisibility
      */
-    override fun tileBecameVisible(storyIndex: Int) {
-        Log.i("Storyteller Sample", "tileBecameVisible: storyIndex $storyIndex")
+    override fun tileBecameVisible(contentIndex: Int) {
+        Log.i("Storyteller Sample", "tileBecameVisible: storyIndex $contentIndex")
     }
 
     /*
@@ -174,11 +174,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     to a specific place within the integrating app.
     For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#SwipingUpToTheIntegratingApp
      */
-    override fun userSwipedUpToApp(swipeUpUrl: String) {
-        Log.i("Storyteller Sample", "userSwipedUpToApp: swipeUpUrl $swipeUpUrl")
+    override fun userNavigatedToApp(url: String) {
+        Log.i("Storyteller Sample", "userNavigatedToApp: swipeUpUrl $url")
         // Pass swipeUpUrl from SDK callback to OtherActivity where it can be accessed as an extra string value when it is started
         startActivity(Intent(this, OtherActivity::class.java).apply {
-            putExtra("EXTRA_SWIPE_URL", swipeUpUrl)
+            putExtra("EXTRA_SWIPE_URL", url)
         })
     }
 
@@ -187,8 +187,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
    Allows to configure WebViewClient if required.
    For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#HowToUse
     */
-    override fun configureSwipeUpWebView(view: WebView, url: String?, favicon: Bitmap?) {
-        Log.i("Storyteller Sample", "configureSwipeUpWebView $url")
+    override fun configureWebView(view: WebView, url: String?, favicon: Bitmap?) {
+        Log.i("Storyteller Sample", "configureWebView $url")
     }
 
     /*
