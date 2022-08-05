@@ -1,12 +1,10 @@
 # Storyteller Android Sample App
 
-[![Github tag](https://badgen.net/github/tag/getstoryteller/storyteller-sample-android?label=latest+release)](https://github.com/getstoryteller/storyteller-sample-android/tags)
-
 <a href="https://getstoryteller.com" target="_blank">
   <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png">
 </a>
 
-![Gradle Compatible](https://img.shields.io/badge/Gradle-Compatible-green?logo=gradle)
+![Gradle Compatible](https://img.shields.io/badge/Gradle-Compatible-green?logo=gradle) [![Latest Release](https://badgen.net/github/tag/getstoryteller/storyteller-sample-android?label=latest+release)](https://github.com/getstoryteller/storyteller-sample-android/tags)
 
 <p>
   <a href="https://getstoryteller.com" target="_blank"><img alt="What is Storyteller?" src="img/what-is-storyteller-btn.png" width="302" height="48"></a>&nbsp;&nbsp;&nbsp;
