@@ -198,7 +198,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
      */
     override fun getAdsForList(
         stories: List<ClientStory>,
-        onComplete: (AdResponse) -> Unit
+        onComplete: (AdResponse) -> Unit,
+        onError: () -> Unit
     ) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
     }
