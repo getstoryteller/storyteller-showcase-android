@@ -1,5 +1,7 @@
 # Storyteller Android Sample App
 
+[![Github tag](https://badgen.net/github/tag/getstoryteller/storyteller-sample-android?label=latest+release)](https://github.com/getstoryteller/storyteller-sample-android/tags)
+
 <a href="https://getstoryteller.com" target="_blank">
   <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png">
 </a>
