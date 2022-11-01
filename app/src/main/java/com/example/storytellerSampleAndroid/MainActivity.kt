@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
              For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view#Methods
              */
             val pageId = data.lastPathSegment
-            storytellerRowView.openPage(pageId) {
+            Storyteller.openPage(this, pageId) {
                 Log.e(
                     "Storyteller Sample",
                     "Cannot open deep link $data",
