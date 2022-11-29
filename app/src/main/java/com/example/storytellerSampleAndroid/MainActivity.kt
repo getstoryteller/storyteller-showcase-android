@@ -97,6 +97,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
                 ).show()
             }
         }
+        findViewById<Button>(R.id.goToJetpackComposeScreen).apply {
+            setOnClickListener {
+                val intent = Intent(this@MainActivity, JetpackComposeActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
 
