@@ -47,15 +47,17 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
 
     setContent {
       StorytellerSampleComposeTheme {
-        Scaffold(topBar = { TopBar() }, content = { paddingValues ->
-          MainContent(
-            paddingValues = paddingValues,
-            onRefresh = { refresh() },
-            viewModel = viewModel,
-            controller = controller,
-            delegate = this
-          )
-        })
+        Scaffold(
+          topBar = { TopBar() },
+          content = { paddingValues ->
+            MainContent(
+              paddingValues = paddingValues,
+              onRefresh = { refresh() },
+              viewModel = viewModel,
+              controller = controller,
+              delegate = this
+            )
+          })
       }
     }
   }
