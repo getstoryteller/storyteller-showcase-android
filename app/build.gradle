@@ -55,7 +55,7 @@ dependencies {
     def storyteller_version = "8.4.0"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
 
-    def storyteller_compose_version = "0.0.1-local-main-fda79ec-dev-SNAPSHOT"
+    def storyteller_compose_version = "0.0.1-local-main-12531a2"
     implementation(group: "Storyteller", name: "sdk-compose", version: "$storyteller_compose_version")
 
     implementation 'androidx.appcompat:appcompat:1.5.1'
