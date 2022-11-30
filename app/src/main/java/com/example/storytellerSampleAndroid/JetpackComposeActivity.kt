@@ -1,11 +1,15 @@
 package com.example.storytellerSampleAndroid
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -22,10 +26,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.pullRefreshIndicatorTransform
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -57,6 +64,7 @@ import com.storyteller.sdk.compose.composeVersion
 import com.storyteller.services.Error
 import com.storyteller.ui.list.StorytellerDelegate
 import com.storyteller.ui.list.StorytellerListViewDelegate
+import java.util.UUID
 import kotlinx.coroutines.launch
 
 class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
@@ -81,6 +89,9 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     setContent {
       StorytellerSampleComposeTheme {
         Scaffold(topBar = { TopBar() }) { paddingValues ->
+          val coroutineScope = rememberCoroutineScope()
+          val listState = rememberLazyListState()
+
           val refreshing by remember { viewModel.refreshing }
           val ptrState = rememberPullRefreshState(refreshing, ::refresh)
           val rotation = animateFloatAsState(ptrState.progress * 120)
@@ -92,9 +103,9 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
               .pullRefresh(state = ptrState)
           ) {
             LazyColumn(
-              modifier = Modifier
-                .fillMaxSize(),
-              horizontalAlignment = Alignment.CenterHorizontally
+              modifier = Modifier.fillMaxSize(),
+              horizontalAlignment = Alignment.CenterHorizontally,
+              state = listState
             ) {
               item {
                 Text(
@@ -107,8 +118,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
                 RowItem(
                   modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
-                  tag = "row"
+                    .height(200.dp), tag = "row"
                 )
               }
               item {
@@ -120,9 +130,25 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
               }
               item {
                 GridItem(
-                  modifier = Modifier.fillMaxWidth(),
-                  tag = "grid"
+                  modifier = Modifier.fillMaxWidth(), tag = "grid"
                 )
+              }
+
+              item {
+                Row(
+                  modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 8.dp),
+                  horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                  ChangeUserButton(onSuccess = {
+                    refresh()
+                    coroutineScope.launch {
+                      listState.animateScrollToItem(0)
+                    }
+                    viewModel.startRefreshing()
+                  })
+                }
               }
             }
 
@@ -156,9 +182,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
 
   @Composable
   private fun RowItem(
-    modifier: Modifier = Modifier,
-    tag: String,
-    categories: List<String> = listOf()
+    modifier: Modifier = Modifier, tag: String, categories: List<String> = listOf()
   ) {
     StorytellerRowView(modifier = modifier, tag = tag, controller = storytellerComposeController) {
       delegate = this@JetpackComposeActivity
@@ -170,9 +194,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
 
   @Composable
   private fun GridItem(
-    modifier: Modifier = Modifier,
-    tag: String,
-    categories: List<String> = listOf()
+    modifier: Modifier = Modifier, tag: String, categories: List<String> = listOf()
   ) {
     StorytellerGridView(modifier = modifier, tag = tag, controller = storytellerComposeController) {
       delegate = this@JetpackComposeActivity
@@ -336,3 +358,31 @@ fun TopBar() {
     }
   }
 }
+
+@Composable
+fun ChangeUserButton(
+  modifier: Modifier = Modifier, onSuccess: () -> Unit = {}, onFailure: () -> Unit = {}
+) {
+  val context = LocalContext.current
+  Button(modifier = modifier, onClick = {
+    val freshUserId = UUID.randomUUID().toString()
+    SampleApp.initializeStoryteller(userId = freshUserId, onSuccess = {
+      Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
+      context.toast("user id changed to: $freshUserId")
+      onSuccess.invoke()
+    }, onFailure = {
+      Log.e("Storyteller Sample", "initialize failed $it}")
+      context.toast("failed to change user id")
+      onFailure.invoke()
+    })
+  }) {
+    Text("Change user")
+  }
+}
+
+fun Context.toast(text: String) {
+  Handler(Looper.getMainLooper()).post {
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+  }
+}
+
