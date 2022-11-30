@@ -12,15 +12,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
+import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.storyteller.Storyteller
-import com.storyteller.domain.*
+import com.storyteller.domain.AdResponse
+import com.storyteller.domain.ClientStory
+import com.storyteller.domain.UserActivity
+import com.storyteller.domain.UserActivityData
 import com.storyteller.services.Error
 import com.storyteller.ui.list.StorytellerDelegate
+import com.storyteller.ui.list.StorytellerGridView
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import com.storyteller.ui.list.StorytellerRowView
-import com.storyteller.ui.list.StorytellerGridView
-
-import java.util.*
+import java.util.UUID
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate,
     StorytellerListViewDelegate {

@@ -50,22 +50,12 @@ android {
 }
 
 dependencies {
-    /**
-     * Storyteller Compose SDK, it contains the latest core SDK transitively*/
-    def storyteller_compose_version = "0.0.1-local-main-e11076e"
+    def storyteller_compose_version = "0.0.1-local-main-ad1aa20"
     implementation(group: "Storyteller", name: "sdk-compose", version: "$storyteller_compose_version")
 
-    /**
-    * If you don't want the latest supported version of the core SDK, you can specify it explicitly
-     *
-     * Un comment the following lines
-    */
-//    
-//    def storyteller_version = "8.2.8"
-//    implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version") {
-//        force = true
-//    }
-//
+    def storyteller_version = "8.2.9"
+    implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
+
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

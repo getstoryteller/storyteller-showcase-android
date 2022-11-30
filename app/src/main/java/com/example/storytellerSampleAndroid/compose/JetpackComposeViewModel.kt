@@ -1,4 +1,4 @@
-package com.example.storytellerSampleAndroid
+package com.example.storytellerSampleAndroid.compose
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

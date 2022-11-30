@@ -6,7 +6,7 @@ import com.storyteller.Storyteller
 import com.storyteller.domain.UserInput
 import com.storyteller.domain.theme.builders.buildTheme
 import com.storyteller.services.Error
-import java.util.*
+import java.util.UUID
 
 class SampleApp : Application() {
 
@@ -23,7 +23,7 @@ class SampleApp : Application() {
                For more info, see - https://www.getstoryteller.com/documentation/android/getting-started#SDKInitialization
                 */
             Storyteller.initialize(
-                apiKey = "[APIKEY]",
+                apiKey = "[API_KEY]",
                 userInput = UserInput(userId),
                 onSuccess = onSuccess,
                 onFailure = onFailure
