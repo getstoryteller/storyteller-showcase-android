@@ -57,12 +57,15 @@ dependencies {
 
     /**
     * If you don't want the latest supported version of the core SDK, you can specify it explicitly
+     *
+     * Un comment the following lines
     */
-    def storyteller_version = "8.2.8"
-    implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version") {
-        force = true
-    }
-
+//    
+//    def storyteller_version = "8.2.8"
+//    implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version") {
+//        force = true
+//    }
+//
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
