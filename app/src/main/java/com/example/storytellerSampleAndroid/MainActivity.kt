@@ -197,10 +197,20 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#ClientAds
      */
     override fun getAdsForList(
+        listDescriptor: ListDescriptor,
         stories: List<ClientStory>,
         onComplete: (AdResponse) -> Unit,
         onError: () -> Unit
     ) {
         Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
     }
+
+    /*
+     DEPRECATED
+    */
+    override fun getAdsForList(
+        stories: List<ClientStory>,
+        onComplete: (AdResponse) -> Unit,
+        onError: () -> Unit
+    ) = Unit
 }
