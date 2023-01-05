@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    def storyteller_compose_version = "0.0.1-local-main-5640fec"
+    def storyteller_compose_version = "1.0.0"
     implementation(group: "Storyteller", name: "sdk-compose", version: "$storyteller_compose_version")
 
     def storyteller_version = "8.4.0"
