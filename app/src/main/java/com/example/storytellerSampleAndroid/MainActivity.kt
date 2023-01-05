@@ -12,15 +12,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
+import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.storyteller.Storyteller
-import com.storyteller.domain.*
+import com.storyteller.domain.AdResponse
+import com.storyteller.domain.ClientStory
+import com.storyteller.domain.ListDescriptor
+import com.storyteller.domain.UserActivity
+import com.storyteller.domain.UserActivityData
 import com.storyteller.services.Error
 import com.storyteller.ui.list.StorytellerDelegate
+import com.storyteller.ui.list.StorytellerGridView
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import com.storyteller.ui.list.StorytellerRowView
-import com.storyteller.ui.list.StorytellerGridView
-
-import java.util.*
+import java.util.UUID
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate,
     StorytellerListViewDelegate {
@@ -95,6 +99,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
                 Toast.makeText(
                     context, "New User with Id: $freshUserId", Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+        findViewById<Button>(R.id.goToJetpackComposeScreen).apply {
+            setOnClickListener {
+                val intent = Intent(this@MainActivity, JetpackComposeActivity::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -191,6 +201,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         Log.i("Storyteller Sample", "configureWebView $url")
     }
 
+    override fun getAdsForList(
+        stories: List<ClientStory>,
+        onComplete: (AdResponse) -> Unit,
+        onError: () -> Unit
+    ) = Unit
+
     /*
     Called when the tenant is configured to request ads from the containing app
     and the SDK requires ad data from the containing app
@@ -202,15 +218,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         onComplete: (AdResponse) -> Unit,
         onError: () -> Unit
     ) {
-        Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
+        Log.i("Storyteller Sample", "getAdsForList $listDescriptor")
     }
-
-    /*
-     DEPRECATED
-    */
-    override fun getAdsForList(
-        stories: List<ClientStory>,
-        onComplete: (AdResponse) -> Unit,
-        onError: () -> Unit
-    ) = Unit
 }
