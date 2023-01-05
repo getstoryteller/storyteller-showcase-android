@@ -16,6 +16,7 @@ import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.storyteller.Storyteller
 import com.storyteller.domain.AdResponse
 import com.storyteller.domain.ClientStory
+import com.storyteller.domain.ListDescriptor
 import com.storyteller.domain.UserActivity
 import com.storyteller.domain.UserActivityData
 import com.storyteller.services.Error
@@ -200,6 +201,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         Log.i("Storyteller Sample", "configureWebView $url")
     }
 
+    override fun getAdsForList(
+        listDescriptor: ListDescriptor,
+        stories: List<ClientStory>,
+        onComplete: (AdResponse) -> Unit,
+        onError: () -> Unit
+    ) {
+        Log.i("Storyteller Sample", "getAdsForList $listDescriptor")
+    }
+
     /*
     Called when the tenant is configured to request ads from the containing app
     and the SDK requires ad data from the containing app
@@ -207,17 +217,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
      */
     override fun getAdsForList(
         listDescriptor: ListDescriptor,
-        stories: List<ClientStory>,
-        onComplete: (AdResponse) -> Unit,
-        onError: () -> Unit
-    ) {
-        Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
-    }
-
-    /*
-     DEPRECATED
-    */
-    override fun getAdsForList(
         stories: List<ClientStory>,
         onComplete: (AdResponse) -> Unit,
         onError: () -> Unit

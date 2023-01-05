@@ -22,6 +22,7 @@ import com.example.storytellerSampleAndroid.theme.StorytellerSampleComposeTheme
 import com.storyteller.Storyteller
 import com.storyteller.domain.AdResponse
 import com.storyteller.domain.ClientStory
+import com.storyteller.domain.ListDescriptor
 import com.storyteller.domain.UserActivity
 import com.storyteller.domain.UserActivityData
 import com.storyteller.sdk.compose.StorytellerComposeController
@@ -37,7 +38,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
 
   private fun refresh() = lifecycleScope.launch {
     viewModel.startRefreshing()
-    controller.reloadData(onSkip = { viewModel.stopRefreshing() })
+    controller.reloadData()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,6 +151,15 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     Log.i("Storyteller Sample", "configureWebView $url")
   }
 
+  override fun getAdsForList(
+    listDescriptor: ListDescriptor,
+    stories: List<ClientStory>,
+    onComplete: (AdResponse) -> Unit,
+    onError: () -> Unit
+  ) {
+    Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
+  }
+
   /*
   Called when the tenant is configured to request ads from the containing app
   and the SDK requires ad data from the containing app
@@ -157,9 +167,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
    */
   override fun getAdsForList(
     stories: List<ClientStory>, onComplete: (AdResponse) -> Unit, onError: () -> Unit
-  ) {
-    Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
-  }
+  ) = Unit
 }
 
 fun Context.toast(text: String) {
