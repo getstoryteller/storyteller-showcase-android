@@ -202,13 +202,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     }
 
     override fun getAdsForList(
-        listDescriptor: ListDescriptor,
         stories: List<ClientStory>,
         onComplete: (AdResponse) -> Unit,
         onError: () -> Unit
-    ) {
-        Log.i("Storyteller Sample", "getAdsForList $listDescriptor")
-    }
+    ) = Unit
 
     /*
     Called when the tenant is configured to request ads from the containing app
@@ -220,5 +217,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         stories: List<ClientStory>,
         onComplete: (AdResponse) -> Unit,
         onError: () -> Unit
-    ) = Unit
+    ) {
+        Log.i("Storyteller Sample", "getAdsForList $listDescriptor")
+    }
 }
