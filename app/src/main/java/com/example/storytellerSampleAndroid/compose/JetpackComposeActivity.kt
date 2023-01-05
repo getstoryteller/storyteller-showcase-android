@@ -18,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.storytellerSampleAndroid.OtherActivity
 import com.example.storytellerSampleAndroid.compose.components.MainContent
 import com.example.storytellerSampleAndroid.compose.components.TopBar
-import com.example.storytellerSampleAndroid.theme.StorytellerSampleComposeTheme
+import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleComposeTheme
 import com.storyteller.Storyteller
 import com.storyteller.domain.AdResponse
 import com.storyteller.domain.ClientStory
@@ -56,7 +56,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
               onRefresh = { refresh() },
               viewModel = viewModel,
               controller = controller,
-              delegate = this
+              storytellerListViewDelegate = this
             )
           })
       }

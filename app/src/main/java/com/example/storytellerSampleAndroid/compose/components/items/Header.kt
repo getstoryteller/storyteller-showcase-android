@@ -1,4 +1,4 @@
-package com.example.storytellerSampleAndroid.compose.components
+package com.example.storytellerSampleAndroid.compose.components.items
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text

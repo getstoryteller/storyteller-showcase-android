@@ -19,9 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
-import com.example.storytellerSampleAndroid.compose.components.items.GridItem
-import com.example.storytellerSampleAndroid.compose.components.items.RowItem
+import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
+import com.example.storytellerSampleAndroid.compose.components.items.Header
+import com.storyteller.domain.StorytellerListViewCellType
 import com.storyteller.sdk.compose.StorytellerComposeController
+import com.storyteller.sdk.compose.StorytellerGridView
+import com.storyteller.sdk.compose.StorytellerRowView
 import com.storyteller.ui.list.StorytellerListViewDelegate
 
 @Composable
@@ -31,7 +34,7 @@ fun MainContent(
   onRefresh: () -> Unit,
   viewModel: JetpackComposeViewModel,
   controller: StorytellerComposeController,
-  delegate: StorytellerListViewDelegate
+  storytellerListViewDelegate: StorytellerListViewDelegate
 ) {
   val coroutineScope = rememberCoroutineScope()
   val listState = rememberLazyListState()
@@ -55,25 +58,33 @@ fun MainContent(
         Header("Row View")
       }
       item {
-        RowItem(
+        StorytellerRowView(
           modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
           tag = "row",
-          controller = controller,
-          delegate = delegate
-        )
+          controller = controller
+        ) {
+          delegate = storytellerListViewDelegate
+          cellType = StorytellerListViewCellType.SQUARE
+          categories = listOf()
+          reloadData()
+        }
       }
       item {
         Header("Grid View")
       }
       item {
-        GridItem(
+        StorytellerGridView(
           modifier = Modifier.fillMaxWidth(),
           tag = "grid",
-          controller = controller,
-          delegate = delegate
-        )
+          controller = controller
+        ) {
+          delegate = storytellerListViewDelegate
+          cellType = StorytellerListViewCellType.ROUND
+          categories = listOf()
+          reloadData()
+        }
       }
 
       item { ChangeUserContainer(onRefresh, coroutineScope, listState, viewModel) }

@@ -1,4 +1,4 @@
-package com.example.storytellerSampleAndroid.theme // ktlint-disable filename
+package com.example.storytellerSampleAndroid.compose.theme
 
 import android.app.Activity
 import android.os.Build
