@@ -1,4 +1,4 @@
-package com.example.storytellerSampleAndroid.theme
+package com.example.storytellerSampleAndroid.compose.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.example.storytellerSampleAndroid.compose.components
+package com.example.storytellerSampleAndroid.compose.components.items
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
