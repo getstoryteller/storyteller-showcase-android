@@ -23,7 +23,8 @@ class SampleApp : Application() {
                For more info, see - https://www.getstoryteller.com/documentation/android/getting-started#SDKInitialization
                 */
             Storyteller.initialize(
-                apiKey = "[API_KEY]",
+                // change to your own [API-KEY]
+                apiKey = "6a0ea73b-7b5d-42ab-bbf9-0584a696d9bb",
                 userInput = UserInput(userId),
                 onSuccess = onSuccess,
                 onFailure = onFailure

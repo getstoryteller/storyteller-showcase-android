@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/refreshLayout"
@@ -8,7 +9,6 @@
     tools:context=".MainActivity">
 
     <androidx.core.widget.NestedScrollView
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -18,46 +18,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/goToJetpackComposeScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="Jetpack Compose"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
-
             <TextView
                 android:paddingBottom="16dp"
                 android:textSize="32dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="RowView"
+                android:text="StoryRowView"
                 android:gravity="center"
                 />
 
             <com.storyteller.ui.list.StorytellerRowView
-                android:id="@+id/channelRowView"
+                android:id="@+id/storyteller_row_view"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 app:cellType="square" />
-
-
-            <TextView
-                android:paddingBottom="16dp"
-                android:textSize="32dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="GridView"
-                android:gravity="center"
-                />
-            <com.storyteller.ui.list.StorytellerGridView
-                android:id="@+id/channelGridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cellType="round"
-                />
 
             <Button
                 android:id="@+id/changeUserButton"
@@ -65,6 +39,28 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Change user"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
+
+            <Button
+                android:id="@+id/multipleListsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Multiple lists"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changeUserButton" />
+
+            <Button
+                android:id="@+id/goToJetpackComposeScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:text="Jetpack Compose"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
