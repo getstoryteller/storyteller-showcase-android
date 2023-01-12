@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
@@ -14,11 +13,15 @@ import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
 import com.example.storytellerSampleAndroid.multiple.MultipleListsActivity
 import com.storyteller.Storyteller
-import com.storyteller.domain.*
+import com.storyteller.domain.AdResponse
+import com.storyteller.domain.ClientStory
+import com.storyteller.domain.ListDescriptor
+import com.storyteller.domain.UserActivity
+import com.storyteller.domain.UserActivityData
 import com.storyteller.services.Error
 import com.storyteller.ui.list.StorytellerDelegate
 import com.storyteller.ui.list.StorytellerListViewDelegate
-import java.util.*
+import java.util.UUID
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDelegate,
     StorytellerListViewDelegate {
