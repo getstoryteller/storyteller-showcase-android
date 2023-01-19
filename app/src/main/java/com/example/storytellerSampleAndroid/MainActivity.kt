@@ -13,12 +13,12 @@ import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
 import com.example.storytellerSampleAndroid.multiple.MultipleListsActivity
 import com.storyteller.Storyteller
-import com.storyteller.domain.AdResponse
-import com.storyteller.domain.ClientStory
-import com.storyteller.domain.ListDescriptor
-import com.storyteller.domain.UserActivity
-import com.storyteller.domain.UserActivityData
-import com.storyteller.services.Error
+import com.storyteller.Storyteller.Companion.activityReentered
+import com.storyteller.domain.entities.UserActivity
+import com.storyteller.domain.entities.UserActivityData
+import com.storyteller.domain.entities.ads.AdResponse
+import com.storyteller.domain.entities.ads.ClientStory
+import com.storyteller.domain.entities.ads.ListDescriptor
 import com.storyteller.ui.list.StorytellerDelegate
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import java.util.UUID
@@ -77,6 +77,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         openDeepLink(intent)
     }
 
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        super.onActivityReenter(resultCode, data)
+        // This method allows smooth close transition syncing. It should be used inside `onActivityReenter` only.
+        activityReentered()
+    }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -118,7 +124,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
     Called when the data loading network request is complete
     For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#ErrorHandling
      */
-    override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+    override fun onDataLoadComplete(
+        success: Boolean,
+        error: com.storyteller.domain.entities.Error?,
+        dataCount: Int
+    ) {
         Log.i(
             "Storyteller Sample",
             "onDataLoadComplete callback: success $success, error $error, dataCount $dataCount"

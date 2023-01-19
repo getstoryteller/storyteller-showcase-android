@@ -2,8 +2,8 @@ package com.example.storytellerSampleAndroid.multiple.adapter
 
 import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
-import com.storyteller.domain.StorytellerListViewCellType
-import com.storyteller.domain.theme.builders.UiTheme
+import com.storyteller.domain.entities.StorytellerListViewCellType
+import com.storyteller.domain.entities.theme.builders.UiTheme
 import java.util.*
 
 data class UiPadding(

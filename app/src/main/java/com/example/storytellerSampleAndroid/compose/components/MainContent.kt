@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
 import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
 import com.example.storytellerSampleAndroid.compose.components.items.Header
-import com.storyteller.domain.StorytellerListViewCellType
+import com.storyteller.domain.entities.StorytellerListViewCellType
+
 import com.storyteller.sdk.compose.StorytellerComposeController
 import com.storyteller.sdk.compose.StorytellerGridView
 import com.storyteller.sdk.compose.StorytellerRowView

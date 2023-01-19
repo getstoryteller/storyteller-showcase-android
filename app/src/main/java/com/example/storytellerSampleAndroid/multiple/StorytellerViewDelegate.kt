@@ -1,7 +1,7 @@
 package com.example.storytellerSampleAndroid.multiple
 
 import android.util.Log
-import com.storyteller.services.Error
+import com.storyteller.domain.entities.Error
 import com.storyteller.ui.list.StorytellerListViewDelegate
 
 class StorytellerViewDelegate(private val rowId: String, val onDataFailed: (String) -> Unit) :

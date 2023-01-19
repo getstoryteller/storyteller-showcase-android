@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.storytellerSampleAndroid.multiple.adapter.UiElement
 import com.example.storytellerSampleAndroid.multiple.adapter.UiPadding
-import com.storyteller.domain.StorytellerListViewCellType
+import com.storyteller.domain.entities.StorytellerListViewCellType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
