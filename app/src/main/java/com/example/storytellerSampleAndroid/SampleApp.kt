@@ -3,15 +3,14 @@ package com.example.storytellerSampleAndroid
 import android.app.Application
 import android.util.Log
 import com.storyteller.Storyteller
-import com.storyteller.domain.UserInput
-import com.storyteller.domain.theme.builders.buildTheme
-import com.storyteller.services.Error
+import com.storyteller.domain.entities.UserInput
+import com.storyteller.domain.entities.theme.builders.buildTheme
+import com.storyteller.domain.entities.Error
 import java.util.UUID
 
 class SampleApp : Application() {
 
     companion object {
-
         fun initializeStoryteller(
             userId: String = UUID.randomUUID().toString(),
             onSuccess: () -> Unit = {},
@@ -32,7 +31,6 @@ class SampleApp : Application() {
         }
     }
 
-
     override fun onCreate() {
         super.onCreate()
         /*
@@ -47,13 +45,11 @@ class SampleApp : Application() {
 
             */
         }
-        initializeStoryteller(
-            onSuccess = {
-                Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
-            },
-            onFailure = { error ->
-                Log.i("Storyteller Sample", "initialize failed, error $error")
-            })
+        initializeStoryteller(onSuccess = {
+            Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
+        }, onFailure = { error ->
+            Log.i("Storyteller Sample", "initialize failed, error $error")
+        })
 
     }
 }

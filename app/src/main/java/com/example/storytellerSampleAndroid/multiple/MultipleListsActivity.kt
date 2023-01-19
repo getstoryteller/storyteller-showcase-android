@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.storytellerSampleAndroid.R
 import com.example.storytellerSampleAndroid.databinding.ActivityMultipleListsBinding
 import com.example.storytellerSampleAndroid.multiple.adapter.MultipleListsAdapter
+import com.storyteller.Storyteller.Companion.activityReentered
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -47,4 +48,9 @@ class MultipleListsActivity : AppCompatActivity(R.layout.activity_multiple_lists
         }.launchIn(lifecycleScope)
     }
 
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        super.onActivityReenter(resultCode, data)
+        // This method allows smooth close transition syncing. It should be used inside `onActivityReenter` only.
+        activityReentered()
+    }
 }
