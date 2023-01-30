@@ -69,6 +69,11 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     handleDeepLink(intent?.data)
   }
 
+  override fun onActivityReenter(resultCode: Int, data: Intent?) {
+    super.onActivityReenter(resultCode, data)
+    activityReentered()
+  }
+
   private fun handleDeepLink(data: Uri?) {
     if (data != null) {/*
        If your app needs to open specific story or page e.g. when opening an activity from a deep link,
