@@ -1,6 +1,7 @@
 package com.example.storytellerSampleAndroid.compose.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -102,7 +103,12 @@ fun MainContent(
       }
 
       item {
-        Row {
+        Row(
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 8.dp),
+          horizontalArrangement = Arrangement.SpaceAround
+        ) {
           ChangeUserContainer(onRefresh, coroutineScope, listState, viewModel)
           ToggleDarkModeContainer {
             viewModel.toggleDarkMode()
