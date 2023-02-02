@@ -2,6 +2,7 @@ package com.example.storytellerSampleAndroid.compose
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
 import androidx.lifecycle.lifecycleScope
 import com.example.storytellerSampleAndroid.OtherActivity
+import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel.JetpackComposeViewModelFactory
 import com.example.storytellerSampleAndroid.compose.components.MainContent
 import com.example.storytellerSampleAndroid.compose.components.TopBar
 import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleComposeTheme
@@ -34,7 +36,11 @@ import kotlinx.coroutines.launch
 
 class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
   StorytellerListViewDelegate {
-  private val viewModel: JetpackComposeViewModel by viewModels()
+
+  private val viewModel: JetpackComposeViewModel by viewModels {
+    JetpackComposeViewModelFactory(isDarkMode)
+  }
+
   private lateinit var controller: StorytellerComposeController
 
   private fun refresh() = lifecycleScope.launch {
@@ -48,18 +54,16 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     controller = StorytellerComposeController().bind(this)
 
     setContent {
-      StorytellerSampleComposeTheme {
-        Scaffold(
-          topBar = { TopBar() },
-          content = { paddingValues ->
-            MainContent(
-              paddingValues = paddingValues,
-              onRefresh = { refresh() },
-              viewModel = viewModel,
-              controller = controller,
-              storytellerListViewDelegate = this
-            )
-          })
+      StorytellerSampleComposeTheme(darkTheme = viewModel.isDarkMode.value) {
+        Scaffold(topBar = { TopBar() }, content = { paddingValues ->
+          MainContent(
+            paddingValues = paddingValues,
+            onRefresh = { refresh() },
+            viewModel = viewModel,
+            controller = controller,
+            storytellerListViewDelegate = this
+          )
+        })
       }
     }
   }
@@ -181,4 +185,6 @@ fun Context.toast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
   }
 }
+
+val Context.isDarkMode get() = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 

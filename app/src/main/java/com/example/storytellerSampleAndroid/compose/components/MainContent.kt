@@ -3,6 +3,7 @@ package com.example.storytellerSampleAndroid.compose.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -21,8 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
 import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
 import com.example.storytellerSampleAndroid.compose.components.items.Header
+import com.example.storytellerSampleAndroid.compose.components.items.ToggleDarkModeContainer
 import com.storyteller.domain.entities.StorytellerListViewCellType
-
+import com.storyteller.domain.entities.StorytellerListViewStyle
 import com.storyteller.sdk.compose.StorytellerComposeController
 import com.storyteller.sdk.compose.StorytellerGridView
 import com.storyteller.sdk.compose.StorytellerRowView
@@ -43,13 +46,23 @@ fun MainContent(
   val refreshing by remember { viewModel.refreshing }
   val ptrState = rememberPullRefreshState(refreshing, onRefresh)
   val rotation = animateFloatAsState(ptrState.progress * 120)
-
+  val darkMode by remember { viewModel.isDarkMode }
   Box(
     modifier = modifier
       .fillMaxSize()
       .padding(paddingValues)
       .pullRefresh(state = ptrState)
   ) {
+    LaunchedEffect(key1 = darkMode) {
+      val uiStyle = if (darkMode) {
+        StorytellerListViewStyle.DARK
+      } else {
+        StorytellerListViewStyle.LIGHT
+      }
+      controller.forEach { item ->
+        item.uiStyle = uiStyle
+      }
+    }
     LazyColumn(
       modifier = Modifier.fillMaxSize(),
       horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,7 +101,14 @@ fun MainContent(
         }
       }
 
-      item { ChangeUserContainer(onRefresh, coroutineScope, listState, viewModel) }
+      item {
+        Row {
+          ChangeUserContainer(onRefresh, coroutineScope, listState, viewModel)
+          ToggleDarkModeContainer {
+            viewModel.toggleDarkMode()
+          }
+        }
+      }
     }
 
     PullToRefresh(
