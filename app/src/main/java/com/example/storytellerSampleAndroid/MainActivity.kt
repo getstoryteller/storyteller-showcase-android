@@ -9,6 +9,7 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
+import com.example.storytellerSampleAndroid.ads.AdsActivity
 import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
 import com.example.storytellerSampleAndroid.multiple.MultipleListsActivity
@@ -72,6 +73,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         binding.goToJetpackComposeScreen.setOnClickListener {
                 val intent = Intent(this@MainActivity, JetpackComposeActivity::class.java)
                 startActivity(intent)
+        }
+
+        binding.goToAdsScreen.setOnClickListener {
+            val intent = Intent(this@MainActivity, AdsActivity::class.java)
+            startActivity(intent)
         }
 
         openDeepLink(intent)

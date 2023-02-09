@@ -52,6 +52,10 @@ dependencies {
      */
     def storyteller_compose_version = "1.0.0"
     implementation(group: "Storyteller", name: "sdk-compose", version: "$storyteller_compose_version")
+    /**
+     * GAM for ClientAds
+     */
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
 
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.core:core-ktx:1.9.0'
