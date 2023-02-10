@@ -88,9 +88,7 @@ class StorytellerAdsDelegate(
           .joinToString(",")
 
         val customMap = mapOf(
-          "objId" to story.id,
           "storytellerStoryId" to story.id,
-          "storyCat" to storyCategories,
           "storytellerCategories" to storyCategories,
           "storytellerPlacement" to listDescriptor.placement,
           "storytellerCurrentCategory" to listDescriptor.categories.joinToString(separator = ",")
