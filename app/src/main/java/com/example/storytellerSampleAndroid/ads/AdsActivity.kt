@@ -31,7 +31,7 @@ class AdsActivity : AppCompatActivity(R.layout.activity_ads) {
 
     binding = ActivityAdsBinding.inflate(layoutInflater)
     setContentView(binding.root)
-
+    // set global delegate which can handle ads
     Storyteller.storytellerDelegate = StorytellerAdsDelegate(NativeAdsManager(this))
 
     binding.storytellerRowView.reloadData()

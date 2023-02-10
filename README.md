@@ -49,7 +49,9 @@ To use the library, first configure it with the correct values from GAM:
 </manifest>
  ```
 
-You also need to supply a format id and unit id in `StorytellerAdsDelegate.kt`:
+[AndroidManifest.xml](https://github.com/getstoryteller/storyteller-sample-android/blob/dbaf19569d2f219520f7aa0a074b24f05576a5b9/app/src/main/AndroidManifest.xml#L57) 
+
+You also need to supply a format id and unit id in [StorytellerAdsDelegate.kt](https://github.com/getstoryteller/storyteller-sample-android/blob/dbaf19569d2f219520f7aa0a074b24f05576a5b9/app/src/main/java/com/example/storytellerSampleAndroid/ads/StorytellerAdsDelegate.kt#L38):
 
 ```kotlin
     companion object {
@@ -67,7 +69,7 @@ Steps above should be sufficient to see ads with you own GAM config.
 
 ### Connect to the Storyteller SDK
 
-Connect the `getAdsForList` callback to get the Native ads:
+Connect the [getAdsForList](https://github.com/getstoryteller/storyteller-sample-android/blob/dbaf19569d2f219520f7aa0a074b24f05576a5b9/app/src/main/java/com/example/storytellerSampleAndroid/ads/StorytellerAdsDelegate.kt#L57) callback to get the Native ads:
 
 ```kotlin
 override fun getAdsForList(
@@ -92,7 +94,7 @@ override fun getAdsForList(
 
 ### Ensure Ad Tracking behaves correctly
 
-Now connect the `onUserActivityOccurred` method to check if ad events are fired:
+Now connect the [onUserActivityOccurred](https://github.com/getstoryteller/storyteller-sample-android/blob/dbaf19569d2f219520f7aa0a074b24f05576a5b9/app/src/main/java/com/example/storytellerSampleAndroid/ads/StorytellerAdsDelegate.kt#L125) callback to check if ad events are fired:
 
  ```kotlin
 override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
