@@ -27,6 +27,8 @@ import com.example.storytellerSampleAndroid.compose.components.items.Header
 import com.example.storytellerSampleAndroid.compose.components.items.ToggleDarkModeContainer
 import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.StorytellerListViewStyle
+import com.storyteller.sdk.compose.StorytellerClipsGridView
+import com.storyteller.sdk.compose.StorytellerClipsRowView
 import com.storyteller.sdk.compose.StorytellerComposeController
 import com.storyteller.sdk.compose.StorytellerGridView
 import com.storyteller.sdk.compose.StorytellerRowView
@@ -98,6 +100,36 @@ fun MainContent(
           delegate = storytellerListViewDelegate
           cellType = StorytellerListViewCellType.ROUND
           categories = listOf()
+          reloadData()
+        }
+      }
+      item {
+        Header("Clips Row View")
+      }
+      item {
+        StorytellerClipsRowView(
+          modifier = Modifier.fillMaxWidth(),
+          tag = "clips_row",
+          controller = controller
+        ) {
+          delegate = storytellerListViewDelegate
+          cellType = StorytellerListViewCellType.SQUARE
+          collection = "clipssample"
+          reloadData()
+        }
+      }
+      item {
+        Header("Clips Grid View")
+      }
+      item {
+        StorytellerClipsGridView(
+          modifier = Modifier.fillMaxWidth(),
+          tag = "clips_grid",
+          controller = controller
+        ) {
+          delegate = storytellerListViewDelegate
+          cellType = StorytellerListViewCellType.SQUARE
+          collection = "clipssample"
           reloadData()
         }
       }
