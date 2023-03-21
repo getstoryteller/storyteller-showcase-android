@@ -12,6 +12,7 @@ import com.example.storytellerSampleAndroid.databinding.ListClipRowBinding
 import com.example.storytellerSampleAndroid.databinding.ListStoryGridBinding
 import com.example.storytellerSampleAndroid.databinding.ListStoryRowBinding
 import com.example.storytellerSampleAndroid.multiple.StorytellerViewDelegate
+import com.example.storytellerSampleAndroid.theme.StorytellerThemes
 import kotlin.math.roundToInt
 
 fun Int.dpToPx(context: Context): Int {
@@ -48,6 +49,9 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) : DemoElement
       }
       this.delegate = StorytellerViewDelegate(storyRow.id, storyRow.onFailure)
       categories = storyRow.categories
+      // set different theme than the Global one in SampleApp
+      theme = StorytellerThemes.getCustomTheme(context)
+
       if (storyRow.forceDataReload) {
         reloadData()
         storyRow.forceDataReload = false
@@ -71,6 +75,9 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) : DemoEleme
       this.cellType = storyGrid.cellType
       this.delegate = StorytellerViewDelegate(storyGrid.id, storyGrid.onFailure)
       categories = storyGrid.categories
+      // set different theme than the Global one in SampleApp
+      theme = StorytellerThemes.getCustomTheme(context)
+
       if (storyGrid.forceDataReload) {
         reloadData()
         storyGrid.forceDataReload = false
