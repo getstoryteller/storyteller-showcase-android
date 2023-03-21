@@ -2,9 +2,9 @@ package com.example.storytellerSampleAndroid
 
 import android.app.Application
 import android.util.Log
+import com.example.storytellerSampleAndroid.theme.StorytellerThemes
 import com.storyteller.Storyteller
 import com.storyteller.domain.entities.UserInput
-import com.storyteller.domain.entities.theme.builders.buildTheme
 import com.storyteller.domain.entities.Error
 import java.util.UUID
 
@@ -34,17 +34,12 @@ class SampleApp : Application() {
     override fun onCreate() {
         super.onCreate()
         /*
-        The SDK allows to customize theme for Storyteller.
-        Make sure that global theme is initialized before views are being inflated or created.
-        */
-        Storyteller.theme = buildTheme(this) {
-            /* MODIFY your theme here
-             eg.
-            light.colors.primary = ofHexCode("#FF00FF")
-            dark from light
+       The SDK allows to customize theme for Storyteller.
+       Make sure that global theme is initialized before views are being inflated or created.
+       */
+        Storyteller.theme = StorytellerThemes.getGlobalTheme(this)
 
-            */
-        }
+
         initializeStoryteller(onSuccess = {
             Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
         }, onFailure = { error ->
