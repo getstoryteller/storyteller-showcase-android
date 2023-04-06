@@ -12,7 +12,7 @@
         android:paddingTop="8dp"
         android:layout_height="wrap_content">
 
-        <com.storyteller.ui.list.StorytellerRowView
+        <com.storyteller.ui.list.StorytellerStoriesRowView
             android:id="@+id/storyteller_row_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"

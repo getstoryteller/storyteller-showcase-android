@@ -3,7 +3,6 @@ package com.example.storytellerSampleAndroid.multiple.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.storyteller.ui.list.StorytellerGridView
 
 class MultipleListsAdapter(
   data: List<UiElement> = listOf()

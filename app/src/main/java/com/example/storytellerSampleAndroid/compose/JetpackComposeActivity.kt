@@ -23,12 +23,11 @@ import com.example.storytellerSampleAndroid.compose.components.TopBar
 import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleComposeTheme
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
+import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.Error
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
 import com.storyteller.domain.entities.ads.AdResponse
-import com.storyteller.domain.entities.ads.ClientStory
-import com.storyteller.domain.entities.ads.ListDescriptor
 import com.storyteller.sdk.compose.StorytellerComposeController
 import com.storyteller.ui.list.StorytellerDelegate
 import com.storyteller.ui.list.StorytellerListViewDelegate
@@ -94,9 +93,9 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     }
   }
 
-  /*
-  Called when the data loading network request is complete
-  For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#ErrorHandling
+  /**
+   * Called when the data loading network request is complete
+   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#ErrorHandling
    */
   override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
     Log.i(
@@ -109,40 +108,32 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     }
   }
 
-  /*
-  Called when the network request to load data for all stories has started
+  /**
+   * Called when the network request to load data for all stories has started
    */
   override fun onDataLoadStarted() {
     Log.i("Storyteller Sample", "onDataLoadStarted callback")
   }
 
-  /*
-  Called when story player has been dismissed
+  /**
+   * Called when story player has been dismissed
    */
   override fun onPlayerDismissed() {
     Log.i("Storyteller Sample", "onPlayerDismissed callback")
   }
 
-  /*
-   Called when an analytics event is triggered
-   For more info, see - https://www.getstoryteller.com/documentation/android/analytics
+  /**
+   * Called when an analytics event is triggered
+   * For more info, see - https://www.getstoryteller.com/documentation/android/analytics
    */
   override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
     Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
   }
 
-  /*
-  Called whenever a tile is visible in the story view
-  For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#TileVisibility
-   */
-  override fun tileBecameVisible(contentIndex: Int) {
-    Log.i("Storyteller Sample", "tileBecameVisible: storyIndex $contentIndex")
-  }
-
-  /*
-  Called when a user swipes up on a page which should direct the user
-  to a specific place within the integrating app.
-  For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#SwipingUpToTheIntegratingApp
+  /**
+   * Called when a user swipes up on a page which should direct the user
+   * to a specific place within the integrating app.
+   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#SwipingUpToTheIntegratingApp
    */
   override fun userNavigatedToApp(url: String) {
     Log.i("Storyteller Sample", "userNavigatedToApp: swipeUpUrl $url")
@@ -152,32 +143,27 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
     })
   }
 
-  /*
- Called when a user swipes up on a page which opens a web link.
- Allows to configure WebViewClient if required.
- For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#HowToUse
-  */
+  /**
+   * Called when a user swipes up on a page which opens a web link.
+   * Allows to configure WebViewClient if required.
+   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#HowToUse
+   */
   override fun configureWebView(view: WebView, url: String?, favicon: Bitmap?) {
     Log.i("Storyteller Sample", "configureWebView $url")
   }
 
+  /**
+   * Called when the tenant is configured to request ads from the containing app
+   * and the SDK requires ad data from the containing app
+   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#ClientAds
+   */
   override fun getAdsForList(
-    listDescriptor: ListDescriptor,
-    stories: List<ClientStory>,
+    adRequestInfo: StorytellerAdRequestInfo,
     onComplete: (AdResponse) -> Unit,
     onError: () -> Unit
   ) {
-    Log.i("Storyteller Sample", "getAdsForRow: stories $stories")
+    Log.i("Storyteller Sample", "getAdsForRow: stories $adRequestInfo")
   }
-
-  /*
-  Called when the tenant is configured to request ads from the containing app
-  and the SDK requires ad data from the containing app
-  For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#ClientAds
-   */
-  override fun getAdsForList(
-    stories: List<ClientStory>, onComplete: (AdResponse) -> Unit, onError: () -> Unit
-  ) = Unit
 }
 
 fun Context.toast(text: String) {

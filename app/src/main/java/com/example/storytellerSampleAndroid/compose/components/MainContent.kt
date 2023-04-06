@@ -30,8 +30,8 @@ import com.storyteller.domain.entities.StorytellerListViewStyle
 import com.storyteller.sdk.compose.StorytellerClipsGridView
 import com.storyteller.sdk.compose.StorytellerClipsRowView
 import com.storyteller.sdk.compose.StorytellerComposeController
-import com.storyteller.sdk.compose.StorytellerGridView
-import com.storyteller.sdk.compose.StorytellerRowView
+import com.storyteller.sdk.compose.StorytellerStoriesGridView
+import com.storyteller.sdk.compose.StorytellerStoriesRowView
 import com.storyteller.ui.list.StorytellerListViewDelegate
 
 @Composable
@@ -75,7 +75,7 @@ fun MainContent(
         Header("Row View")
       }
       item {
-        StorytellerRowView(
+        StorytellerStoriesRowView(
           modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
@@ -92,7 +92,7 @@ fun MainContent(
         Header("Grid View")
       }
       item {
-        StorytellerGridView(
+        StorytellerStoriesGridView(
           modifier = Modifier.fillMaxWidth(),
           tag = "grid",
           controller = controller

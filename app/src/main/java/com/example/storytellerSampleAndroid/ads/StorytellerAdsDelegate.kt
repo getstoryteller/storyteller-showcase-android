@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
-import com.google.android.gms.ads.nativead.NativeCustomFormatAd
-import com.storyteller.domain.entities.UserActivity
 import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.ADVERTISER_NAME
 import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.CLICK_CTA
 import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.CLICK_TYPE
@@ -20,16 +18,24 @@ import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.TRACKING_U
 import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.VIDEO
 import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.VIDEO_URL
 import com.example.storytellerSampleAndroid.ads.AdConstants.Companion.WEB
+import com.example.storytellerSampleAndroid.ads.StorytellerAdsDelegate.StorytellerNativeAd.StorytellerClipsNativeAd
+import com.example.storytellerSampleAndroid.ads.StorytellerAdsDelegate.StorytellerNativeAd.StorytellerStoriesNativeAd
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd
+import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
+import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo.ClipsAdRequestInfo
+import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo.StoriesAdRequestInfo
+import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
-import com.storyteller.domain.entities.ads.*
-import com.storyteller.remote.dtos.TrackingPixelClientAd
+import com.storyteller.domain.entities.ads.AdResponse
+import com.storyteller.domain.entities.ads.ClientAction
+import com.storyteller.domain.entities.ads.ClientAd
+import com.storyteller.remote.ads.TrackingPixelClientAd
 import com.storyteller.ui.list.StorytellerDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class StorytellerAdsDelegate(
   private val nativeAdsManager: NativeAdsManager
@@ -41,33 +47,104 @@ class StorytellerAdsDelegate(
   }
 
   private var adsRequested: Int = 0
-  private val storiesNativeAds: MutableMap<String, StoryNativeAd> = mutableMapOf()
+  private val storiesNativeAds: MutableMap<String, StorytellerStoriesNativeAd> = mutableMapOf()
+  private val clipsNativeAds: MutableMap<String, StorytellerClipsNativeAd> = mutableMapOf()
   private val storytellerScope = CoroutineScope(Dispatchers.Main + Job())
 
-  /**
-   * Deprecated
-   * ads will be provided by newer overloaded version.
-   */
   override fun getAdsForList(
-    stories: List<ClientStory>,
+    adRequestInfo: StorytellerAdRequestInfo,
     onComplete: (AdResponse) -> Unit,
     onError: () -> Unit
-  ) = Unit
+  ) {
+    when (adRequestInfo) {
+      is ClipsAdRequestInfo -> {
+        handleClipAds(adRequestInfo, onComplete, onError)
+      }
+      is StoriesAdRequestInfo -> {
+        handleStoryAds(adRequestInfo, onComplete, onError)
 
-  override fun getAdsForList(
-    listDescriptor: ListDescriptor,
-    stories: List<ClientStory>,
+      }
+    }
+  }
+
+  private fun handleClipAds(
+    adRequestInfo: ClipsAdRequestInfo,
     onComplete: (AdResponse) -> Unit,
     onError: () -> Unit
   ) {
     adsRequested = 0
+    val clips = adRequestInfo.clips
+
+    val shouldUpdateClientAds = {
+      adsRequested++
+      if (adsRequested == clips.size) {
+        val adsResponse = clipsNativeAds.mapNotNull { (creativeId, entry) ->
+          val id = entry.entity.id
+          val ad = entry.nativeAd?.toClientAd(creativeId)
+          // Storyteller supports only video ads for clips
+          if (ad?.video.isNullOrEmpty()) {
+            return@mapNotNull null
+          }
+          id to ad
+        }.toMap()
+
+        Log.i("StorytellerAds", "getAdsForList COMPLETED: $adsResponse")
+        try {
+          onComplete(adsResponse)
+        } catch (ex: Exception) {
+          onError()
+          Log.w("StorytellerAds", "Failed to send ads to storyteller", ex)
+        }
+      } else {
+        Log.i("StorytellerAds", "Getting more ads")
+      }
+    }
+    storytellerScope.launch {
+      for (clip in clips) {
+        val clipCollection = clip.collection
+
+        val customMap = mapOf(
+          "storytellerStoryId" to clip.id,
+          "storytellerCollection" to clipCollection,
+          "storytellerPlacement" to adRequestInfo.placement,
+        )
+
+        nativeAdsManager.requestAd(
+          adUnit = adUnitId,
+          formatId = formatId,
+          customMap = customMap, // custom targeting params
+          onAdDataLoaded = { ad ->
+            if (ad != null) {
+              val creativeId = ad.getText(AdConstants.CREATIVE_ID)?.toString()
+              if (creativeId != null) {
+                clipsNativeAds[creativeId] = StorytellerClipsNativeAd(clip, ad)
+              }
+            }
+            shouldUpdateClientAds()
+          },
+          onAdDataFailed = {
+            shouldUpdateClientAds()
+          }
+        )
+      }
+    }
+  }
+
+  private fun handleStoryAds(
+    adRequestInfo: StoriesAdRequestInfo,
+    onComplete: (AdResponse) -> Unit,
+    onError: () -> Unit
+  ) {
+    adsRequested = 0
+    val stories = adRequestInfo.stories
+
     val shouldUpdateClientAds = {
       adsRequested++
       if (adsRequested == stories.size) {
-        val adsResponse = storiesNativeAds.map { (key, entry) ->
-          val storyId = entry.story.id
-          val ad = entry.nativeAd?.toClientAd(key)
-          storyId to ad
+        val adsResponse = storiesNativeAds.map { (creativeId, entry) ->
+          val id = entry.entity.id
+          val ad = entry.nativeAd?.toClientAd(creativeId)
+          id to ad
         }.toMap()
 
         Log.i("StorytellerAds", "getAdsForList COMPLETED: $adsResponse")
@@ -90,8 +167,8 @@ class StorytellerAdsDelegate(
         val customMap = mapOf(
           "storytellerStoryId" to story.id,
           "storytellerCategories" to storyCategories,
-          "storytellerPlacement" to listDescriptor.placement,
-          "storytellerCurrentCategory" to listDescriptor.categories.joinToString(separator = ",")
+          "storytellerPlacement" to adRequestInfo.placement,
+          "storytellerCurrentCategory" to adRequestInfo.categories.joinToString(separator = ",")
         )
 
         nativeAdsManager.requestAd(
@@ -102,7 +179,7 @@ class StorytellerAdsDelegate(
             if (ad != null) {
               val creativeId = ad.getText(AdConstants.CREATIVE_ID)?.toString()
               if (creativeId != null) {
-                storiesNativeAds[creativeId] = StoryNativeAd(story, ad)
+                storiesNativeAds[creativeId] = StorytellerStoriesNativeAd(story, ad)
               }
             }
             shouldUpdateClientAds()
@@ -116,7 +193,6 @@ class StorytellerAdsDelegate(
   }
 
   override fun configureWebView(view: WebView, url: String?, favicon: Bitmap?) = Unit
-
 
   override fun userNavigatedToApp(url: String) = Unit
 
@@ -273,6 +349,19 @@ class StorytellerAdsDelegate(
             this == UserActivity.EventType.DISMISSED_STORY ||
             this == UserActivity.EventType.DISMISSED_CLIP
 
-  private data class StoryNativeAd(val story: ClientStory, val nativeAd: NativeCustomFormatAd?)
+  /**
+   * Data class to help binds native ad to the story it was requested for.
+   */
+  private sealed class StorytellerNativeAd {
+    data class StorytellerStoriesNativeAd(
+      val entity: StoriesAdRequestInfo.StoryInfo,
+      val nativeAd: NativeCustomFormatAd?
+    ) : StorytellerNativeAd()
+
+    data class StorytellerClipsNativeAd(
+      val entity: ClipsAdRequestInfo.ClipInfo,
+      val nativeAd: NativeCustomFormatAd?
+    ) : StorytellerNativeAd()
+  }
 }
 

@@ -5,19 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.storytellerSampleAndroid.R
-import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.example.storytellerSampleAndroid.databinding.ActivityAdsBinding
-import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
-import com.example.storytellerSampleAndroid.multiple.MultipleListsActivity
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
-import com.storyteller.domain.entities.UserActivityData
-import com.storyteller.domain.entities.ads.AdResponse
-import com.storyteller.domain.entities.ads.ClientStory
-import com.storyteller.domain.entities.ads.ListDescriptor
-import com.storyteller.ui.list.StorytellerDelegate
-import com.storyteller.ui.list.StorytellerListViewDelegate
-import java.util.UUID
 
 class AdsActivity : AppCompatActivity(R.layout.activity_ads) {
 

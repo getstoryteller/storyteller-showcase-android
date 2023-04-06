@@ -33,12 +33,4 @@ class StorytellerViewDelegate(private val rowId: String, val onDataFailed: (Stri
   override fun onPlayerDismissed() {
     Log.i("Storyteller Sample", "onPlayerDismissed callback")
   }
-
-  /*
-  Called whenever a tile is visible in the story view
-  For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-list-view-delegate#TileVisibility
-   */
-  override fun tileBecameVisible(contentIndex: Int) {
-    Log.i("Storyteller Sample", "tileBecameVisible: storyIndex $contentIndex")
-  }
 }

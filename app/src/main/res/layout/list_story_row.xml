@@ -13,7 +13,7 @@
         android:text="StoryRowView"
         android:textSize="16sp" />
 
-    <com.storyteller.ui.list.StorytellerRowView
+    <com.storyteller.ui.list.StorytellerStoriesRowView
         android:id="@+id/storytellerRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
