@@ -1,7 +1,6 @@
 package com.example.storytellerSampleAndroid.compose.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,9 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
+import com.example.storytellerSampleAndroid.compose.components.items.Banner
 import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
 import com.example.storytellerSampleAndroid.compose.components.items.Header
 import com.example.storytellerSampleAndroid.compose.components.items.ToggleDarkModeContainer
+import com.example.storytellerSampleAndroid.compose.theme.random
 import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.StorytellerListViewStyle
 import com.storyteller.sdk.compose.StorytellerClipsGridView
@@ -52,10 +53,11 @@ fun MainContent(
   val ptrState = rememberPullRefreshState(refreshing, onRefresh)
   val rotation = animateFloatAsState(ptrState.progress * 120)
   val darkMode by remember { viewModel.isDarkMode }
-  val randomColor1 = remember { randomColor() }
-  val randomColor2 = remember { randomColor() }
-  val randomColor3 = remember { randomColor() }
-  val randomColor4 = remember { randomColor() }
+
+  val randomColor1 = remember { Color.random() }
+  val randomColor2 = remember { Color.random() }
+  val randomColor3 = remember { Color.random() }
+  val randomColor4 = remember { Color.random() }
 
   Box(
     modifier = modifier
@@ -78,9 +80,7 @@ fun MainContent(
       horizontalAlignment = Alignment.CenterHorizontally,
       state = listState
     ) {
-      item {
-        Header("Row View")
-      }
+      item { Header("Row View") }
       item {
         StorytellerStoriesRowView(
           modifier = Modifier
@@ -95,21 +95,8 @@ fun MainContent(
           reloadData()
         }
       }
-      item { Header(text = "Banner") }
-      item {
-        // banner
-
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .background(color = randomColor1)
-        ) {
-        }
-      }
-      item {
-        Header("Grid View")
-      }
+      item { Banner(randomColor1) }
+      item { Header("Grid View") }
       item {
         StorytellerStoriesGridView(
           modifier = Modifier.fillMaxWidth(),
@@ -122,21 +109,8 @@ fun MainContent(
           reloadData()
         }
       }
-      item { Header(text = "Banner") }
-      item {
-        // banner
-
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .background(color = randomColor2)
-        ) {
-        }
-      }
-      item {
-        Header("Clips Row View")
-      }
+      item { Banner(randomColor2) }
+      item { Header("Clips Row View") }
       item {
         StorytellerClipsRowView(
           modifier = Modifier.fillMaxWidth(),
@@ -149,21 +123,8 @@ fun MainContent(
           reloadData()
         }
       }
-      item { Header(text = "Banner") }
-      item {
-        // banner
-
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .background(color = randomColor3)
-        ) {
-        }
-      }
-      item {
-        Header("Clips Grid View")
-      }
+      item { Banner(randomColor3) }
+      item { Header("Clips Grid View") }
       item {
         StorytellerClipsGridView(
           modifier = Modifier.fillMaxWidth(),
@@ -176,17 +137,7 @@ fun MainContent(
           reloadData()
         }
       }
-      item { Header(text = "Banner") }
-      item {
-        // banner
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .background(color = randomColor4)
-        ) {
-        }
-      }
+      item { Banner(randomColor4) }
       item {
         Row(
           modifier = Modifier
@@ -211,14 +162,4 @@ fun MainContent(
     )
   }
 }
-
-private fun randomColor() = Color(
-  red = (0..255).random(),
-  green = (0..255).random(),
-  blue = (0..255).random()
-)
-
-
-
-
 
