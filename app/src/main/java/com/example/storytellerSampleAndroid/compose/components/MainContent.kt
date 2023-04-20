@@ -1,6 +1,7 @@
 package com.example.storytellerSampleAndroid.compose.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
 import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
@@ -50,6 +52,11 @@ fun MainContent(
   val ptrState = rememberPullRefreshState(refreshing, onRefresh)
   val rotation = animateFloatAsState(ptrState.progress * 120)
   val darkMode by remember { viewModel.isDarkMode }
+  val randomColor1 = remember { randomColor() }
+  val randomColor2 = remember { randomColor() }
+  val randomColor3 = remember { randomColor() }
+  val randomColor4 = remember { randomColor() }
+
   Box(
     modifier = modifier
       .fillMaxSize()
@@ -88,6 +95,18 @@ fun MainContent(
           reloadData()
         }
       }
+      item { Header(text = "Banner") }
+      item {
+        // banner
+
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(color = randomColor1)
+        ) {
+        }
+      }
       item {
         Header("Grid View")
       }
@@ -101,6 +120,18 @@ fun MainContent(
           cellType = StorytellerListViewCellType.ROUND
           categories = listOf()
           reloadData()
+        }
+      }
+      item { Header(text = "Banner") }
+      item {
+        // banner
+
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(color = randomColor2)
+        ) {
         }
       }
       item {
@@ -118,6 +149,18 @@ fun MainContent(
           reloadData()
         }
       }
+      item { Header(text = "Banner") }
+      item {
+        // banner
+
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(color = randomColor3)
+        ) {
+        }
+      }
       item {
         Header("Clips Grid View")
       }
@@ -133,7 +176,17 @@ fun MainContent(
           reloadData()
         }
       }
-
+      item { Header(text = "Banner") }
+      item {
+        // banner
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(color = randomColor4)
+        ) {
+        }
+      }
       item {
         Row(
           modifier = Modifier
@@ -158,6 +211,12 @@ fun MainContent(
     )
   }
 }
+
+private fun randomColor() = Color(
+  red = (0..255).random(),
+  green = (0..255).random(),
+  blue = (0..255).random()
+)
 
 
 
