@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class JetpackComposeViewModel(
-  initialUiMode: Boolean
+  initialUiMode: Boolean,
+  sampleStorytellerDelegate: SampleStorytellerDelegate
 ) : ViewModel() {
   private var _refreshing = mutableStateOf(false)
   val refreshing: State<Boolean> get() = _refreshing
+
+  val userNavigatedToApp = sampleStorytellerDelegate.userNavigatedToApp
 
   private var _isDarkMode = mutableStateOf(initialUiMode)
   val isDarkMode: State<Boolean> get() = _isDarkMode
@@ -26,9 +29,12 @@ class JetpackComposeViewModel(
     _isDarkMode.value = !_isDarkMode.value
   }
 
-  class JetpackComposeViewModelFactory(private val initialUiMode: Boolean): ViewModelProvider.NewInstanceFactory() {
+  class JetpackComposeViewModelFactory(
+    private val initialUiMode: Boolean,
+    private val storytellerDelegate: SampleStorytellerDelegate
+  ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-      return JetpackComposeViewModel(initialUiMode) as T
+      return JetpackComposeViewModel(initialUiMode, storytellerDelegate) as T
     }
   }
 }

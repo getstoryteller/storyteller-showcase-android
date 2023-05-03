@@ -21,9 +21,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
 import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
 import com.example.storytellerSampleAndroid.compose.components.items.Header
+import com.example.storytellerSampleAndroid.compose.components.items.NavigatedToApp
 import com.example.storytellerSampleAndroid.compose.components.items.ToggleDarkModeContainer
 import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.StorytellerListViewStyle
@@ -41,7 +43,8 @@ fun MainContent(
   onRefresh: () -> Unit,
   viewModel: JetpackComposeViewModel,
   controller: StorytellerComposeController,
-  storytellerListViewDelegate: StorytellerListViewDelegate
+  storytellerListViewDelegate: StorytellerListViewDelegate,
+  onUserNavigatedToApp: (String) -> Unit
 ) {
   val coroutineScope = rememberCoroutineScope()
   val listState = rememberLazyListState()
@@ -131,6 +134,19 @@ fun MainContent(
           cellType = StorytellerListViewCellType.SQUARE
           collection = "clipssample"
           reloadData()
+        }
+      }
+
+      item {
+        Row(
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 8.dp),
+          horizontalArrangement = Arrangement.SpaceAround
+        ) {
+          val userNavigatedToApp by viewModel.userNavigatedToApp
+            .collectAsStateWithLifecycle(initialValue = "")
+          NavigatedToApp(text = userNavigatedToApp, onUserNavigatedToApp = onUserNavigatedToApp)
         }
       }
 

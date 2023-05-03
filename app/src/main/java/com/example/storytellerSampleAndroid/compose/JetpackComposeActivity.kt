@@ -3,13 +3,11 @@ package com.example.storytellerSampleAndroid.compose
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,21 +21,21 @@ import com.example.storytellerSampleAndroid.compose.components.TopBar
 import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleComposeTheme
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
-import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.Error
-import com.storyteller.domain.entities.UserActivity
-import com.storyteller.domain.entities.UserActivityData
-import com.storyteller.domain.entities.ads.AdResponse
 import com.storyteller.sdk.compose.StorytellerComposeController
-import com.storyteller.ui.list.StorytellerDelegate
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import kotlinx.coroutines.launch
 
-class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
-  StorytellerListViewDelegate {
+class JetpackComposeActivity : ComponentActivity(), StorytellerListViewDelegate {
+
+  // will be created from other classes (e.g. StorytellerDiModule)
+  private val sampleStorytellerDelegate: SampleStorytellerDelegate = SampleStorytellerDelegateImpl()
+
 
   private val viewModel: JetpackComposeViewModel by viewModels {
-    JetpackComposeViewModelFactory(isDarkMode)
+    // We can inject this at the View leve or the VM level
+    // at this example we are using manual DI, so we are injecting it at the VM level
+    JetpackComposeViewModelFactory(isDarkMode, sampleStorytellerDelegate)
   }
 
   private lateinit var controller: StorytellerComposeController
@@ -49,7 +47,7 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Storyteller.storytellerDelegate = this
+    Storyteller.storytellerDelegate = sampleStorytellerDelegate
     controller = StorytellerComposeController().bind(this)
 
     setContent {
@@ -60,7 +58,12 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
             onRefresh = { refresh() },
             viewModel = viewModel,
             controller = controller,
-            storytellerListViewDelegate = this
+            storytellerListViewDelegate = this,
+            onUserNavigatedToApp = { url ->
+              startActivity(Intent(this, OtherActivity::class.java).apply {
+                putExtra("EXTRA_SWIPE_URL", url)
+              })
+            }
           )
         })
       }
@@ -120,49 +123,6 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerDelegate,
    */
   override fun onPlayerDismissed() {
     Log.i("Storyteller Sample", "onPlayerDismissed callback")
-  }
-
-  /**
-   * Called when an analytics event is triggered
-   * For more info, see - https://www.getstoryteller.com/documentation/android/analytics
-   */
-  override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
-    Log.i("Storyteller Sample", "onUserActivityOccurred: type $type data $data")
-  }
-
-  /**
-   * Called when a user swipes up on a page which should direct the user
-   * to a specific place within the integrating app.
-   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#SwipingUpToTheIntegratingApp
-   */
-  override fun userNavigatedToApp(url: String) {
-    Log.i("Storyteller Sample", "userNavigatedToApp: swipeUpUrl $url")
-    // Pass swipeUpUrl from SDK callback to OtherActivity where it can be accessed as an extra string value when it is started
-    startActivity(Intent(this, OtherActivity::class.java).apply {
-      putExtra("EXTRA_SWIPE_URL", url)
-    })
-  }
-
-  /**
-   * Called when a user swipes up on a page which opens a web link.
-   * Allows to configure WebViewClient if required.
-   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#HowToUse
-   */
-  override fun configureWebView(view: WebView, url: String?, favicon: Bitmap?) {
-    Log.i("Storyteller Sample", "configureWebView $url")
-  }
-
-  /**
-   * Called when the tenant is configured to request ads from the containing app
-   * and the SDK requires ad data from the containing app
-   * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#ClientAds
-   */
-  override fun getAdsForList(
-    adRequestInfo: StorytellerAdRequestInfo,
-    onComplete: (AdResponse) -> Unit,
-    onError: () -> Unit
-  ) {
-    Log.i("Storyteller Sample", "getAdsForRow: stories $adRequestInfo")
   }
 }
 
