@@ -50,6 +50,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".ads.AdsActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".EmbeddedClipActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".OtherActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".compose.JetpackComposeActivity"

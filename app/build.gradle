@@ -44,9 +44,10 @@ android {
 
 dependencies {
 
-    def storyteller_version = "9.1.6"
-    implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
-
+    def storyteller_version = "9.2.0"
+    //TODO change after
+//    implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
+    implementation("Storyteller:sdk:9.1.6-local-release_9.2.0-dce1255f9")
     /**
      * If you want to use the Storyteller Compose SDK, you need to add the following dependency:
      */
