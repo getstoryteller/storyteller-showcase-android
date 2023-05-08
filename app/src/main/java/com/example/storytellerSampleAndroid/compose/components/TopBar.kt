@@ -47,7 +47,7 @@ fun TopBar() {
       )
       Text(
         modifier = Modifier.align(Alignment.Bottom),
-        text = "v${Storyteller.version.substringBefore("-")}",
+        text = "v${Storyteller.version.calculateVersion()}",
         style = MaterialTheme.typography.bodySmall
       )
       Image(
@@ -59,7 +59,7 @@ fun TopBar() {
       )
       Text(
         modifier = Modifier.align(Alignment.Bottom),
-        text = "v${Storyteller.composeVersion.substringBefore("-")}",
+        text = "v${Storyteller.composeVersion.calculateVersion()}",
         style = MaterialTheme.typography.bodySmall
       )
     }
@@ -74,4 +74,10 @@ fun TopBar() {
       )
     }
   }
+}
+
+private fun String.calculateVersion(): String {
+  val substringBefore = this.substringBefore("-")
+  val localPart  = if (this.contains("local", true)) "-local" else ""
+  return substringBefore + localPart
 }
