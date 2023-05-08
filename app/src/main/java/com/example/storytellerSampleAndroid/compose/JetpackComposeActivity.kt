@@ -12,12 +12,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.Scaffold
 import androidx.lifecycle.lifecycleScope
 import com.example.storytellerSampleAndroid.OtherActivity
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel.JetpackComposeViewModelFactory
-import com.example.storytellerSampleAndroid.compose.components.MainContent
-import com.example.storytellerSampleAndroid.compose.components.TopBar
+import com.example.storytellerSampleAndroid.compose.components.MainEntrypoint
 import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleComposeTheme
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
@@ -52,20 +50,16 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerListViewDelegate 
 
     setContent {
       StorytellerSampleComposeTheme(darkTheme = viewModel.isDarkMode.value) {
-        Scaffold(topBar = { TopBar() }, content = { paddingValues ->
-          MainContent(
-            paddingValues = paddingValues,
-            onRefresh = { refresh() },
-            viewModel = viewModel,
-            controller = controller,
-            storytellerListViewDelegate = this,
-            onUserNavigatedToApp = { url ->
-              startActivity(Intent(this, OtherActivity::class.java).apply {
-                putExtra("EXTRA_SWIPE_URL", url)
-              })
-            }
-          )
-        })
+        MainEntrypoint(
+          controller = controller,
+          storytellerListViewDelegate = this,
+          viewModel = viewModel,
+          onRefresh = { refresh() }
+        ) { url ->
+          startActivity(Intent(this, OtherActivity::class.java).apply {
+            putExtra("EXTRA_SWIPE_URL", url)
+          })
+        }
       }
     }
   }
