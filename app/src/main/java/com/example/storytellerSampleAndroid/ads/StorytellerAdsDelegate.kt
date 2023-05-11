@@ -101,12 +101,10 @@ class StorytellerAdsDelegate(
     }
     storytellerScope.launch {
       for (clip in clips) {
-        val clipCollection = clip.collection
 
         val customMap = mapOf(
           "storytellerStoryId" to clip.id,
-          "storytellerCollection" to clipCollection,
-          "storytellerPlacement" to adRequestInfo.placement,
+          "storytellerCollection" to adRequestInfo.collection,
         )
 
         nativeAdsManager.requestAd(
