@@ -103,8 +103,9 @@ class StorytellerAdsDelegate(
       for (clip in clips) {
 
         val customMap = mapOf(
-          "storytellerStoryId" to clip.id,
-          "storytellerCollection" to adRequestInfo.collection,
+          "stCollection" to adRequestInfo.collection,
+          "stClipCategories" to clip.categories.joinToString(",") { it.externalId },
+          "stClipId" to clip.id
         )
 
         nativeAdsManager.requestAd(
@@ -163,10 +164,10 @@ class StorytellerAdsDelegate(
           .joinToString(",")
 
         val customMap = mapOf(
-          "storytellerStoryId" to story.id,
-          "storytellerCategories" to storyCategories,
-          "storytellerPlacement" to adRequestInfo.placement,
-          "storytellerCurrentCategory" to adRequestInfo.categories.joinToString(separator = ",")
+          "stStoryId" to story.id,
+          "stCategories" to storyCategories,
+          "stPlacement" to adRequestInfo.placement,
+          "stCurrentCategory" to adRequestInfo.categories.joinToString(separator = ",")
         )
 
         nativeAdsManager.requestAd(
@@ -346,6 +347,30 @@ class StorytellerAdsDelegate(
     get() = this == UserActivity.EventType.DISMISSED_AD ||
             this == UserActivity.EventType.DISMISSED_STORY ||
             this == UserActivity.EventType.DISMISSED_CLIP
+
+  private fun MutableMap<String, String>.fillClipsKVPs(
+    collection: String,
+    clipInfo: ClipsAdRequestInfo.ClipInfo
+  ): MutableMap<String, String> {
+    this["stCollection"] = collection
+    this["stClipCategories"] = clipInfo.categories.joinToString(",") { it.externalId }
+    this["stClipId"] = clipInfo.id
+    return this
+  }
+
+  private fun MutableMap<String, String>.fillStoriesKVPs(
+    storyCategories: String,
+    story: StoriesAdRequestInfo.StoryInfo,
+    adRequestInfo: StoriesAdRequestInfo
+  ): MutableMap<String, String> {
+    this["storyCat"] = storyCategories
+    this["stCategories"] = storyCategories
+    this["objid"] = story.id
+    this["stStoryId"] = story.id
+    this["stPlacement"] = adRequestInfo.placement
+    this["stCurrentCategory"] = adRequestInfo.categories.joinToString(",")
+    return this
+  }
 
   /**
    * Data class to help binds native ad to the story it was requested for.

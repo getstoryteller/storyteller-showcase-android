@@ -25,13 +25,17 @@ class AdsActivity : AppCompatActivity(R.layout.activity_ads) {
     Storyteller.storytellerDelegate = StorytellerAdsDelegate(NativeAdsManager(this))
 
     binding.storytellerRowView.reloadData()
-
+    binding.storytellerClipsView.apply {
+      collection = "clipssample"
+      reloadData()
+    }
     //setup refresh layout
     binding.refreshLayout.setOnRefreshListener {
       /*
       Tell the SDK to load the latest data from the API
        */
       binding.storytellerRowView.reloadData()
+      binding.storytellerClipsView.reloadData()
     }
   }
 
