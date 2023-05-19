@@ -44,7 +44,7 @@ android {
 
 dependencies {
 
-    def storyteller_version = "9.1.4"
+    def storyteller_version = "9.1.5"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
 
     /**
