@@ -89,7 +89,6 @@ override fun getAdsForList(
     )
   }
 }
-}
 ```
 
 ### Ensure Ad Tracking behaves correctly
