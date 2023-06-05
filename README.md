@@ -55,7 +55,7 @@ To use the library, first configure it with the correct values from GAM:
 You also need to supply a format id and unit id in [StorytellerAdsDelegate.kt](https://github.com/getstoryteller/storyteller-sample-android/blob/dbaf19569d2f219520f7aa0a074b24f05576a5b9/app/src/main/java/com/example/storytellerSampleAndroid/ads/StorytellerAdsDelegate.kt#L38):
 
 ```kotlin
-    companion object {
+companion object {
   val adUnitId = [AdUnitId]
   val formatId = [NativeAdFormatId]
 }
