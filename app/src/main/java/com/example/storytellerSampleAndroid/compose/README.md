@@ -1,7 +1,16 @@
-# Storyteller Compose SDK
+# Storyteller Compose
 
-<div><img src="/img/compose.png" align="right" alt="Jetpack Compose Logo" height="120" style="margin-left: 1%;margin-right: 1%;"></div>
-<div><img src="/img/storyteller.png" align="right" alt="Storyteller Logo" height="120" style="margin-left: 1%;margin-right: 1%;"></div>
+<a href="https://getstoryteller.com" target="_blank">
+  <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="/img/readme-cover.png">
+</a>
+
+![Gradle Compatible](https://img.shields.io/badge/Gradle%20Compatible-green?logo=gradle) [![Main SDK](https://badgen.net/github/tag/getstoryteller/storyteller-sample-android?label=latest+release&)](https://github.com/getstoryteller/storyteller-sample-android/tags) ![Compose SDK](https://img.shields.io/badge/dynamic/json?color=blue&label=Compose%20SDK&query=name&url=https://api.razonyang.com/v1/github/tag/getstoryteller/storyteller-sample-android%3Fprefix=compose-)
+
+<p>
+  <a href="https://getstoryteller.com" target="_blank"><img alt="What is Storyteller?" src="/img/Storyteller-Btn-Default.png" height="48"></a>&nbsp;&nbsp;&nbsp;
+  <a href="https://docs.getstoryteller.com/documents/android-sdk" target="_blank"><img alt="Storyteller Android Documentation" src="/img/Android-Documentation-Btn-Default.png" height="48"></a>
+  <a href="https://www.getstoryteller.com/documentation/android/storyteller-compose" target="_blank"><img alt="Storyteller Compose Documentation" src="/img/JetpackCompose-Btn-Active.png" width="329" height="48"></a>
+</p>
 
 Storyteller is now speaking compose. Designed to fulfill all your needs and suites well in the compose ecosystem.
 
@@ -21,14 +30,14 @@ With an elegant API optimized to work well inside your compose applications, Sto
 1. Using composables directly
 
     ```kotlin
-      StorytellerRowView(
+      StorytellerStoriesRowView(
         modifier = modifier,
         tag = type.tag, // tag to identify this composable
-        controller = controller // controller to control the state of the composable mainly we should define one per activity
+        controller = controller // controls the state of the composable mainly we should define one per activity
       ) { // the configuration block
         delegate = listViewDelegate
         cellType = StorytellerListViewCellType.SQUARE
-        categories = // provide the categories
+        categories = listOf("category-1") // provide the categories
         reloadData() // we want to reload data when the backing view is initialized
       }
     ```
@@ -56,7 +65,7 @@ Don't worry about doing anything in the `onDestroy` method, the controller will 
 
    ```kotlin
    controller.reloadData() // reload all the composables in the current controller
-   // or you can specifiy a list of views (using their tags) to do anything on them
+   // or you can specify a list of views (using their tags) to do anything on them
    // controller.forEach("tag-1", "tag-2") { view ->
        // do something on the view  
    }

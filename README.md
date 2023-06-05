@@ -1,14 +1,15 @@
 # Storyteller Android Sample App
 
 <a href="https://getstoryteller.com" target="_blank">
-  <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png">
+  <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="/img/readme-cover.png">
 </a>
 
-![Gradle Compatible](https://img.shields.io/badge/Gradle-Compatible-green?logo=gradle) [![Latest Release](https://badgen.net/github/tag/getstoryteller/storyteller-sample-android?label=latest+release)](https://github.com/getstoryteller/storyteller-sample-android/tags)
+![Gradle Compatible](https://img.shields.io/badge/Gradle%20Compatible-green?logo=gradle) [![Main SDK](https://badgen.net/github/tag/getstoryteller/storyteller-sample-android?label=latest+release&)](https://github.com/getstoryteller/storyteller-sample-android/tags) ![Compose SDK](https://img.shields.io/badge/dynamic/json?color=blue&label=Compose%20SDK&query=name&url=https://api.razonyang.com/v1/github/tag/getstoryteller/storyteller-sample-android%3Fprefix=compose-)
 
 <p>
-  <a href="https://getstoryteller.com" target="_blank"><img alt="What is Storyteller?" src="img/what-is-storyteller-btn.png" width="302" height="48"></a>&nbsp;&nbsp;&nbsp;
-  <a href="https://docs.getstoryteller.com/documents/android-sdk" target="_blank"><img alt="Storyteller Android Documentation" src="img/docs-btn.png" width="329" height="48"></a>
+  <a href="https://getstoryteller.com" target="_blank"><img alt="What is Storyteller?" src="/img/Storyteller-Btn-Active.png" height="48"></a>&nbsp;&nbsp;&nbsp;
+  <a href="https://docs.getstoryteller.com/documents/android-sdk" target="_blank"><img alt="Storyteller Android Documentation" src="/img/Android-Documentation-Btn-Default.png" height="48"></a>
+  <a href="https://github.com/getstoryteller/storyteller-sample-android/tree/main/app/src/main/java/com/example/storytellerSampleAndroid/compose" target="_blank"><img alt="Storyteller Compose Documentation" src="/img/JetpackCompose-Btn-Default.png" width="329" height="48"></a>
 </p>
 
 Use this repo as a reference for integrating Storyteller in your Android App.
