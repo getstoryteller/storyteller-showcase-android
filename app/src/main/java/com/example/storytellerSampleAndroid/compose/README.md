@@ -75,6 +75,8 @@ For more information, visit the documentation: https://www.getstoryteller.com/do
 
 ## Download
 
+![Latest Version](https://img.shields.io/badge/dynamic/json?color=blue&label=Compose%20SDK&query=name&url=https://api.razonyang.com/v1/github/tag/getstoryteller/storyteller-sample-android%3Fprefix=compose-)
+
 ```groovy
 repositories {
    maven {
