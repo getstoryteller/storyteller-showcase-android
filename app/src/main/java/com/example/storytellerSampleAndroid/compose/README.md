@@ -1,17 +1,17 @@
 # Storyteller Compose SDK
 
-<div><img src="art/compose.png" align="right" alt="Jetpack Compose Logo" height="120" style="margin-left: 1%;margin-right: 1%;"></div>
-<div><img src="art/storyteller.png" align="right" alt="Storyteller Logo" height="120" style="margin-left: 1%;margin-right: 1%;"></div>
+<div><img src="/img/compose.png" align="right" alt="Jetpack Compose Logo" height="120" style="margin-left: 1%;margin-right: 1%;"></div>
+<div><img src="/img/storyteller.png" align="right" alt="Storyteller Logo" height="120" style="margin-left: 1%;margin-right: 1%;"></div>
 
 Storyteller is now speaking compose. Designed to fulfill all your needs and suites well in the compose ecosystem.
 
 With an elegant API optimized to work well inside your compose applications, Storyteller Compose SDK is the perfect companion for your next compose project.
 
-<div><img src="art/usage-example.png" alt="Storyteller Compose SDK Usage Example"></div>
+<div><img src="/img/usage-example.png" alt="Storyteller Compose SDK Usage Example"></div>
 
 ## Supported Views
-- [x] `StorytellerRowView` a composable to displays row of stories
-- [x] `StorytellerGridView` a composable to displays grid of stories
+- [x] `StorytellerStoriesRowView` a composable to displays row of stories
+- [x] `StorytellerStoriesGridView` a composable to displays grid of stories
 - [x] `StorytellerClipsRowView` a composable to displays row of clips
 - [x] `StorytellerClipsGridView` a composable to displays grid of clips
 
