@@ -104,7 +104,7 @@ class StorytellerAdsDelegate(
 
         val customMap = mapOf(
           "stCollection" to adRequestInfo.collection,
-          "stClipCategories" to clip.categories.joinToString(",") { it.externalId.toString() },
+          "stClipCategories" to clip.categories.mapNotNull { it.externalId }.joinToString(","),
           "stClipId" to clip.id
         )
 
@@ -353,7 +353,7 @@ class StorytellerAdsDelegate(
     clipInfo: ClipsAdRequestInfo.ClipInfo
   ): MutableMap<String, String> {
     this["stCollection"] = collection
-    this["stClipCategories"] = clipInfo.categories.joinToString(",") { it.externalId.toString() }
+    this["stClipCategories"] = clipInfo.categories.mapNotNull { it.externalId }.joinToString(",")
     this["stClipId"] = clipInfo.id
     return this
   }

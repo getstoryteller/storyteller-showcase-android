@@ -70,12 +70,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         }
 
         binding.goToJetpackComposeScreen.setOnClickListener {
-                val intent = Intent(this@MainActivity, JetpackComposeActivity::class.java)
-                startActivity(intent)
+            val intent = Intent(this@MainActivity, JetpackComposeActivity::class.java)
+            startActivity(intent)
         }
 
         binding.goToAdsScreen.setOnClickListener {
             val intent = Intent(this@MainActivity, AdsActivity::class.java)
+            startActivity(intent)
+        }
+        binding.goToEmbeddedClip.setOnClickListener {
+            val intent = Intent(this@MainActivity, EmbeddedClipActivity::class.java)
             startActivity(intent)
         }
 

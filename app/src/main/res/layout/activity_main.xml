@@ -37,6 +37,7 @@
                 android:id="@+id/changeUserButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
                 android:text="Change user"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -72,6 +73,17 @@
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"
                 android:text="GAM Sample"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
+
+            <Button
+                android:id="@+id/goToEmbeddedClip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:text="Embedded Clip"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/refreshLayout" />
