@@ -21,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.storytellerSampleAndroid.R
 import com.storyteller.Storyteller
-import com.storyteller.sdk.compose.composeVersion
 
 @Composable
 fun TopBar() {
@@ -48,18 +47,6 @@ fun TopBar() {
       Text(
         modifier = Modifier.align(Alignment.Bottom),
         text = "v${Storyteller.version.calculateVersion()}",
-        style = MaterialTheme.typography.bodySmall
-      )
-      Image(
-        modifier = Modifier
-          .size(16.dp)
-          .align(Alignment.Bottom),
-        painter = painterResource(id = R.drawable.ic_compose),
-        contentDescription = "Storyteller Icon"
-      )
-      Text(
-        modifier = Modifier.align(Alignment.Bottom),
-        text = "v${Storyteller.composeVersion.calculateVersion()}",
         style = MaterialTheme.typography.bodySmall
       )
     }

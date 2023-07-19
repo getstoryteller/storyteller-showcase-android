@@ -27,9 +27,9 @@ import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo.StoriesAdReq
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
 import com.storyteller.domain.entities.ads.AdResponse
-import com.storyteller.domain.entities.ads.ClientAction
-import com.storyteller.domain.entities.ads.ClientAd
-import com.storyteller.remote.ads.TrackingPixelClientAd
+import com.storyteller.domain.entities.ads.StorytellerAd
+import com.storyteller.domain.entities.ads.StorytellerAdAction
+import com.storyteller.remote.ads.StorytellerAdTrackingPixel
 import com.storyteller.ui.list.StorytellerDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -262,19 +262,19 @@ class StorytellerAdsDelegate(
     clickThroughUrl: String?,
     clickCTA: String?,
     playStoreId: String?
-  ): ClientAction? = when {
+  ): StorytellerAdAction? = when {
     clickType.equals(
       WEB,
       ignoreCase = true
-    ) && clickThroughUrl != null -> ClientAction.createWebAction(clickThroughUrl, clickCTA)
+    ) && clickThroughUrl != null -> StorytellerAdAction.createWebAction(clickThroughUrl, clickCTA)
     clickType.equals(
       IN_APP,
       ignoreCase = true
-    ) && clickThroughUrl != null -> ClientAction.createInAppAction(clickThroughUrl, clickCTA)
+    ) && clickThroughUrl != null -> StorytellerAdAction.createInAppAction(clickThroughUrl, clickCTA)
     clickType.equals(
       STORE,
       ignoreCase = true
-    ) && playStoreId != null -> ClientAction.createStoreAction(playStoreId, clickCTA)
+    ) && playStoreId != null -> StorytellerAdAction.createStoreAction(playStoreId, clickCTA)
     else -> null
   }
 
@@ -289,10 +289,10 @@ class StorytellerAdsDelegate(
     val clickThroughCTA = getText(CLICK_CTA)?.toString()
 
     val trackingUrl = getText(TRACKING_URL)?.toString()
-    val trackingPixels = mutableListOf<TrackingPixelClientAd>()
+    val trackingPixels = mutableListOf<StorytellerAdTrackingPixel>()
     if (trackingUrl != null) {
       trackingPixels.add(
-        TrackingPixelClientAd(
+        StorytellerAdTrackingPixel(
           eventType = UserActivity.EventType.OPENED_AD,
           url = trackingUrl
         )
@@ -300,11 +300,11 @@ class StorytellerAdsDelegate(
     }
 
     if (creativeType == DISPLAY && image != null) {
-      ClientAd.createImageAd(
+      StorytellerAd.createImageAd(
         id = adKey,
         advertiserName = advertiserName,
         image = image,
-        clientAction = if (!clickType.isNullOrEmpty()) createAdAction(
+        storytellerAdAction = if (!clickType.isNullOrEmpty()) createAdAction(
           clickType = clickType,
           clickThroughUrl = clickThroughUrl,
           clickCTA = clickThroughCTA,
@@ -315,11 +315,11 @@ class StorytellerAdsDelegate(
         trackingPixels = trackingPixels
       )
     } else if (creativeType == VIDEO && video != null) {
-      ClientAd.createVideoAd(
+      StorytellerAd.createVideoAd(
         id = adKey,
         advertiserName = advertiserName,
         video = video,
-        clientAction = if (!clickType.isNullOrEmpty()) createAdAction(
+        storytellerAdAction = if (!clickType.isNullOrEmpty()) createAdAction(
           clickType = clickType,
           clickThroughUrl = clickThroughUrl,
           clickCTA = clickThroughCTA,

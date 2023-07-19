@@ -20,7 +20,7 @@ import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleCompo
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
 import com.storyteller.domain.entities.Error
-import com.storyteller.sdk.compose.StorytellerComposeController
+import com.storyteller.ui.compose.StorytellerComposeController
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import kotlinx.coroutines.launch
 

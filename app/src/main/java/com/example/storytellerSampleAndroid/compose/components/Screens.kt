@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
-import com.storyteller.sdk.compose.StorytellerComposeController
+import com.storyteller.ui.compose.StorytellerComposeController
 
 @Composable
 fun MainEntrypoint(
