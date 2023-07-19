@@ -44,14 +44,9 @@ android {
 
 dependencies {
 
-    def storyteller_version = "9.2.2"
+    def storyteller_version = "9.2.2-local-release_9.3.0-07e33d9821"
     implementation(group: "Storyteller", name: "sdk", version: "$storyteller_version")
 
-    /**
-     * If you want to use the Storyteller Compose SDK, you need to add the following dependency:
-     */
-    def storyteller_compose_version = "1.3.0"
-    implementation(group: "Storyteller", name: "sdk-compose", version: "$storyteller_compose_version")
     /**
      * GAM for ClientAds
      */
