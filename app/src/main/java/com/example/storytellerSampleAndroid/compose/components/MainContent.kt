@@ -35,12 +35,14 @@ import com.example.storytellerSampleAndroid.compose.components.items.ToggleDarkM
 import com.storyteller.domain.entities.Error
 import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.StorytellerListViewStyle
-import com.storyteller.sdk.compose.StorytellerClipsGridView
-import com.storyteller.sdk.compose.StorytellerClipsRowView
-import com.storyteller.sdk.compose.StorytellerComposeController
-import com.storyteller.sdk.compose.StorytellerStoriesGridView
-import com.storyteller.sdk.compose.StorytellerStoriesRowView
+import com.storyteller.ui.compose.StorytellerClipsGridView
+import com.storyteller.ui.compose.StorytellerClipsRowView
+import com.storyteller.ui.compose.StorytellerComposeController
+import com.storyteller.ui.compose.StorytellerStoriesGridView
+import com.storyteller.ui.compose.StorytellerStoriesRowView
+import com.storyteller.ui.list.StorytellerClipsView
 import com.storyteller.ui.list.StorytellerListViewDelegate
+import com.storyteller.ui.list.StorytellerStoriesView
 
 @Composable
 fun MainScreen(
@@ -96,8 +98,10 @@ fun MainScreen(
           controller = controller
         ) {
           delegate = storytellerListViewDelegate
-          cellType = StorytellerListViewCellType.SQUARE
-          categories = listOf()
+          configuration = StorytellerStoriesView.ListConfiguration(
+            cellType = StorytellerListViewCellType.SQUARE,
+            categories = listOf()
+          )
           reloadData()
         }
       }
@@ -111,8 +115,10 @@ fun MainScreen(
           controller = controller
         ) {
           delegate = storytellerListViewDelegate
-          cellType = StorytellerListViewCellType.ROUND
-          categories = listOf()
+            configuration = StorytellerStoriesView.ListConfiguration(
+                cellType = StorytellerListViewCellType.SQUARE,
+                categories = listOf()
+            )
           reloadData()
         }
       }
@@ -126,8 +132,10 @@ fun MainScreen(
           controller = controller
         ) {
           delegate = storytellerListViewDelegate
-          cellType = StorytellerListViewCellType.SQUARE
-          collection = "clipssample"
+          configuration = StorytellerClipsView.ListConfiguration(
+            cellType = StorytellerListViewCellType.SQUARE,
+            collection = "clipssample"
+          )
           reloadData()
         }
       }
@@ -141,8 +149,10 @@ fun MainScreen(
           controller = controller
         ) {
           delegate = storytellerListViewDelegate
-          cellType = StorytellerListViewCellType.SQUARE
-          collection = "clipssample"
+          configuration = StorytellerClipsView.ListConfiguration(
+            cellType = StorytellerListViewCellType.SQUARE,
+            collection = "clipssample"
+          )
           reloadData()
         }
       }
@@ -166,7 +176,9 @@ fun MainScreen(
 
       item {
         Row(
-          modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
           horizontalArrangement = Arrangement.Center
         ) {
           Button(onClick = openSettings) {
@@ -226,8 +238,3 @@ fun hasDataStorytellerDelegate(callback: (Boolean) -> Unit) = object : EmptyStor
     callback(dataCount > 0)
   }
 }
-
-
-
-
-
