@@ -8,6 +8,7 @@ import com.example.storytellerSampleAndroid.R
 import com.example.storytellerSampleAndroid.databinding.ActivityAdsBinding
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
+import com.storyteller.ui.list.StorytellerClipsView
 
 class AdsActivity : AppCompatActivity(R.layout.activity_ads) {
 
@@ -26,7 +27,7 @@ class AdsActivity : AppCompatActivity(R.layout.activity_ads) {
 
     binding.storytellerRowView.reloadData()
     binding.storytellerClipsView.apply {
-      collection = "clipssample"
+      configuration = StorytellerClipsView.ListConfiguration(collection = "clipssample")
       reloadData()
     }
     //setup refresh layout

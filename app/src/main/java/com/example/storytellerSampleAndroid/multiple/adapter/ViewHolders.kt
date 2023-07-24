@@ -13,6 +13,8 @@ import com.example.storytellerSampleAndroid.databinding.ListStoryGridBinding
 import com.example.storytellerSampleAndroid.databinding.ListStoryRowBinding
 import com.example.storytellerSampleAndroid.multiple.StorytellerViewDelegate
 import com.example.storytellerSampleAndroid.theme.StorytellerThemes
+import com.storyteller.ui.list.StorytellerClipsView
+import com.storyteller.ui.list.StorytellerStoriesView
 import kotlin.math.roundToInt
 
 fun Int.dpToPx(context: Context): Int {
@@ -42,16 +44,19 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) : DemoElement
     super.bind(uiElement)
     val storyRow = uiElement as UiElement.StoryRow
     binding.storytellerRow.run {
-      this.cellType = storyRow.cellType
+
       val heightResolved = storyRow.height.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {
         height = heightResolved
       }
       this.delegate = StorytellerViewDelegate(storyRow.id, storyRow.onFailure)
-      categories = storyRow.categories
-      // set different theme than the Global one in SampleApp
-      theme = StorytellerThemes.getCustomTheme(context)
 
+      configuration = StorytellerStoriesView.ListConfiguration(
+        categories = storyRow.categories,
+        cellType = storyRow.cellType,
+        // set different theme than the Global one in SampleApp
+        theme = StorytellerThemes.getCustomTheme(context)
+      )
       if (storyRow.forceDataReload) {
         reloadData()
         storyRow.forceDataReload = false
@@ -72,11 +77,12 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) : DemoEleme
     super.bind(uiElement)
     val storyGrid = uiElement as UiElement.StoryGrid
     binding.storytellerGrid.run {
-      this.cellType = storyGrid.cellType
-      this.delegate = StorytellerViewDelegate(storyGrid.id, storyGrid.onFailure)
-      categories = storyGrid.categories
-      // set different theme than the Global one in SampleApp
-      theme = StorytellerThemes.getCustomTheme(context)
+      configuration = StorytellerStoriesView.ListConfiguration(
+        categories = storyGrid.categories,
+        cellType = storyGrid.cellType,
+        // set different theme than the Global one in SampleApp
+        theme = StorytellerThemes.getCustomTheme(context)
+      )
 
       if (storyGrid.forceDataReload) {
         reloadData()
@@ -98,9 +104,13 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) : DemoElement
     super.bind(uiElement)
     val clipsGrid = uiElement as UiElement.ClipGrid
     binding.storytellerClipGrid.run {
-      this.cellType = clipsGrid.cellType
+      configuration = StorytellerClipsView.ListConfiguration(
+        collection = clipsGrid.collection,
+        cellType = clipsGrid.cellType,
+        // set different theme than the Global one in SampleApp
+        theme = StorytellerThemes.getCustomTheme(context)
+      )
       this.delegate = StorytellerViewDelegate(clipsGrid.id, clipsGrid.onFailure)
-      collection = clipsGrid.collection
       if (clipsGrid.forceDataReload) {
         reloadData()
         clipsGrid.forceDataReload = false
@@ -121,13 +131,17 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) : DemoElementVi
     super.bind(uiElement)
     val clipsRow = uiElement as UiElement.ClipRow
     binding.storytellerClipRow.run {
-      this.cellType = clipsRow.cellType
       val heightResolved = clipsRow.height.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {
         height = heightResolved
       }
+      configuration = StorytellerClipsView.ListConfiguration(
+        collection = clipsRow.collection,
+        cellType = clipsRow.cellType,
+        // set different theme than the Global one in SampleApp
+        theme = StorytellerThemes.getCustomTheme(context)
+      )
       this.delegate = StorytellerViewDelegate(clipsRow.id, clipsRow.onFailure)
-      collection = clipsRow.collection
       if (clipsRow.forceDataReload) {
         reloadData()
         clipsRow.forceDataReload = false
