@@ -20,7 +20,7 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven {
-            url 'https://www.myget.org/F/storyteller-android-sdk/maven/'
+            url 'https://storyteller.mycloudrepo.io/public/repositories/storyteller-sdk'
         }
     }
 }
