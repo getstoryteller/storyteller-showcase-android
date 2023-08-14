@@ -1,14 +1,21 @@
-package com.example.storytellerSampleAndroid.multiple.adapter
+package com.example.storytellerSampleAndroid.models.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.storytellerSampleAndroid.models.ClipsGridItem
+import com.example.storytellerSampleAndroid.models.ClipsRowItem
+import com.example.storytellerSampleAndroid.models.ClipsSingletonItem
+import com.example.storytellerSampleAndroid.models.Item
+import com.example.storytellerSampleAndroid.models.StoriesGridItem
+import com.example.storytellerSampleAndroid.models.StoriesRowItem
+import com.example.storytellerSampleAndroid.models.StoriesSingletonItem
 
 class MultipleListsAdapter(
-  data: List<UiElement> = listOf()
-) : RecyclerView.Adapter<DemoElementViewHolder>() {
+  data: List<Item> = listOf()
+) : RecyclerView.Adapter<UiItemViewHolder>() {
 
-  var data: List<UiElement> = data
+  var data: List<Item> = data
     set(value) {
       calculateDataDiff(value, data).dispatchUpdatesTo(this)
       field = value
@@ -16,19 +23,23 @@ class MultipleListsAdapter(
 
   companion object {
     private val supportedTypes = listOf<Class<*>>(
-      UiElement.StoryRow::class.java,
-      UiElement.StoryGrid::class.java,
-      UiElement.ClipRow::class.java,
-      UiElement.ClipGrid::class.java
+      StoriesRowItem::class.java,
+      StoriesGridItem::class.java,
+      ClipsRowItem::class.java,
+      ClipsGridItem::class.java,
+      ClipsSingletonItem::class.java,
+      StoriesSingletonItem::class.java
     )
     private val supportedInflaters = listOf(
       StoryRowViewHolder.Companion::inflate,
       StoryGridViewHolder.Companion::inflate,
       ClipRowViewHolder.Companion::inflate,
-      ClipGridViewHolder.Companion::inflate
+      ClipGridViewHolder.Companion::inflate,
+      ClipSingletonViewHolder.Companion::inflate,
+      StorySingletonViewHolder.Companion::inflate
     )
 
-    fun calculateDataDiff(newData: List<UiElement>, oldData: List<UiElement>) =
+    fun calculateDataDiff(newData: List<Item>, oldData: List<Item>) =
       DiffUtil.calculateDiff(object : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
           newData[newItemPosition].id == oldData[oldItemPosition].id
@@ -48,11 +59,11 @@ class MultipleListsAdapter(
     return index
   }
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DemoElementViewHolder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UiItemViewHolder {
     return supportedInflaters[viewType](parent)
   }
 
-  override fun onBindViewHolder(holder: DemoElementViewHolder, position: Int) {
+  override fun onBindViewHolder(holder: UiItemViewHolder, position: Int) {
     val element = data[position]
     holder.bind(element)
     return

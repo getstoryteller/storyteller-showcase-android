@@ -23,7 +23,7 @@ class SampleApp : Application() {
                 */
             Storyteller.initialize(
                 // change to your own [API-KEY]
-                apiKey = "6a0ea73b-7b5d-42ab-bbf9-0584a696d9bb",
+                apiKey = "02e18252-5b39-40fe-8ddc-813c864bc663",
                 userInput = UserInput(userId),
                 onSuccess = onSuccess,
                 onFailure = onFailure

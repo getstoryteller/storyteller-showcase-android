@@ -6,12 +6,27 @@
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="16dp"
-        android:text="StoryGridView"
-        android:textSize="16sp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="8dp"
+        android:paddingStart="8dp"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/moreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="8dp"
+        android:paddingEnd="8dp"
+        android:text="More"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="12sp" />
 
     <com.storyteller.ui.list.StorytellerStoriesGridView
         android:id="@+id/storytellerGrid"
