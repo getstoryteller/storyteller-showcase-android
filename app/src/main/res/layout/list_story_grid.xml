@@ -13,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:paddingBottom="8dp"
         android:paddingStart="8dp"
+        app:layout_constraintBottom_toTopOf="@id/titleTextView"
         android:textSize="12sp" />
 
     <TextView
@@ -26,6 +27,7 @@
         android:paddingEnd="8dp"
         android:text="More"
         android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintBottom_toTopOf="@id/titleTextView"
         android:textSize="12sp" />
 
     <com.storyteller.ui.list.StorytellerStoriesGridView

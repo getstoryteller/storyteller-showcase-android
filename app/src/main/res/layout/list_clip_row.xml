@@ -11,6 +11,7 @@
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/titleTextView"
         android:paddingBottom="8dp"
         android:paddingStart="8dp"
         android:textSize="12sp" />
@@ -26,6 +27,7 @@
         android:paddingEnd="8dp"
         android:text="More"
         android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintBottom_toTopOf="@id/titleTextView"
         android:textSize="12sp" />
 
     <com.storyteller.ui.list.StorytellerClipsRowView

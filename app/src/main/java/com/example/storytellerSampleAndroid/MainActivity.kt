@@ -33,9 +33,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     binding.recyclerView.adapter = adapter
 
     viewModel.stateFlow.onEach { state ->
+      binding.refreshLayout.isRefreshing = false
       adapter.data = state.items
     }.launchIn(lifecycleScope)
 
+    binding.refreshLayout.setOnRefreshListener {
+      binding.refreshLayout.isRefreshing = true
+      viewModel.reloadData()
+    }
+
+    binding.refreshLayout.isRefreshing = true
     viewModel.reloadData()
 
 

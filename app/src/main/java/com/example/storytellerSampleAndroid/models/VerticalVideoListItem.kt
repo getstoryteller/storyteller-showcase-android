@@ -1,9 +1,13 @@
 package com.example.storytellerSampleAndroid.models
 
-import android.util.Log
+
 import com.storyteller.domain.entities.StorytellerListViewCellType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 enum class Layout {
@@ -23,13 +27,11 @@ enum class VideoType {
 enum class Size {
   @SerialName("regular") REGULAR,
   @SerialName("medium") MEDIUM,
-  @SerialName("small")  SMALL,
   @SerialName("large")  LARGE,
 }
 
 @Serializable
 data class VerticalVideoListDto(val data: List<VerticalVideoListItem>)
-
 
 @Serializable
 data class VerticalVideoListItem(
@@ -47,58 +49,72 @@ data class VerticalVideoListItem(
   val id: String,
 )
 
-sealed class Item(open val id: String)
+sealed class Item(open val id: String, open var forceReload: Boolean, open var removeItemFlow: MutableSharedFlow<String>?)
 data class StoriesRowItem(
   override val id: String,
+  override var forceReload: Boolean,
+  override var removeItemFlow: MutableSharedFlow<String>?,
   val moreButtonTitle: String,
   val cellType: StorytellerListViewCellType,
   val count: Int,
   val categories: List<String>,
   val title: String,
-  val size: Size?,
-) : Item(id)
+  val heightDp: Int,
+) : Item(id, forceReload, removeItemFlow)
 
 data class StoriesGridItem(
   override val id: String,
+  override var forceReload: Boolean,
+  override var removeItemFlow: MutableSharedFlow<String>?,
   val moreButtonTitle: String,
   val cellType: StorytellerListViewCellType,
   val count: Int,
   val categories: List<String>,
   val title: String,
-) : Item(id)
+) : Item(id, forceReload, removeItemFlow)
 
 data class ClipsRowItem(
   override val id: String,
+  override var forceReload: Boolean,
+  override var removeItemFlow: MutableSharedFlow<String>?,
   val moreButtonTitle: String,
   val cellType: StorytellerListViewCellType,
   val count: Int,
   val title: String,
   val collection: String,
   val size: Size?,
-) : Item(id)
+  val heightDp: Int
+) : Item(id, forceReload, removeItemFlow)
 
 data class ClipsGridItem(
   override val id: String,
+  override var forceReload: Boolean,
+  override var removeItemFlow: MutableSharedFlow<String>?,
+
   val moreButtonTitle: String,
   val cellType: StorytellerListViewCellType,
   val count: Int,
   val title: String,
   val collection: String,
-) : Item(id)
+) : Item(id, forceReload,removeItemFlow)
 
 data class StoriesSingletonItem(
   override val id: String,
+  override var forceReload: Boolean,
+  override var removeItemFlow: MutableSharedFlow<String>?,
   val categories: List<String>,
   val moreButtonTitle: String,
   val title: String,
-) : Item(id)
+) : Item(id, forceReload, removeItemFlow)
 
 data class ClipsSingletonItem(
   override val id: String,
+  override var forceReload: Boolean,
   val moreButtonTitle: String,
   val title: String,
   val collection: String,
-) : Item(id)
+  override var removeItemFlow: MutableSharedFlow<String>?,
+) : Item(id, forceReload,removeItemFlow)
 
 val VerticalVideoListItem.toEntity: Item?
   get() {
@@ -112,6 +128,12 @@ val VerticalVideoListItem.toEntity: Item?
     val moreButtonTitle = moreButtonTitle.orEmpty()
     val categories = categories.orEmpty()
     val collection = collection.orEmpty()
+    val heightDp = when(size){
+      Size.REGULAR -> 140
+      Size.MEDIUM -> 200
+      Size.LARGE -> 220
+      null -> 0
+    }
 
     return when {
       videoType == VideoType.STORIES && layout == Layout.ROW -> {
@@ -122,7 +144,9 @@ val VerticalVideoListItem.toEntity: Item?
           count = count,
           categories = categories,
           title = title,
-          size = size
+          heightDp = heightDp,
+          forceReload = true,
+          removeItemFlow = null
         )
       }
 
@@ -134,6 +158,8 @@ val VerticalVideoListItem.toEntity: Item?
           count = count,
           categories = categories,
           title = title,
+          forceReload = true,
+          removeItemFlow = null
         )
       }
 
@@ -145,7 +171,10 @@ val VerticalVideoListItem.toEntity: Item?
           count = count,
           collection = collection,
           title = title,
-          size = size
+          size = size,
+          heightDp = heightDp,
+          forceReload = true,
+          removeItemFlow = null
         )
       }
 
@@ -156,7 +185,9 @@ val VerticalVideoListItem.toEntity: Item?
           cellType = cellType,
           count = count,
           collection = collection,
-          title = title)
+          title = title,
+          forceReload = true,
+          removeItemFlow = null)
       }
       videoType == VideoType.STORIES && layout == Layout.SINGLETON -> {
         StoriesSingletonItem(
@@ -164,6 +195,8 @@ val VerticalVideoListItem.toEntity: Item?
           moreButtonTitle = moreButtonTitle,
           categories = categories,
           title = title,
+          forceReload = true,
+          removeItemFlow = null
         )
       }
       videoType == VideoType.CLIPS && layout == Layout.SINGLETON -> {
@@ -172,6 +205,8 @@ val VerticalVideoListItem.toEntity: Item?
           moreButtonTitle = moreButtonTitle,
           collection = collection,
           title = title,
+          forceReload = true,
+          removeItemFlow = null
         )
       }
       else -> null

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.storytellerSampleAndroid.databinding.ListClipGridBinding
 import com.example.storytellerSampleAndroid.databinding.ListClipRowBinding
@@ -25,6 +27,7 @@ import com.storyteller.domain.entities.Error
 import com.storyteller.ui.list.StorytellerClipsView
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import com.storyteller.ui.list.StorytellerStoriesView
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 fun Int.dpToPx(context: Context): Int {
@@ -35,8 +38,16 @@ fun Int.dpToPx(context: Context): Int {
   ).roundToInt()
 }
 
+interface RemoveItemDelegate: StorytellerListViewDelegate{
+  override fun onDataLoadStarted() = Unit
+  override fun onPlayerDismissed() = Unit
+  override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int)
+}
+
 abstract class UiItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
+  val lifecycleScope
+    get() = view.findViewTreeLifecycleOwner()?.lifecycleScope
   open fun bind(uiElement: Item) {
   }
 }
@@ -58,24 +69,21 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) :
     binding.titleTextView.isVisible = storyRow.title.isNotBlank()
     binding.titleTextView.text = storyRow.title
     binding.storytellerRow.run {
-
-//      val heightResolved = storyRow.height.dpToPx(context)
-//      updateLayoutParams<ViewGroup.LayoutParams> {
-//        height = heightResolved
-//      }
-      this.delegate = object : StorytellerListViewDelegate{
+      delegate = object : RemoveItemDelegate{
         override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
-          Log.d("FINA", "onDataLoadComplete: $success, $error, $dataCount")
-        }
+          if (!success || dataCount == 0){
+            lifecycleScope?.launch {
+              storyRow.removeItemFlow?.emit(storyRow.id)
+            }
 
-        override fun onDataLoadStarted() {
-          Log.d("FINA", "onDataLoadStarted: ")
-        }
 
-        override fun onPlayerDismissed() {
+          }
         }
-
       }
+      val heightResolved = storyRow.heightDp.dpToPx(context)
+      updateLayoutParams<ViewGroup.LayoutParams> {
+        height = heightResolved
+     }
 
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyRow.categories,
@@ -84,11 +92,10 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) :
         theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = storyRow.count
       )
-      reloadData()
-//      if (storyRow.forceDataReload) {
-//        reloadData()
-//        storyRow.forceDataReload = false
-//      }
+      if (storyRow.forceReload) {
+        reloadData()
+        storyRow.forceReload = false
+      }
     }
   }
 }
@@ -113,15 +120,23 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) :
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyGrid.categories,
         cellType = storyGrid.cellType,
-        // set different theme than the Global one in SampleApp
         theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = storyGrid.count
       )
-      reloadData()
-//      if (storyGrid.forceDataReload) {
-//        reloadData()
-//        storyGrid.forceDataReload = false
-//      }
+      delegate = object : RemoveItemDelegate{
+        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+          if (!success || dataCount == 0){
+            lifecycleScope?.launch {
+              storyGrid.removeItemFlow?.emit(storyGrid.id)
+            }
+
+          }
+        }
+      }
+      if (storyGrid.forceReload) {
+        reloadData()
+        storyGrid.forceReload = false
+      }
     }
   }
 }
@@ -143,7 +158,6 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) :
     binding.titleTextView.isVisible = clipsGrid.title.isNotBlank()
     binding.titleTextView.text = clipsGrid.title
     binding.storytellerClipGrid.run {
-      Log.d("FINA", "bind: ${clipsGrid}")
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsGrid.collection,
         cellType = clipsGrid.cellType,
@@ -151,14 +165,20 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) :
         theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = clipsGrid.count
       )
+      delegate = object : RemoveItemDelegate{
+        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+          if (!success || dataCount == 0){
+            lifecycleScope?.launch {
+              clipsGrid.removeItemFlow?.emit(clipsGrid.id)
+            }
+          }
+        }
+      }
 
-      reloadData()
-//      this.delegate = StorytellerViewDelegate(clipsGrid.id, clipsGrid.onFailure)
-//      if (clipsGrid.forceDataReload) {
-//        reloadData()
-//        clipsGrid.forceDataReload = false
-//      }
-//    }
+      if (clipsGrid.forceReload) {
+        reloadData()
+        clipsGrid.forceReload = false
+      }
     }
   }
 }
@@ -180,10 +200,10 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) :
     binding.titleTextView.isVisible = clipsRow.title.isNotBlank()
     binding.titleTextView.text = clipsRow.title
     binding.storytellerClipRow.run {
-//      val heightResolved = clipsRow.height.dpToPx(context)
-//      updateLayoutParams<ViewGroup.LayoutParams> {
-//        height = heightResolved
-//      }
+      val heightResolved = clipsRow.heightDp.dpToPx(context)
+      updateLayoutParams<ViewGroup.LayoutParams> {
+        height = heightResolved
+      }
 
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsRow.collection,
@@ -192,12 +212,19 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) :
         theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = clipsRow.count
       )
-      reloadData()
-//      this.delegate = StorytellerViewDelegate(clipsRow.id, clipsRow.onFailure)
-//      if (clipsRow.forceDataReload) {
-//        reloadData()
-//        clipsRow.forceDataReload = false
-//      }
+      delegate = object : RemoveItemDelegate{
+        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+          if (!success || dataCount == 0){
+            lifecycleScope?.launch {
+              clipsRow.removeItemFlow?.emit(clipsRow.id)
+            }
+          }
+        }
+      }
+      if (clipsRow.forceReload) {
+        reloadData()
+        clipsRow.forceReload = false
+      }
     }
   }
 }
@@ -219,19 +246,24 @@ class ClipSingletonViewHolder(private val binding: ListClipGridBinding) :
     binding.titleTextView.isVisible = clipsGrid.title.isNotBlank()
     binding.titleTextView.text = clipsGrid.title
     binding.storytellerClipGrid.run {
-      Log.d("FINA", "bind: ${clipsGrid}")
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsGrid.collection,
         theme = StorytellerThemes.getSingletonTheme(context),
         displayLimit = 1
       )
-      reloadData()
-//      this.delegate = StorytellerViewDelegate(clipsGrid.id, clipsGrid.onFailure)
-//      if (clipsGrid.forceDataReload) {
-//        reloadData()
-//        clipsGrid.forceDataReload = false
-//      }
-//    }
+      delegate = object : RemoveItemDelegate{
+        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+          if (!success || dataCount == 0){
+            lifecycleScope?.launch {
+              clipsGrid.removeItemFlow?.emit(clipsGrid.id)
+            }
+          }
+        }
+      }
+      if (clipsGrid.forceReload) {
+        reloadData()
+        clipsGrid.forceReload = false
+      }
     }
   }
 }
@@ -259,11 +291,20 @@ class StorySingletonViewHolder(private val binding: ListStoryGridBinding) :
         theme = StorytellerThemes.getSingletonTheme(context),
         displayLimit = 1
       )
-      reloadData()
-//      if (storyGrid.forceDataReload) {
-//        reloadData()
-//        storyGrid.forceDataReload = false
-//      }
+      delegate = object : RemoveItemDelegate{
+        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+          if (!success || dataCount == 0){
+            lifecycleScope?.launch {
+              storyGrid.removeItemFlow?.emit(storyGrid.id)
+            }
+          }
+        }
+      }
+
+      if (storyGrid.forceReload) {
+        reloadData()
+        storyGrid.forceReload = false
+      }
     }
   }
 }
