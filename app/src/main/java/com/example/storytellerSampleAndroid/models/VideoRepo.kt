@@ -17,6 +17,9 @@ class VideoRepo {
     }
   }
 
-  suspend fun getVerticalVideosList() : VerticalVideoListDto
-    = client.get("https://sampleappcontent.usestoryteller.com/api/entries").body()
+  suspend fun getVerticalVideosList()
+    = client.get("https://sampleappcontent.usestoryteller.com/api/entries")
+      .body<VerticalVideoListDto>()
+      .data
+      .mapNotNull { it.toEntity }
 }

@@ -7,21 +7,19 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
 import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
-import com.example.storytellerSampleAndroid.models.adapter.MultipleListsAdapter
+import com.example.storytellerSampleAndroid.ui.VerticalVideoListFragment
+import com.example.storytellerSampleAndroid.ui.VerticalVideoListViewModel
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.storyteller.ui.pager.StorytellerClipsFragment
 import java.util.UUID
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+  private var fragment: StorytellerClipsFragment? = null
   private lateinit var binding: ActivityMainBinding
-  private val viewModel: MainActivityViewModel by viewModels()
-  private val adapter = MultipleListsAdapter()
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     //make layout stable during system UI changes like hiding/showing status bar
@@ -29,23 +27,32 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
       window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
     binding = ActivityMainBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-    binding.recyclerView.adapter = adapter
 
-    viewModel.stateFlow.onEach { state ->
-      binding.refreshLayout.isRefreshing = false
-      adapter.data = state.items
-    }.launchIn(lifecycleScope)
+    binding.navControls.setOnItemSelectedListener {
+      Log.d("FINA", "onCreate: ---")
+      when (it.itemId) {
+        R.id.home -> {
+          Log.d("FINA", "onCreate: ---")
+          addVerticalVideoFragment()
+          true
+        }
+        R.id.embedd -> {
+          Log.d("FINA", "onCreate: ---")
+          supportFragmentManager.beginTransaction().apply {
+            fragment = StorytellerClipsFragment.create("demo")
+            fragment?.let {
+              replace(R.id.fragment_host, it)
+            }
+            disallowAddToBackStack()
+            commit()
+          }
+          true
+        }
 
-    binding.refreshLayout.setOnRefreshListener {
-      binding.refreshLayout.isRefreshing = true
-      viewModel.reloadData()
+        else -> false
+      }
     }
-
-    binding.refreshLayout.isRefreshing = true
-    viewModel.reloadData()
-
-
+    addVerticalVideoFragment()
     //openDeepLink(intent)
   }
 
@@ -90,5 +97,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         Log.e("Storyteller Sample", "initialize failed $it}")
       })
 
+  }
+  private fun addVerticalVideoFragment() {
+    supportFragmentManager.beginTransaction().apply {
+      replace(R.id.fragment_host, VerticalVideoListFragment())
+      fragment = null
+      disallowAddToBackStack()
+      commit()
+    }
   }
 }

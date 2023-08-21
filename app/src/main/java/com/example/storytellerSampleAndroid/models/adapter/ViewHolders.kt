@@ -72,6 +72,7 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) :
       delegate = object : RemoveItemDelegate{
         override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
           if (!success || dataCount == 0){
+
             lifecycleScope?.launch {
               storyRow.removeItemFlow?.emit(storyRow.id)
             }

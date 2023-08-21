@@ -1,12 +1,10 @@
-package com.example.storytellerSampleAndroid
+package com.example.storytellerSampleAndroid.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.storytellerSampleAndroid.models.Item
-import com.example.storytellerSampleAndroid.models.Layout
 import com.example.storytellerSampleAndroid.models.VideoRepo
-import com.example.storytellerSampleAndroid.models.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +14,12 @@ import kotlinx.coroutines.launch
 
 data class UiState(val items: List<Item>)
 
-class MainActivityViewModel: ViewModel() {
+class VerticalVideoListViewModel(
+  private val videoRepo: VideoRepo = VideoRepo()
+) : ViewModel() {
 
-  private val _stateFlow = MutableStateFlow(UiState(items = emptyList()))
-  val stateFlow: Flow<UiState> = _stateFlow
-
-  private val videoRepo = VideoRepo()
+  private val _uiStateFlow = MutableStateFlow(UiState(items = emptyList()))
+  val uiStateFlow: Flow<UiState> = _uiStateFlow
 
   private val removeItemFlow = MutableSharedFlow<String>()
 
@@ -29,25 +27,22 @@ class MainActivityViewModel: ViewModel() {
     removeItemFlow
       .onEach { itemId ->
         Log.d("FINA", ": $itemId")
-        val items = _stateFlow.value.items.filter { it.id != itemId }
-        _stateFlow.value = UiState(items)
+        val items = _uiStateFlow.value.items.filter { it.id != itemId }
+        _uiStateFlow.value = UiState(items)
       }
       .launchIn(viewModelScope)
   }
 
-  fun reloadData(){
+  fun reloadData() {
     viewModelScope.launch {
-      videoRepo.getVerticalVideosList()
-        .data
-        .mapNotNull { it.toEntity }
+      val items = videoRepo.getVerticalVideosList()
         .map {
-          it.forceReload = true
-          it.removeItemFlow = removeItemFlow
-          it
+          it.also {
+            it.forceReload = true
+            it.removeItemFlow = removeItemFlow
+          }
         }
-        .let {
-        _stateFlow.value = UiState(items = it)
-      }
+      _uiStateFlow.value = UiState(items = items)
     }
   }
 }
