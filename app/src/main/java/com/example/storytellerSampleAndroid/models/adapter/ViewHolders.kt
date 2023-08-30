@@ -69,23 +69,20 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) :
     binding.moreButton.text = storyRow.moreButtonTitle
     binding.moreButton.setOnClickListener {
       MoreActivity.start(
-        context = binding.root.context,
+        context = view.context,
         title = storyRow.title,
         categories = storyRow.categories
       )
     }
     binding.titleTextView.isVisible = storyRow.title.isNotBlank()
     binding.titleTextView.text = storyRow.title
-    binding.storytellerRow.run {
+    binding.storytellerRow.apply {
       delegate = object : RemoveItemDelegate{
         override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
           if (!success || dataCount == 0){
-
             lifecycleScope?.launch {
               storyRow.removeItemFlow?.emit(storyRow.id)
             }
-
-
           }
         }
       }
@@ -125,14 +122,14 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) :
     binding.moreButton.text = storyGrid.moreButtonTitle
     binding.moreButton.setOnClickListener {
       MoreActivity.start(
-        context = binding.root.context,
+        context = view.context,
         title = storyGrid.title,
         categories = storyGrid.categories
       )
     }
     binding.titleTextView.isVisible = storyGrid.title.isNotBlank()
     binding.titleTextView.text = storyGrid.title
-    binding.storytellerGrid.run {
+    binding.storytellerGrid.apply {
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyGrid.categories,
         cellType = storyGrid.cellType,
@@ -173,14 +170,14 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) :
     binding.moreButton.text = clipsGrid.moreButtonTitle
     binding.moreButton.setOnClickListener {
       MoreActivity.start(
-        context = binding.root.context,
+        context = view.context,
         title = clipsGrid.title,
         collection = clipsGrid.collection
       )
     }
     binding.titleTextView.isVisible = clipsGrid.title.isNotBlank()
     binding.titleTextView.text = clipsGrid.title
-    binding.storytellerClipGrid.run {
+    binding.storytellerClipGrid.apply {
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsGrid.collection,
         cellType = clipsGrid.cellType,
@@ -222,14 +219,14 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) :
     binding.moreButton.text = clipsRow.moreButtonTitle
     binding.moreButton.setOnClickListener {
       MoreActivity.start(
-        context = binding.root.context,
+        context = view.context,
         title = clipsRow.title,
         collection = clipsRow.collection
       )
     }
     binding.titleTextView.isVisible = clipsRow.title.isNotBlank()
     binding.titleTextView.text = clipsRow.title
-    binding.storytellerClipRow.run {
+    binding.storytellerClipRow.apply {
       val heightResolved = clipsRow.heightDp.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {
         height = heightResolved
@@ -275,14 +272,14 @@ class ClipSingletonViewHolder(private val binding: ListClipGridBinding) :
     binding.moreButton.text = clipsGrid.moreButtonTitle
     binding.moreButton.setOnClickListener {
       MoreActivity.start(
-        context = binding.root.context,
+        context = view.context,
         title = clipsGrid.title,
         collection = clipsGrid.collection
       )
     }
     binding.titleTextView.isVisible = clipsGrid.title.isNotBlank()
     binding.titleTextView.text = clipsGrid.title
-    binding.storytellerClipGrid.run {
+    binding.storytellerClipGrid.apply {
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsGrid.collection,
         theme = StorytellerThemes.getSingletonTheme(context),
@@ -321,14 +318,14 @@ class StorySingletonViewHolder(private val binding: ListStoryGridBinding) :
     binding.moreButton.text = storyGrid.moreButtonTitle
     binding.moreButton.setOnClickListener {
       MoreActivity.start(
-        context = binding.root.context,
+        context = view.context,
         title = storyGrid.title,
         categories = storyGrid.categories
       )
     }
     binding.titleTextView.isVisible = storyGrid.title.isNotBlank()
     binding.titleTextView.text = storyGrid.title
-    binding.storytellerGrid.run {
+    binding.storytellerGrid.apply {
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyGrid.categories,
         // set different theme than the Global one in SampleApp
