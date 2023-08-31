@@ -7,7 +7,7 @@ import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
-import com.storyteller.domain.entities.ads.AdResponse
+import com.storyteller.domain.entities.ads.StorytellerAd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -51,9 +51,9 @@ class SampleStorytellerDelegateImpl : SampleStorytellerDelegate {
    * and the SDK requires ad data from the containing app
    * For more info, see - https://www.getstoryteller.com/documentation/android/storyteller-delegate#ClientAds
    */
-  override fun getAdsForList(
+  override fun getAd(
     adRequestInfo: StorytellerAdRequestInfo,
-    onComplete: (AdResponse) -> Unit,
+    onComplete: (StorytellerAd) -> Unit,
     onError: () -> Unit
   ) {
     Log.i("Storyteller Sample", "getAdsForRow: stories $adRequestInfo")
