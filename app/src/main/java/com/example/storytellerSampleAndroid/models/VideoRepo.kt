@@ -21,5 +21,4 @@ class VideoRepo {
     = client.get("https://sampleappcontent.usestoryteller.com/api/entries")
       .body<VerticalVideoListDto>()
       .data
-      .mapNotNull { it.toEntity }
 }

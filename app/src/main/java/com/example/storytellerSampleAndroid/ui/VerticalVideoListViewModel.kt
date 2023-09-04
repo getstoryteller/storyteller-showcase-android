@@ -2,7 +2,9 @@ package com.example.storytellerSampleAndroid.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.storytellerSampleAndroid.models.GetVideoListUseCase
 import com.example.storytellerSampleAndroid.models.Item
 import com.example.storytellerSampleAndroid.models.VideoRepo
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +17,7 @@ import kotlinx.coroutines.launch
 data class UiState(val items: List<Item>)
 
 class VerticalVideoListViewModel(
-  private val videoRepo: VideoRepo = VideoRepo()
+  private val useCase: GetVideoListUseCase
 ) : ViewModel() {
 
   private val _uiStateFlow = MutableStateFlow(UiState(items = emptyList()))
@@ -35,7 +37,7 @@ class VerticalVideoListViewModel(
 
   fun reloadData() {
     viewModelScope.launch {
-      val items = videoRepo.getVerticalVideosList()
+      val items = useCase.invoke()
         .map {
           it.also {
             it.forceReload = true
@@ -44,5 +46,16 @@ class VerticalVideoListViewModel(
         }
       _uiStateFlow.value = UiState(items = items)
     }
+  }
+
+  class Factory(private val useCase: GetVideoListUseCase) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+      if (modelClass.isAssignableFrom(VerticalVideoListViewModel::class.java)) {
+        return VerticalVideoListViewModel(useCase = useCase) as T
+      }
+      throw IllegalArgumentException("Unknown ViewModel class")
+    }
+
   }
 }

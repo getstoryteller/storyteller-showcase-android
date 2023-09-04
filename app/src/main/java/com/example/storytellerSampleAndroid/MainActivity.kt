@@ -18,7 +18,7 @@ import com.storyteller.Storyteller.Companion.activityReentered
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import java.util.UUID
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
 
   private var fragment: StorytellerClipsFragment? = null
   private lateinit var binding: ActivityMainBinding
@@ -29,27 +29,26 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
       window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
     binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     setSupportActionBar(binding.toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(false)
     supportActionBar?.setDisplayShowTitleEnabled(false)
 
     binding.navControls.setOnItemSelectedListener {
-      Log.d("FINA", "onCreate: ---")
       when (it.itemId) {
         R.id.home -> {
-          Log.d("FINA", "onCreate: ---")
           addVerticalVideoFragment()
           true
         }
 
         R.id.embedd -> {
-          Log.d("FINA", "onCreate: ---")
           supportFragmentManager.beginTransaction().apply {
             fragment = StorytellerClipsFragment.create("demo")
             fragment?.let {
               replace(R.id.fragment_host, it)
             }
+            fragment?.collectionId = "must-see-moments"
             disallowAddToBackStack()
             commit()
           }
@@ -62,19 +61,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     addVerticalVideoFragment()
     val storytellerAdsDelegate = StorytellerAdsDelegate(NativeAdsManager(this))
     Storyteller.storytellerDelegate = storytellerAdsDelegate
-    Log.d("FINA", "onCreate: ")
     binding.settings.setOnClickListener {
-      Log.d("FINA", "onCLick: ")
       SettingDialogFragment().show(
         supportFragmentManager, SettingDialogFragment::class.java.simpleName)
     }
     //openDeepLink(intent)
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    Log.d("FINA", "onOptionsItemSelected: $item")
-    return super.onOptionsItemSelected(item)
-    
   }
 
   override fun onActivityReenter(resultCode: Int, data: Intent?) {
@@ -128,4 +119,5 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
       commit()
     }
   }
+
 }

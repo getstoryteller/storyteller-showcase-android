@@ -5,19 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.storytellerSampleAndroid.databinding.FragmentVerticalVideoBinding
+import com.example.storytellerSampleAndroid.models.GetVideoListUseCase
+import com.example.storytellerSampleAndroid.models.VideoRepo
 import com.example.storytellerSampleAndroid.models.adapter.MultipleListsAdapter
+import com.example.storytellerSampleAndroid.preferences.SharedPreferencesManager
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 class VerticalVideoListFragment : Fragment() {
 
 
-  private val viewModel: VerticalVideoListViewModel by viewModels()
+  lateinit var viewModel: VerticalVideoListViewModel
 
   private val adapter = MultipleListsAdapter()
 
@@ -37,6 +39,14 @@ class VerticalVideoListFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     binding.recyclerView.adapter = adapter
 
+    val useCase = GetVideoListUseCase(
+      sharedPreferencesManager = SharedPreferencesManager(requireContext())
+    )
+    viewModel = ViewModelProvider(
+      this,
+      VerticalVideoListViewModel.Factory(useCase)
+    )[VerticalVideoListViewModel::class.java]
+
     viewModel.uiStateFlow
       .onEach { state ->
         binding.refreshLayout.isRefreshing = false
@@ -46,10 +56,13 @@ class VerticalVideoListFragment : Fragment() {
       .launchIn(lifecycleScope)
 
     binding.refreshLayout.setOnRefreshListener {
-      binding.refreshLayout.isRefreshing = true
-      viewModel.reloadData()
+      reloadData()
     }
 
+    reloadData()
+  }
+
+  fun reloadData() {
     binding.refreshLayout.isRefreshing = true
     viewModel.reloadData()
   }
@@ -58,4 +71,5 @@ class VerticalVideoListFragment : Fragment() {
     super.onDestroyView()
     _binding = null
   }
+
 }
