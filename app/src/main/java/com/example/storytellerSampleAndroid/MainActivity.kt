@@ -3,14 +3,16 @@ package com.example.storytellerSampleAndroid
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
+import com.example.storytellerSampleAndroid.ads.NativeAdsManager
+import com.example.storytellerSampleAndroid.ads.StorytellerAdsDelegate
 import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
+import com.example.storytellerSampleAndroid.settings.SettingDialogFragment
 import com.example.storytellerSampleAndroid.ui.VerticalVideoListFragment
-import com.example.storytellerSampleAndroid.ui.VerticalVideoListViewModel
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
 import com.storyteller.ui.pager.StorytellerClipsFragment
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     binding = ActivityMainBinding.inflate(layoutInflater)
 
+    setSupportActionBar(binding.toolbar)
+    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    supportActionBar?.setDisplayShowTitleEnabled(false)
+
     binding.navControls.setOnItemSelectedListener {
       Log.d("FINA", "onCreate: ---")
       when (it.itemId) {
@@ -36,6 +42,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
           addVerticalVideoFragment()
           true
         }
+
         R.id.embedd -> {
           Log.d("FINA", "onCreate: ---")
           supportFragmentManager.beginTransaction().apply {
@@ -53,7 +60,21 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
       }
     }
     addVerticalVideoFragment()
+    val storytellerAdsDelegate = StorytellerAdsDelegate(NativeAdsManager(this))
+    Storyteller.storytellerDelegate = storytellerAdsDelegate
+    Log.d("FINA", "onCreate: ")
+    binding.settings.setOnClickListener {
+      Log.d("FINA", "onCLick: ")
+      SettingDialogFragment().show(
+        supportFragmentManager, SettingDialogFragment::class.java.simpleName)
+    }
     //openDeepLink(intent)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    Log.d("FINA", "onOptionsItemSelected: $item")
+    return super.onOptionsItemSelected(item)
+    
   }
 
   override fun onActivityReenter(resultCode: Int, data: Intent?) {
@@ -98,6 +119,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
       })
 
   }
+
   private fun addVerticalVideoFragment() {
     supportFragmentManager.beginTransaction().apply {
       replace(R.id.fragment_host, VerticalVideoListFragment())
