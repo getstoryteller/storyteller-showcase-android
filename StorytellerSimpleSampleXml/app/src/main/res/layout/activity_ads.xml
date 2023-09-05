@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ads.AdsActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:paddingTop="8dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <com.storyteller.ui.list.StorytellerStoriesRowView
+            android:id="@+id/storyteller_row_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:cellType="square" />
+
+        <com.storyteller.ui.list.StorytellerClipsRowView
+            android:id="@+id/storyteller_clips_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            app:cellType="square" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
