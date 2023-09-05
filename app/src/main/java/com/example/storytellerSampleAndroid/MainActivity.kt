@@ -2,12 +2,8 @@ package com.example.storytellerSampleAndroid
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.storytellerSampleAndroid.SampleApp.Companion.initializeStoryteller
 import com.example.storytellerSampleAndroid.ads.NativeAdsManager
 import com.example.storytellerSampleAndroid.ads.StorytellerAdsDelegate
 import com.example.storytellerSampleAndroid.databinding.ActivityMainBinding
@@ -16,7 +12,6 @@ import com.example.storytellerSampleAndroid.ui.VerticalVideoListFragment
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
 import com.storyteller.ui.pager.StorytellerClipsFragment
-import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,7 +60,7 @@ class MainActivity : AppCompatActivity() {
       SettingDialogFragment().show(
         supportFragmentManager, SettingDialogFragment::class.java.simpleName)
     }
-    //openDeepLink(intent)
+    openDeepLink(intent)
   }
 
   override fun onActivityReenter(resultCode: Int, data: Intent?) {
@@ -85,30 +80,6 @@ class MainActivity : AppCompatActivity() {
     if (deepLink != null && Storyteller.isStorytellerDeepLink(deepLink)) {
       Storyteller.openDeepLink(this, deepLink)
     }
-  }
-
-  private fun changeUser() {
-    /*
-    If you use login in your app and wish to allow users to logout and log back in as a new user
-    (or proceed as an anonymous user) then when a user logs out you should call initialize
-    again specifying a new externalId. Note that this will reset the local store of which pages the user has viewed.
-    For more info, see - https://www.getstoryteller.com/documentation/android/users
-    */
-    val freshUserId = UUID.randomUUID().toString()
-    initializeStoryteller(
-      userId = freshUserId,
-      onSuccess =
-      {
-        // binding.storytellerRowView.reloadData()
-        Toast.makeText(
-          this@MainActivity, "New User with Id: $freshUserId", Toast.LENGTH_SHORT
-        ).show()
-        Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
-      },
-      onFailure = {
-        Log.e("Storyteller Sample", "initialize failed $it}")
-      })
-
   }
 
   private fun addVerticalVideoFragment() {
