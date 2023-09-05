@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
+import com.example.storytellerSampleAndroid.MainActivity
 import com.example.storytellerSampleAndroid.SampleApp
 import com.example.storytellerSampleAndroid.databinding.FragmentSettingsBinding
 import com.example.storytellerSampleAndroid.preferences.SharedPreferencesManager
@@ -93,7 +94,7 @@ class SettingDialogFragment : DialogFragment() {
         onSuccess = {
           preferencesManager.userId = binding.userId.text.toString()
           Storyteller.user.setCustomAttribute("favoriteTeam", preferencesManager.team)
-          (parentFragment as? VerticalVideoListFragment)?.reloadData()
+          (activity as? MainActivity)?.refreshData()
           dismiss()
         },
         onFailure = {

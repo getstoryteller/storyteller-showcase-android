@@ -2,6 +2,7 @@ package com.example.storytellerSampleAndroid
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.storytellerSampleAndroid.ads.NativeAdsManager
@@ -15,7 +16,6 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 
 class MainActivity : AppCompatActivity() {
 
-  private var fragment: StorytellerClipsFragment? = null
   private lateinit var binding: ActivityMainBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -33,27 +33,19 @@ class MainActivity : AppCompatActivity() {
     binding.navControls.setOnItemSelectedListener {
       when (it.itemId) {
         R.id.home -> {
-          addVerticalVideoFragment()
+          showVerticalVideoFragment()
           true
         }
 
         R.id.embedd -> {
-          supportFragmentManager.beginTransaction().apply {
-            fragment = StorytellerClipsFragment.create("demo")
-            fragment?.let {
-              replace(R.id.fragment_host, it)
-            }
-            fragment?.collectionId = "must-see-moments"
-            disallowAddToBackStack()
-            commit()
-          }
+          showEmbeddedClipsFragment()
           true
         }
 
         else -> false
       }
     }
-    addVerticalVideoFragment()
+    showVerticalVideoFragment()
     val storytellerAdsDelegate = StorytellerAdsDelegate(NativeAdsManager(this))
     Storyteller.storytellerDelegate = storytellerAdsDelegate
     binding.settings.setOnClickListener {
@@ -82,12 +74,45 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun addVerticalVideoFragment() {
+  private fun showVerticalVideoFragment() {
     supportFragmentManager.beginTransaction().apply {
-      replace(R.id.fragment_host, VerticalVideoListFragment())
-      fragment = null
+      val verticalVideoFragment = supportFragmentManager.findFragmentByTag(VerticalVideoListFragment::class.java.simpleName)
+      val clipsFragment = supportFragmentManager.findFragmentByTag(StorytellerClipsFragment::class.java.simpleName)
+      if(verticalVideoFragment == null){
+        add(R.id.fragment_host, VerticalVideoListFragment(), VerticalVideoListFragment::class.java.simpleName)
+      }else{
+        show(verticalVideoFragment)
+      }
+      if(clipsFragment != null){
+        hide(clipsFragment)
+      }
       disallowAddToBackStack()
       commit()
+    }
+  }
+
+  private fun showEmbeddedClipsFragment() {
+    supportFragmentManager.beginTransaction().apply {
+      val verticalVideoFragment = supportFragmentManager.findFragmentByTag(VerticalVideoListFragment::class.java.simpleName)
+      val clipsFragment = supportFragmentManager.findFragmentByTag(StorytellerClipsFragment::class.java.simpleName)
+      if(clipsFragment == null){
+        add(R.id.fragment_host, StorytellerClipsFragment.create(collectionId = "must-see-moments"), StorytellerClipsFragment::class.java.simpleName)
+      }else{
+        show(clipsFragment)
+      }
+      if(verticalVideoFragment != null){
+        hide(verticalVideoFragment)
+      }
+      disallowAddToBackStack()
+      commit()
+    }
+  }
+
+  fun refreshData() {
+    val verticalVideoFragment = supportFragmentManager.findFragmentByTag(VerticalVideoListFragment::class.java.simpleName)
+    if(verticalVideoFragment != null){
+      Log.d("FINA", "refreshData: ")
+      (verticalVideoFragment as VerticalVideoListFragment).reloadData()
     }
   }
 

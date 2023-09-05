@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:paddingTop="@dimen/item_top_padding"
     android:layout_height="wrap_content">
 
     <TextView
@@ -12,9 +13,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingBottom="8dp"
-        android:paddingStart="8dp"
+        android:textColor="@color/headerTitleText"
+        android:paddingStart="@dimen/item_horizontal_padding"
         app:layout_constraintBottom_toTopOf="@id/titleTextView"
-        android:textSize="12sp" />
+        android:textSize="@dimen/item_header_size" />
 
     <TextView
         android:id="@+id/moreButton"
@@ -24,16 +26,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingBottom="8dp"
-        android:paddingEnd="8dp"
         android:text="More"
-        app:layout_constraintBottom_toTopOf="@id/titleTextView"
+        android:paddingEnd="@dimen/item_horizontal_padding"
         android:textColor="@android:color/holo_blue_dark"
-        android:textSize="12sp" />
+        android:textSize="@dimen/item_header_size" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="moreButton,titleTextView" />
 
     <com.storyteller.ui.list.StorytellerStoriesRowView
         android:id="@+id/storytellerRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        app:layout_constraintTop_toBottomOf="@id/barrier"
         app:uiStyle="light" />
 </androidx.constraintlayout.widget.ConstraintLayout>

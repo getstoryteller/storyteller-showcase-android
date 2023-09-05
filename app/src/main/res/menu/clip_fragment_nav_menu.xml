@@ -4,14 +4,12 @@
 
   <item
       android:id="@+id/home"
-      android:icon="@drawable/ic_home_circle"
       android:checked="true"
-      android:title="home" />
+      android:title="HOME" />
 
   <item
     android:id="@+id/embedd"
-    android:icon="@drawable/menu_ic_clips_fragments"
     android:checked="false"
-    android:title="Embedded Clips" />
+    android:title="EMBEDDED CLIPS" />
 
 </menu>

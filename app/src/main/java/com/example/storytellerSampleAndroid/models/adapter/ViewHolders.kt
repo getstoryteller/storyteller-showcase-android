@@ -25,6 +25,7 @@ import com.example.storytellerSampleAndroid.models.StoriesRowItem
 import com.example.storytellerSampleAndroid.models.StoriesSingletonItem
 import com.example.storytellerSampleAndroid.theme.StorytellerThemes
 import com.storyteller.domain.entities.Error
+import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.ui.list.StorytellerClipsView
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import com.storyteller.ui.list.StorytellerStoriesView
@@ -77,6 +78,7 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) :
     binding.titleTextView.isVisible = storyRow.title.isNotBlank()
     binding.titleTextView.text = storyRow.title
     binding.storytellerRow.apply {
+
       delegate = object : RemoveItemDelegate{
         override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
           if (!success || dataCount == 0){
@@ -95,8 +97,12 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) :
         categories = storyRow.categories,
         cellType = storyRow.cellType,
         // set different theme than the Global one in SampleApp
-        theme = StorytellerThemes.getCustomTheme(context),
-        displayLimit = storyRow.count
+        displayLimit = storyRow.count,
+        theme = if(storyRow.cellType == StorytellerListViewCellType.ROUND){
+          StorytellerThemes.getRoundTheme(context)
+        }else{
+          StorytellerThemes.getGlobalTheme(context)
+        }
       )
       if (storyRow.forceReload) {
         reloadData()
@@ -133,7 +139,6 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) :
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyGrid.categories,
         cellType = storyGrid.cellType,
-        theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = storyGrid.count
       )
       delegate = object : RemoveItemDelegate{
@@ -182,7 +187,6 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) :
         collection = clipsGrid.collection,
         cellType = clipsGrid.cellType,
         // set different theme than the Global one in SampleApp
-        theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = clipsGrid.count
       )
       delegate = object : RemoveItemDelegate{
@@ -235,8 +239,6 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) :
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsRow.collection,
         cellType = clipsRow.cellType,
-        // set different theme than the Global one in SampleApp
-        theme = StorytellerThemes.getCustomTheme(context),
         displayLimit = clipsRow.count
       )
       delegate = object : RemoveItemDelegate{

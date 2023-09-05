@@ -12,9 +12,11 @@ import com.example.storytellerSampleAndroid.models.GetVideoListUseCase
 import com.example.storytellerSampleAndroid.models.VideoRepo
 import com.example.storytellerSampleAndroid.models.adapter.MultipleListsAdapter
 import com.example.storytellerSampleAndroid.preferences.SharedPreferencesManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class VerticalVideoListFragment : Fragment() {
 
@@ -54,17 +56,17 @@ class VerticalVideoListFragment : Fragment() {
       }
       .catch { binding.refreshLayout.isRefreshing = false }
       .launchIn(lifecycleScope)
-
     binding.refreshLayout.setOnRefreshListener {
       reloadData()
     }
-
     reloadData()
   }
 
   fun reloadData() {
-    binding.refreshLayout.isRefreshing = true
-    viewModel.reloadData()
+    lifecycleScope.launch(Dispatchers.Main) {
+      binding.refreshLayout.isRefreshing = true
+      viewModel.reloadData()
+    }
   }
 
   override fun onDestroyView() {
