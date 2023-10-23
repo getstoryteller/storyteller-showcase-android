@@ -39,8 +39,10 @@ class StorytellerAdsDelegate(
 ) : StorytellerDelegate {
 
   companion object {
-    const val adUnitId = "/33813572/stories-native-ad-unit"
-    const val formatId = "12102683"
+    const val storiesAdUnitId = "/33813572/stories-native-ad-unit"
+    const val storiesTemplateId = "12102683"
+    const val clipsAdUnit = "/33813572/clips-native-ad-unit"
+    const val clipTemplateId = "12269089"
   }
 
   private val nativeAds: MutableMap<String, StorytellerNativeAd> = mutableMapOf()
@@ -77,8 +79,8 @@ class StorytellerAdsDelegate(
       )
 
       nativeAdsManager.requestAd(
-        adUnit = adUnitId,
-        formatId = formatId,
+        adUnit = clipsAdUnit,
+        formatId = clipTemplateId,
         customMap = customMap, // custom targeting params
         onAdDataLoaded = { ad ->
           if (ad != null) {
@@ -122,8 +124,8 @@ class StorytellerAdsDelegate(
         "stCurrentCategory" to adRequestInfo.categories.joinToString(separator = ",")
       )
       nativeAdsManager.requestAd(
-        adUnit = adUnitId,
-        formatId = formatId,
+        adUnit = storiesAdUnitId,
+        formatId = storiesTemplateId,
         customMap = customMap, // custom targeting params
         onAdDataLoaded = { ad ->
           if (ad != null) {
