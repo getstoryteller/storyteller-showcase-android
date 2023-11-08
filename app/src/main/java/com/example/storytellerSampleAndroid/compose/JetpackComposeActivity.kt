@@ -20,7 +20,6 @@ import com.example.storytellerSampleAndroid.compose.theme.StorytellerSampleCompo
 import com.storyteller.Storyteller
 import com.storyteller.Storyteller.Companion.activityReentered
 import com.storyteller.domain.entities.Error
-import com.storyteller.ui.compose.StorytellerComposeController
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import kotlinx.coroutines.launch
 
@@ -36,22 +35,17 @@ class JetpackComposeActivity : ComponentActivity(), StorytellerListViewDelegate 
     JetpackComposeViewModelFactory(isDarkMode, sampleStorytellerDelegate)
   }
 
-  private lateinit var controller: StorytellerComposeController
-
   private fun refresh() = lifecycleScope.launch {
     viewModel.startRefreshing()
-    controller.reloadData()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Storyteller.storytellerDelegate = sampleStorytellerDelegate
-    controller = StorytellerComposeController().bind(this)
 
     setContent {
       StorytellerSampleComposeTheme(darkTheme = viewModel.isDarkMode.value) {
         MainEntrypoint(
-          controller = controller,
           storytellerListViewDelegate = this,
           viewModel = viewModel,
           onRefresh = { refresh() }

@@ -7,11 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.storytellerSampleAndroid.compose.JetpackComposeActivity
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
-import com.storyteller.ui.compose.StorytellerComposeController
 
 @Composable
 fun MainEntrypoint(
-  controller: StorytellerComposeController,
   viewModel: JetpackComposeViewModel,
   onRefresh: () -> Unit,
   storytellerListViewDelegate: JetpackComposeActivity,
@@ -23,7 +21,6 @@ fun MainEntrypoint(
     composable(Screens.MainScreen.route) {
       Scaffold(topBar = { TopBar() }) {
         MainScreen(
-          controller = controller,
           viewModel = viewModel,
           onRefresh = onRefresh,
           onUserNavigatedToApp = onUserNavigatedToApp,
