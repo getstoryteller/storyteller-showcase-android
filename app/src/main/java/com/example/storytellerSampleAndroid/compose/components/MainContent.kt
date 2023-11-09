@@ -100,7 +100,6 @@ fun MainScreen(
                         .wrapContentHeight(),
                     dataModel = StorytellerStoriesDataModel(
                         categories = listOf(),
-                        displayLimit = 4,
                         uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
                         cellType = StorytellerListViewCellType.SQUARE
                     ),
@@ -114,9 +113,9 @@ fun MainScreen(
             }
             item {
                 StorytellerClipsRow(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.height(200.dp).fillMaxWidth(),
                     dataModel = StorytellerClipsDataModel(
-                        collection = "clips_row",
+                        collection = "clipssample",
                         uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
                         cellType = StorytellerListViewCellType.SQUARE
                     ),
@@ -132,7 +131,7 @@ fun MainScreen(
                     modifier = Modifier.fillMaxWidth()
                         .wrapContentHeight(),
                     dataModel = StorytellerClipsDataModel(
-                        collection = "clips_grid",
+                        collection = "clipssample",
                         displayLimit = 4,
                         uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
                         cellType = StorytellerListViewCellType.SQUARE
@@ -142,21 +141,25 @@ fun MainScreen(
                     isScrollable = false
                 )
             }
-
+            item {
+                Header("Clips Grid View - no data")
+            }
             item {
                 AnimatedVisibility(visible = shouldShowRow) {
                     StorytellerClipsGrid(
                         modifier = Modifier.fillMaxWidth()
                             .wrapContentHeight(),
                         dataModel = StorytellerClipsDataModel(
-                            collection = "clips_grid",
+                            collection = "not-existing",
                             displayLimit = 4,
                             uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
                             cellType = StorytellerListViewCellType.SQUARE
                         ),
-                        delegate = storytellerListViewDelegate,
+                        delegate = hasDataStorytellerDelegate { hasData ->
+                            shouldShowRow = hasData
+                        },
                         isRefreshing = refreshing,
-                        isScrollable = false
+                        isScrollable = false,
                     )
                 }
             }
