@@ -74,6 +74,24 @@ class OptionSelectViewModel @Inject constructor(
                     )
                 )
             }
+
+            OptionSelectType.EVENT_TRACKING -> {
+                _uiState.value = OptionSelectUIModel(
+                    title = "Allow Event Tracking",
+                    type = OptionSelectType.EVENT_TRACKING,
+                    selectedOption = if (sessionService.trackEvents) "yes" else "no",
+                    options = listOf(
+                        KeyValueUiModel(
+                            key = "no",
+                            value = "No"
+                        ),
+                        KeyValueUiModel(
+                            key = "yes",
+                            value = "Yes"
+                        ),
+                    )
+                )
+            }
         }
     }
 
@@ -83,6 +101,7 @@ class OptionSelectViewModel @Inject constructor(
             OptionSelectType.HAS_ACCOUNT -> sessionService.hasAccount = key == "yes"
             OptionSelectType.LANGUAGE -> sessionService.language = key
             OptionSelectType.TEAM -> sessionService.team = key
+            OptionSelectType.EVENT_TRACKING -> sessionService.trackEvents = key == "yes"
         }
         storytellerService.updateCustomAttributes()
     }

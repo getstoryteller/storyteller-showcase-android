@@ -20,6 +20,7 @@ class VerifyCodeUseCaseImpl(
         sessionService.apiKey = settings.androidApiKey
         sessionService.userId = UUID.randomUUID().toString()
         storytellerService.initStoryteller()
+        storytellerService.updateCustomAttributes()
         return TenantSettingsDto(
             topLevelClipsCollection = settings.topLevelClipsCollection,
             tabsEnabled = settings.tabsEnabled

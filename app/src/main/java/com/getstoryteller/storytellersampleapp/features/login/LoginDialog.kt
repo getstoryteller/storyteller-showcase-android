@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellersampleapp.features.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,6 +52,7 @@ fun LoginDialog(
             usePlatformDefaultWidth = false
         )
     ) {
+        val isDarkTheme = isSystemInDarkTheme()
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,7 +68,7 @@ fun LoginDialog(
                 var text by remember { mutableStateOf("") }
                 Image(
                     modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                    painter = painterResource(id = R.drawable.ic_logo),
+                    painter = painterResource(id = if (isDarkTheme) R.drawable.ic_logo_dark else R.drawable.ic_logo),
                     contentDescription = ""
                 )
                 Text(

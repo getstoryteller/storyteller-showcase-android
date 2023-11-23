@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellersampleapp.ui.SampleAppTheme
 import com.storyteller.Storyteller
@@ -21,7 +24,9 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navController = rememberNavController()
             SampleAppTheme {
-                Surface {
+                Surface(
+                    modifier = Modifier.background(color = MaterialTheme.colors.surface)
+                ) {
                     MainScreen(
                         activity = this,
                         navController = navController,

@@ -2,12 +2,14 @@ package com.getstoryteller.storytellersampleapp.features.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ fun OptionSelectScreen(
     optionSelectType: OptionSelectType,
     config: Config
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
     LaunchedEffect(key1 = optionSelectType.name, block = {
         viewModel.setupOptionType(config, optionSelectType)
     })
@@ -40,14 +43,14 @@ fun OptionSelectScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 20.dp)
-            .background(color = colorResource(id = R.color.background_settings))
+            .background(color = MaterialTheme.colors.surface)
     ) {
         uiState.options.forEach { model ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp)
-                    .background(color = Color.White)
+                    .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
                     .clickable {
                         viewModel.selectOption(model.key)
                     },
@@ -65,5 +68,6 @@ fun OptionSelectScreen(
 enum class OptionSelectType(val title: String) {
     HAS_ACCOUNT("Has Account"),
     LANGUAGE("Language"),
-    TEAM("Favorite Team")
+    TEAM("Favorite Team"),
+    EVENT_TRACKING("Allow Event Tracking"),
 }

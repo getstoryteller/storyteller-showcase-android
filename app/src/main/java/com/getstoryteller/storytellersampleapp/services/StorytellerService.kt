@@ -1,8 +1,15 @@
 package com.getstoryteller.storytellersampleapp.services
 
+import android.graphics.Bitmap
+import android.webkit.WebView
 import com.storyteller.Storyteller
+import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
+import com.storyteller.domain.entities.UserActivity
+import com.storyteller.domain.entities.UserActivityData
 import com.storyteller.domain.entities.UserInput
+import com.storyteller.domain.entities.ads.StorytellerAd
 import com.storyteller.domain.usecases.attributes.UserAttributes
+import com.storyteller.ui.list.StorytellerDelegate
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -45,6 +52,11 @@ class StorytellerServiceImpl @Inject constructor(
         } ?: Storyteller.user.removeCustomAttribute(FAV_TEAM_ATTRIBUTE_KEY)
         sessionService.hasAccount.let {
             Storyteller.user.setCustomAttribute(HAS_ACCOUNT_ATTRIBUTE_KEY, if (it) "yes" else "no")
+        }
+        if (sessionService.trackEvents) {
+            Storyteller.enableEventTracking()
+        } else {
+            Storyteller.disableEventTracking()
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.getstoryteller.storytellersampleapp.features.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import kotlinx.serialization.decodeFromString
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +15,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -25,9 +26,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,18 +42,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellersampleapp.R
-import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
-import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
 import com.getstoryteller.storytellersampleapp.features.account.AccountScreen
 import com.getstoryteller.storytellersampleapp.features.account.OptionSelectScreen
 import com.getstoryteller.storytellersampleapp.features.account.OptionSelectType
+import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
 import com.getstoryteller.storytellersampleapp.features.home.MoreScreen
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
+import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
 import com.getstoryteller.storytellersampleapp.features.watch.WatchScreen
 import com.storyteller.Storyteller
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     activity: Activity,
@@ -71,13 +73,8 @@ fun MainScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                backgroundColor = colorResource(
-                    id = if (navigationState != PageState.ACCOUNT)
-                        R.color.white
-                    else
-                        R.color.background_settings
-                ),
-                contentColor = colorResource(id = R.color.on_light_color_active),
+                backgroundColor = MaterialTheme.colors.background,
+                contentColor = MaterialTheme.colors.onBackground,
                 title = {
                     if (navigationState != PageState.HOME) {
                         Text(text = title)
@@ -93,7 +90,8 @@ fun MainScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Search,
-                                contentDescription = ""
+                                contentDescription = "",
+                                tint = MaterialTheme.colors.onBackground
                             )
                         }
                         IconButton(
@@ -111,7 +109,8 @@ fun MainScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.AccountCircle,
-                                contentDescription = ""
+                                contentDescription = "",
+                                tint = MaterialTheme.colors.onBackground
                             )
                         }
                     }
@@ -120,13 +119,13 @@ fun MainScreen(
                     IconButton(onClick = {
                         navController.navigateUp()
                     }) {
-                        if (navigationState == PageState.ACCOUNT)
+                        if (navigationState != PageState.HOME)
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
                                 contentDescription = null,
-                                tint = Color.Unspecified
+                                tint = MaterialTheme.colors.onBackground
                             )
-                        else if (navigationState == PageState.HOME) {
+                        else {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_logo_icon),
                                 contentDescription = null,
@@ -143,7 +142,7 @@ fun MainScreen(
                 visible = navigationState == PageState.HOME,
                 content = {
                     BottomNavigation(
-                        backgroundColor = Color.White
+                        backgroundColor = MaterialTheme.colors.background
                     ) {
                         val backStackEntry = navController.currentBackStackEntryAsState()
                         val navbackEntry by navController.currentBackStackEntryAsState()
@@ -154,17 +153,13 @@ fun MainScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_home),
                                     contentDescription = null,
-                                    tint = if (homeSelected) colorResource(id = R.color.on_light_color_active) else colorResource(
-                                        id = R.color.on_light_color_inactive
-                                    )
+                                    tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                                 )
                             },
                             label = {
                                 Text(
                                     text = "Home",
-                                    color = if (homeSelected) colorResource(id = R.color.on_light_color_active) else colorResource(
-                                        id = R.color.on_light_color_inactive
-                                    )
+                                    color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                                 )
                             },
                             selected = navbackEntry?.destination?.route == "home",
@@ -184,17 +179,13 @@ fun MainScreen(
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_watch),
                                     contentDescription = null,
-                                    tint = if (!homeSelected) colorResource(id = R.color.on_light_color_active) else colorResource(
-                                        id = R.color.on_light_color_inactive
-                                    )
+                                    tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                                 )
                             },
                             label = {
                                 Text(
                                     text = "Watch",
-                                    color = if (!homeSelected) colorResource(id = R.color.on_light_color_active) else colorResource(
-                                        id = R.color.on_light_color_inactive
-                                    )
+                                    color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                                 )
                             },
                             selected = navbackEntry?.destination?.route == "watch",
@@ -212,13 +203,10 @@ fun MainScreen(
                     }
                 })
         }
-    ) { paddingValues ->
+    ) { _ ->
         Box(modifier = Modifier.fillMaxSize()) {
             NavHost(
-                navController = navController, startDestination = "home",
-                modifier = Modifier
-                    .background(Color.White)
-                    .padding(paddingValues)
+                navController = navController, startDestination = "home"
             ) {
 
                 composable("home") {
@@ -226,7 +214,8 @@ fun MainScreen(
                     HomeScreen(
                         viewModel = hiltViewModel(),
                         config = mainPageUiState.config,
-                        navController = navController
+                        navController = navController,
+                        isRefreshing = mainPageUiState.isRefreshing
                     )
                 }
                 composable("watch") {
@@ -247,6 +236,10 @@ fun MainScreen(
                         onLogout = {
                             navigationState = PageState.HOME
                             viewModel.logout()
+                        },
+                        onRefresh = {
+                            navigationState = PageState.HOME
+                            viewModel.refreshMainPage()
                         }
                     )
                 }
@@ -292,7 +285,7 @@ fun MainScreen(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .padding(16.dp)
-                        .background(Color.White)
+                        .background(color = MaterialTheme.colors.surface)
                         .align(Alignment.Center)
                 )
             }

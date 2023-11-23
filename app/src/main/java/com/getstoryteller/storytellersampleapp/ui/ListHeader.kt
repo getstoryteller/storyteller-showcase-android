@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -28,13 +29,14 @@ fun ListHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp),
+            .padding(start = 12.dp, end = 12.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = text,
             textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onBackground
         )
         Row(
             modifier = Modifier
@@ -45,14 +47,8 @@ fun ListHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = moreButtonTitle
-            )
-            Icon(
-                Icons.Filled.ArrowForward,
-                modifier = Modifier
-                    .padding(start = 4.dp)
-                    .height(12.dp),
-                contentDescription = null,
+                text = moreButtonTitle,
+                color = MaterialTheme.colors.onBackground
             )
         }
     }

@@ -1,7 +1,9 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -20,10 +22,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellersampleapp.data.TabDto
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TabLayout(
     tabs: List<TabDto>,
-    rootNavController: NavController
+    rootNavController: NavController,
+    isRefreshing: Boolean
 ) {
     val titles = tabs.map { it.name }
     var tabIndex by remember { mutableIntStateOf(0) }
@@ -31,10 +35,19 @@ fun TabLayout(
 
     Scaffold(
         topBar = {
-            TabRow(selectedTabIndex = tabIndex) {
+            TabRow(
+                selectedTabIndex = tabIndex,
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = MaterialTheme.colors.primary
+            ) {
                 titles.forEachIndexed { index, title ->
                     Tab(
-                        text = { Text(title) },
+                        text = {
+                            Text(
+                                text = title,
+                                color = if (tabIndex == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+                            )
+                        },
                         selected = tabIndex == index,
                         onClick = {
                             tabIndex = index
@@ -44,19 +57,17 @@ fun TabLayout(
                 }
             }
         },
-        content = { paddingValues ->
+        content = { _ ->
             NavHost(
                 navController = navController, startDestination = "home",
-                modifier = Modifier
-                    .background(Color.White)
-                    .padding(paddingValues)
             ) {
                 tabs.forEach { tab ->
-                    composable(tab.value) {
+                    composable(route = tab.value) {
                         TabScreen(
                             tabId = tab.value,
                             viewModel = hiltViewModel(),
-                            rootNavController = rootNavController
+                            rootNavController = rootNavController,
+                            isRefreshing = isRefreshing
                         )
                     }
                 }

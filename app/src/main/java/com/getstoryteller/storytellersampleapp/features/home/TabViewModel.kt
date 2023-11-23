@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.domain.GetTabContentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,6 +30,18 @@ class TabViewModel @Inject constructor(
                     tabItems = items
                 )
             )
+        }
+    }
+
+    fun onRefresh() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isRefreshing = true)
+            }
+            delay(1000)
+            _uiState.update {
+                it.copy(isRefreshing = false)
+            }
         }
     }
 

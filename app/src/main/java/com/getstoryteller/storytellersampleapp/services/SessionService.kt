@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellersampleapp.services
 
 import android.content.SharedPreferences
+import java.util.UUID
 
 interface SessionService {
     var apiKey: String?
@@ -8,6 +9,9 @@ interface SessionService {
     var language: String?
     var team: String?
     var hasAccount: Boolean
+    var trackEvents: Boolean
+
+    fun reset()
 }
 
 class SessionServiceImpl(private val prefs: SharedPreferences) : SessionService {
@@ -18,6 +22,7 @@ class SessionServiceImpl(private val prefs: SharedPreferences) : SessionService 
         private const val KEY_LANGUAGE = "KEY_LANGUAGE"
         private const val KEY_TEAM = "KEY_TEAM"
         private const val KEY_HAS_ACCOUNT = "KEY_HAS_ACCOUNT"
+        private const val KEY_TRACK_EVENTS = "KEY_TRACK_EVENTS"
     }
 
     override var apiKey: String?
@@ -39,4 +44,16 @@ class SessionServiceImpl(private val prefs: SharedPreferences) : SessionService 
     override var hasAccount: Boolean
         get() = prefs.getBoolean(KEY_HAS_ACCOUNT, false)
         set(value) = prefs.edit().putBoolean(KEY_HAS_ACCOUNT, value).apply()
+
+    override var trackEvents: Boolean
+        get() = prefs.getBoolean(KEY_TRACK_EVENTS, true)
+        set(value) = prefs.edit().putBoolean(KEY_TRACK_EVENTS, value).apply()
+
+    override fun reset() {
+        userId = UUID.randomUUID().toString()
+        trackEvents = true
+        hasAccount = false
+        language = null
+        team = null
+    }
 }

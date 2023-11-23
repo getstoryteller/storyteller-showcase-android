@@ -2,6 +2,7 @@ package com.getstoryteller.storytellersampleapp.features.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -31,20 +33,25 @@ fun AccountScreen(
     navController: NavController,
     viewModel: AccountViewModel,
     config: Config?,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onRefresh: () -> Unit
 ) {
-
     val isLoggedOut by viewModel.isLoggedOut.collectAsState()
+    val refreshMainPage by viewModel.refreshMainPage.collectAsState()
     if (isLoggedOut) {
         navController.navigateUp()
         onLogout()
+    }
+    if (refreshMainPage) {
+        navController.navigateUp()
+        onRefresh()
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = colorResource(id = R.color.background_settings)
+                color = MaterialTheme.colors.surface
             )
     ) {
         Column(
@@ -56,7 +63,7 @@ fun AccountScreen(
                 Text(
                     text = "PERSONALISATION",
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                    color = colorResource(id = R.color.text_label)
+                    color = MaterialTheme.colors.onSurface
                 )
                 if (it.teams.isNotEmpty()) {
                     SettingsRow(
@@ -85,9 +92,22 @@ fun AccountScreen(
             Text(
                 text = "SETTINGS",
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                color = colorResource(id = R.color.text_label)
+                color = MaterialTheme.colors.onSurface
             )
-            SettingsRow(text = "Reset")
+            SettingsRow(
+                text = "Allow Event Tracking",
+                arrowVisible = true,
+                onClick = {
+                    navController.navigate("account/${OptionSelectType.EVENT_TRACKING.name}")
+                }
+            )
+            SettingsRow(
+                text = "Reset",
+                onClick = {
+                    viewModel.reset()
+                    navController.navigateUp()
+                }
+            )
             SettingsRow(
                 text = "Log Out",
                 color = colorResource(id = R.color.error),
@@ -106,11 +126,12 @@ fun SettingsRow(
     color: Color = colorResource(id = R.color.on_light_color_active),
     onClick: () -> Unit = {}
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .background(Color.White)
+            .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
             .clickable {
                 onClick()
             },
@@ -121,14 +142,14 @@ fun SettingsRow(
             modifier = Modifier
                 .padding(start = 16.dp)
                 .weight(1f),
-            color = color
+            color = MaterialTheme.colors.onBackground
         )
         if (arrowVisible) {
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "",
                 modifier = Modifier.padding(end = 16.dp),
-                tint = color
+                tint = MaterialTheme.colors.onBackground
             )
         }
     }

@@ -1,9 +1,12 @@
 package com.getstoryteller.storytellersampleapp.ui
 
+import android.view.Gravity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,7 +35,10 @@ fun StorytellerItem(
     navController: NavController,
     disableHeader: Boolean = false
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         if (uiModel.title.isNotEmpty() && !disableHeader) {
             ListHeader(
                 text = uiModel.title,
@@ -55,8 +61,7 @@ fun StorytellerItem(
                         StorytellerStoriesRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(150.dp)
-                                .padding(bottom = 16.dp),
+                                .height(150.dp),
                             dataModel = StorytellerStoriesDataModel(
                                 theme = Storyteller.theme,
                                 uiStyle = StorytellerListViewStyle.AUTO,
@@ -74,7 +79,7 @@ fun StorytellerItem(
 
                     LayoutType.GRID -> {
                         StorytellerStoriesGrid(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp),
                             dataModel = StorytellerStoriesDataModel(
                                 theme = Storyteller.theme,
                                 uiStyle = StorytellerListViewStyle.AUTO,
@@ -93,9 +98,40 @@ fun StorytellerItem(
 
                     LayoutType.SINGLETON -> {
                         StorytellerStoriesGrid(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp),
                             dataModel = StorytellerStoriesDataModel(
-                                theme = Storyteller.theme,
+                                theme = Storyteller.theme?.let {
+                                    it.copy(
+                                        light = it.light.copy(
+                                            lists = it.light.lists.copy(
+                                                grid = it.light.lists.grid.copy(
+                                                    columns = 1
+                                                )
+                                            ),
+                                            storyTiles = it.light.storyTiles.copy(
+                                                title = it.light.storyTiles.title.copy(
+                                                    titleSize = 21,
+                                                    alignment = Gravity.START,
+                                                    lineHeight = 24
+                                                )
+                                            )
+                                        ),
+                                        dark = it.dark.copy(
+                                            lists = it.dark.lists.copy(
+                                                grid = it.dark.lists.grid.copy(
+                                                    columns = 1
+                                                )
+                                            ),
+                                            storyTiles = it.dark.storyTiles.copy(
+                                                title = it.dark.storyTiles.title.copy(
+                                                    titleSize = 21,
+                                                    alignment = Gravity.START,
+                                                    lineHeight = 24
+                                                )
+                                            )
+                                        )
+                                    )
+                                },
                                 uiStyle = StorytellerListViewStyle.AUTO,
                                 displayLimit = 1,
                                 categories = uiModel.categories,
@@ -137,9 +173,41 @@ fun StorytellerItem(
 
                     LayoutType.SINGLETON -> {
                         StorytellerClipsGrid(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(start = 12.dp, end = 12.dp),
                             dataModel = StorytellerClipsDataModel(
-                                theme = Storyteller.theme,
+                                theme = Storyteller.theme?.let {
+                                    it.copy(
+                                        light = it.light.copy(
+                                            lists = it.light.lists.copy(
+                                                grid = it.light.lists.grid.copy(
+                                                    columns = 1
+                                                )
+                                            ),
+                                            storyTiles = it.light.storyTiles.copy(
+                                                title = it.light.storyTiles.title.copy(
+                                                    titleSize = 21,
+                                                    alignment = Gravity.START,
+                                                    lineHeight = 24
+                                                )
+                                            )
+                                        ),
+                                        dark = it.dark.copy(
+                                            lists = it.dark.lists.copy(
+                                                grid = it.dark.lists.grid.copy(
+                                                    columns = 1
+                                                )
+                                            ),
+                                            storyTiles = it.dark.storyTiles.copy(
+                                                title = it.dark.storyTiles.title.copy(
+                                                    titleSize = 21,
+                                                    alignment = Gravity.START,
+                                                    lineHeight = 24
+                                                )
+                                            )
+                                        )
+                                    )
+                                },
                                 uiStyle = StorytellerListViewStyle.AUTO,
                                 displayLimit = 1,
                                 collection = uiModel.collectionId ?: "",
@@ -156,7 +224,8 @@ fun StorytellerItem(
 
                     LayoutType.GRID -> {
                         StorytellerClipsGrid(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(start = 12.dp, end = 12.dp),
                             dataModel = StorytellerClipsDataModel(
                                 theme = Storyteller.theme,
                                 uiStyle = StorytellerListViewStyle.AUTO,

@@ -65,6 +65,12 @@ class MainViewModel @Inject constructor(
     fun logout() {
         loginDialogVisible.value = true
     }
+
+    fun refreshMainPage() {
+        _uiState.update {
+            it.copy(isRefreshing = true)
+        }
+    }
 }
 
 data class MainPageUiState(
