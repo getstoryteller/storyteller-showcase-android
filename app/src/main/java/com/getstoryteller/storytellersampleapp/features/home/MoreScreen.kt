@@ -1,0 +1,32 @@
+package com.getstoryteller.storytellersampleapp.features.home
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import com.getstoryteller.storytellersampleapp.data.LayoutType
+import com.getstoryteller.storytellersampleapp.data.TileType
+import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
+
+@Composable
+fun MoreScreen(
+    pageItemUiModel: PageItemUiModel,
+    viewModel: MoreViewModel,
+    navController: NavController
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        StorytellerItem(
+            uiModel = pageItemUiModel.copy(
+                tileType = TileType.RECTANGULAR,
+                layout = LayoutType.GRID
+            ),
+            isRefreshing = true,
+            navController = navController,
+            disableHeader = true
+        )
+    }
+}
