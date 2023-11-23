@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,9 +57,9 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
-    val refreshing by remember { viewModel.refreshing }
-    val ptrState = rememberPullRefreshState(refreshing, onRefresh)
-    val rotation = animateFloatAsState(ptrState.progress * 120)
+    val refreshing by remember { derivedStateOf { viewModel.refreshing } }
+    val ptrState = rememberPullRefreshState(refreshing.value, onRefresh)
+    val rotation = animateFloatAsState(ptrState.progress * 120, label = "rotation")
     val darkMode by remember { viewModel.isDarkMode }
     Box(
         modifier = modifier
@@ -75,7 +76,7 @@ fun MainScreen(
             state = listState
         ) {
             item {
-                Header("Row View")
+                Header(text = "Storyteller Stories Row Example")
             }
             item {
                 StorytellerStoriesRow(
@@ -88,47 +89,48 @@ fun MainScreen(
                         cellType = StorytellerListViewCellType.SQUARE
                     ),
                     delegate = storytellerListViewDelegate,
-                    isRefreshing = refreshing,
+                    isRefreshing = refreshing.value,
                 )
             }
+//            item {
+//              Header(text = "Storyteller Stories Grid Example")
+//            }
+//            item {
+//                StorytellerStoriesGrid(
+//                    modifier = Modifier.fillMaxWidth()
+//                        .wrapContentHeight(),
+//                    dataModel = StorytellerStoriesDataModel(
+//                        categories = listOf(),
+//                        uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
+//                        cellType = StorytellerListViewCellType.SQUARE
+//                    ),
+//                    isScrollable = false,
+//                    delegate = storytellerListViewDelegate,
+//                    isRefreshing = refreshing.value,
+//                )
+//            }
+//            item {
+//              Header(text = "Storyteller Clips Row Example")
+//            }
+//            item {
+//                StorytellerClipsRow(
+//                    modifier = Modifier.height(200.dp).fillMaxWidth(),
+//                    dataModel = StorytellerClipsDataModel(
+//                        collection = "clipssample",
+//                        uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
+//                        cellType = StorytellerListViewCellType.SQUARE
+//                    ),
+//                    delegate = storytellerListViewDelegate,
+//                    isRefreshing = refreshing.value,
+//                )
+//            }
             item {
-                Header("Grid View")
-            }
-            item {
-                StorytellerStoriesGrid(
-                    modifier = Modifier.fillMaxWidth()
-                        .wrapContentHeight(),
-                    dataModel = StorytellerStoriesDataModel(
-                        categories = listOf(),
-                        uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
-                        cellType = StorytellerListViewCellType.SQUARE
-                    ),
-                    isScrollable = false,
-                    delegate = storytellerListViewDelegate,
-                    isRefreshing = refreshing,
-                )
-            }
-            item {
-                Header("Clips Row View")
-            }
-            item {
-                StorytellerClipsRow(
-                    modifier = Modifier.height(200.dp).fillMaxWidth(),
-                    dataModel = StorytellerClipsDataModel(
-                        collection = "clipssample",
-                        uiStyle = if (darkMode) StorytellerListViewStyle.DARK else StorytellerListViewStyle.LIGHT,
-                        cellType = StorytellerListViewCellType.SQUARE
-                    ),
-                    delegate = storytellerListViewDelegate,
-                    isRefreshing = refreshing,
-                )
-            }
-            item {
-                Header("Clips Grid View")
+                Header(text = "Storyteller Clips Grid Example")
             }
             item {
                 StorytellerClipsGrid(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .wrapContentHeight(),
                     dataModel = StorytellerClipsDataModel(
                         collection = "clipssample",
@@ -137,17 +139,20 @@ fun MainScreen(
                         cellType = StorytellerListViewCellType.SQUARE
                     ),
                     delegate = storytellerListViewDelegate,
-                    isRefreshing = refreshing,
+                    isRefreshing = refreshing.value,
                     isScrollable = false
                 )
             }
             item {
-                Header("Clips Grid View - no data")
+                AnimatedVisibility(visible = shouldShowRow) {
+                    Header(text = "Clips Grid View - no data") // This will be hidden automatically when there is data
+                }
             }
             item {
                 AnimatedVisibility(visible = shouldShowRow) {
                     StorytellerClipsGrid(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .wrapContentHeight(),
                         dataModel = StorytellerClipsDataModel(
                             collection = "not-existing",
@@ -158,7 +163,7 @@ fun MainScreen(
                         delegate = hasDataStorytellerDelegate { hasData ->
                             shouldShowRow = hasData
                         },
-                        isRefreshing = refreshing,
+                        isRefreshing = refreshing.value,
                         isScrollable = false,
                     )
                 }
@@ -183,11 +188,11 @@ fun MainScreen(
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    val userNavigatedToApp by viewModel.userNavigatedToApp
-                        .collectAsStateWithLifecycle(initialValue = "")
+                    val userNavigatedToApp by viewModel.userNavigatedToApp.collectAsStateWithLifecycle(
+                            initialValue = ""
+                        )
                     NavigatedToApp(
-                        text = userNavigatedToApp,
-                        onUserNavigatedToApp = onUserNavigatedToApp
+                        text = userNavigatedToApp, onUserNavigatedToApp = onUserNavigatedToApp
                     )
                 }
             }
@@ -208,11 +213,10 @@ fun MainScreen(
         }
 
         PullToRefresh(
-            modifier = Modifier
-                .align(Alignment.TopCenter),
+            modifier = Modifier.align(Alignment.TopCenter),
             state = ptrState,
             rotation = rotation.value,
-            refreshing = refreshing
+            refreshing = refreshing.value
         )
     }
 }
