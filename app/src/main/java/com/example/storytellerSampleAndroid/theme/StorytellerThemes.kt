@@ -11,7 +11,7 @@ import com.storyteller.domain.entities.theme.builders.ofHexCode
  */
 object StorytellerThemes {
 
-  fun getGlobalTheme(context: Context) = buildTheme(context) {
+  fun getGlobalTheme(context: Context) = buildTheme {
       light{
         colors.primary = ofHexCode("#0000FF")
         //font = ResourcesCompat.getFont(context, R.font.your_custom_font)
@@ -27,7 +27,7 @@ object StorytellerThemes {
       dark from light // use light theme in dark mode this can also be modified with uiMode parameter on the views
   }
 
-  fun getCustomTheme(context: Context) = buildTheme(context) {
+  fun getCustomTheme(context: Context) = buildTheme {
     light{
       colors.primary = ofHexCode("#FF00FF")
       //font = ResourcesCompat.getFont(context, R.font.your_custom_font)
