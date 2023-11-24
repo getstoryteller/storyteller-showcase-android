@@ -1,7 +1,9 @@
 package com.getstoryteller.storytellersampleapp.services
 
 import android.graphics.Bitmap
+import android.util.Log
 import android.webkit.WebView
+import com.getstoryteller.storytellersampleapp.ads.StorytellerAdsDelegate
 import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.UserActivity
@@ -19,7 +21,8 @@ interface StorytellerService {
 }
 
 class StorytellerServiceImpl @Inject constructor(
-    private val sessionService: SessionService
+    private val sessionService: SessionService,
+    private val storytellerAdsDelegate: StorytellerAdsDelegate
 ) : StorytellerService {
 
     companion object {
@@ -30,6 +33,7 @@ class StorytellerServiceImpl @Inject constructor(
 
     override fun initStoryteller() {
         Storyteller.apply {
+            this.storytellerDelegate = storytellerAdsDelegate
             this.initialize(
                 apiKey = sessionService.apiKey ?: "",
                 userInput = sessionService.userId?.let { UserInput(it) },

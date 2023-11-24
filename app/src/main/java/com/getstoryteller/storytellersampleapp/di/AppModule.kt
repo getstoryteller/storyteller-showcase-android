@@ -1,5 +1,8 @@
 package com.getstoryteller.storytellersampleapp.di
 
+import android.content.Context
+import com.getstoryteller.storytellersampleapp.ads.NativeAdsManager
+import com.getstoryteller.storytellersampleapp.ads.StorytellerAdsDelegate
 import com.getstoryteller.storytellersampleapp.api.ApiService
 import com.getstoryteller.storytellersampleapp.data.repo.AuthRepository
 import com.getstoryteller.storytellersampleapp.data.repo.AuthRepositoryImpl
@@ -23,6 +26,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(ViewModelComponent::class)
