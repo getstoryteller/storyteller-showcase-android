@@ -26,11 +26,13 @@ object ServicesModule {
         )
 
     @Provides
+    @Singleton
     fun provideNativeAdsManager(
         @ApplicationContext context: Context
     ): NativeAdsManager = NativeAdsManager(context)
 
     @Provides
+    @Singleton
     fun provideStorytellerAdsDelegate(
         nativeAdsManager : NativeAdsManager
     ): StorytellerAdsDelegate = StorytellerAdsDelegate(nativeAdsManager)

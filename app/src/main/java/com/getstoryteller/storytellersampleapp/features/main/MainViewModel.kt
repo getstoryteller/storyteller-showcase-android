@@ -7,6 +7,7 @@ import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellersampleapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellersampleapp.services.SessionService
+import com.getstoryteller.storytellersampleapp.services.StorytellerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val verifyCodeUseCase: VerifyCodeUseCase,
     private val getConfigurationUseCase: GetConfigurationUseCase,
-    private val sessionService: SessionService
+    private val sessionService: SessionService,
+    private val storytellerService: StorytellerService
 ) : ViewModel() {
 
     private var config: Config? = null
@@ -36,8 +38,15 @@ class MainViewModel @Inject constructor(
         if (sessionService.apiKey != null) {
             viewModelScope.launch {
                 config = getConfigurationUseCase.getConfiguration()
+                initStoryteller()
                 _uiState.emit(MainPageUiState(config = config))
             }
+        }
+    }
+
+    private fun initStoryteller() {
+        if (sessionService.apiKey != null) {
+            storytellerService.initStoryteller()
         }
     }
 

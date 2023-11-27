@@ -19,6 +19,7 @@ import com.getstoryteller.storytellersampleapp.ads.AdConstants.Companion.VIDEO
 import com.getstoryteller.storytellersampleapp.ads.AdConstants.Companion.VIDEO_URL
 import com.getstoryteller.storytellersampleapp.ads.AdConstants.Companion.WEB
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
+import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo.ClipsAdRequestInfo
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo.StoriesAdRequestInfo
@@ -55,6 +56,7 @@ class StorytellerAdsDelegate(
   ) {
     when (adRequestInfo) {
       is ClipsAdRequestInfo -> {
+
         handleClipAds(adRequestInfo, onComplete, onError)
       }
 
@@ -75,7 +77,8 @@ class StorytellerAdsDelegate(
       val customMap = mapOf(
         "stCollection" to adRequestInfo.collection,
         "stClipCategories" to adRequestInfo.itemCategories,
-        "stClipId" to adRequestInfo.itemInfo.id
+        "stClipId" to adRequestInfo.itemInfo.id,
+        "stApiKey" to Storyteller.currentApiKey
       )
 
       nativeAdsManager.requestAd(
@@ -96,13 +99,13 @@ class StorytellerAdsDelegate(
                 }
               } catch (ex: Exception) {
                 onError()
-                Log.w("StorytellerAds", "Failed to send ads to storyteller", ex)
+                Log.w("GamAds", "Failed to send ads to storyteller", ex)
               }
             }
           }
         },
         onAdDataFailed = {
-          Log.w("StorytellerAds", "Error when fetching GAM Ad: $it")
+          Log.w("GamAds", "Error when fetching GAM Ad: $it")
         }
       )
     }
@@ -118,7 +121,8 @@ class StorytellerAdsDelegate(
         "stStoryId" to adRequestInfo.itemInfo.id,
         "stCategories" to adRequestInfo.itemCategories,
         "stPlacement" to adRequestInfo.placement,
-        "stCurrentCategory" to adRequestInfo.categories.joinToString(separator = ",")
+        "stCurrentCategory" to adRequestInfo.categories.joinToString(separator = ","),
+        "stApiKey" to Storyteller.currentApiKey
       )
       nativeAdsManager.requestAd(
         adUnit = storiesAdUnitId,
@@ -138,13 +142,13 @@ class StorytellerAdsDelegate(
                 }
               } catch (ex: Exception) {
                 onError()
-                Log.w("StorytellerAds", "Failed to send ads to storyteller", ex)
+                Log.w("GamAds", "Failed to send ads to storyteller", ex)
               }
             }
           }
         },
         onAdDataFailed = {
-          Log.w("StorytellerAds", "Error when fetching GAM Ad: $it")
+          Log.w("GamAds", "Error when fetching GAM Ad: $it")
         }
       )
     }
