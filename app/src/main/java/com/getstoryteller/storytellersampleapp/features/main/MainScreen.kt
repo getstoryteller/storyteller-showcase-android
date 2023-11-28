@@ -203,7 +203,7 @@ fun MainScreen(
                     }
                 })
         }
-    ) { _ ->
+    ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             NavHost(
                 navController = navController, startDestination = "home"
@@ -221,6 +221,7 @@ fun MainScreen(
                 composable("watch") {
                     navigationState = PageState.HOME
                     WatchScreen(
+                        modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
                         viewModel = hiltViewModel(),
                         fragmentManager = fragmentManager,
                         config = mainPageUiState.config

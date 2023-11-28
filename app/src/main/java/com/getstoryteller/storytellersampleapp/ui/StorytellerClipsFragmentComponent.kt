@@ -13,8 +13,7 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 fun StorytellerClipsFragmentComponent(
     fragmentManager: FragmentManager,
     modifier: Modifier = Modifier,
-    collectionId: String,
-    height: Int = 0
+    collectionId: String
 ) {
     AndroidView(
         modifier = modifier,
@@ -24,7 +23,7 @@ fun StorytellerClipsFragmentComponent(
                 id = containerId
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    height
+                  ViewGroup.LayoutParams.MATCH_PARENT
                 )
             }
 
