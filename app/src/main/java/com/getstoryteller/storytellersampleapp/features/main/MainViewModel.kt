@@ -20,8 +20,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val verifyCodeUseCase: VerifyCodeUseCase,
     private val getConfigurationUseCase: GetConfigurationUseCase,
-    private val sessionService: SessionService,
-    private val storytellerService: StorytellerService
+    private val sessionService: SessionService
 ) : ViewModel() {
 
     private var config: Config? = null
@@ -38,15 +37,8 @@ class MainViewModel @Inject constructor(
         if (sessionService.apiKey != null) {
             viewModelScope.launch {
                 config = getConfigurationUseCase.getConfiguration()
-                initStoryteller()
                 _uiState.emit(MainPageUiState(config = config))
             }
-        }
-    }
-
-    private fun initStoryteller() {
-        if (sessionService.apiKey != null) {
-            storytellerService.initStoryteller()
         }
     }
 
