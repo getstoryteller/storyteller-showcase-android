@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,28 +20,22 @@ import com.getstoryteller.storytellersampleapp.ui.StorytellerClipsFragmentCompon
 
 @Composable
 fun WatchScreen(
+    modifier: Modifier,
     viewModel: WatchViewModel,
     fragmentManager: FragmentManager,
     config: Config?
 ) {
-    var columnHeightPx by remember {
-        mutableStateOf(0)
-    }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Red)
-            .onGloballyPositioned {
-                columnHeightPx = it.size.height
-            }
     ) {
         StorytellerClipsFragmentComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),
             fragmentManager = fragmentManager,
-            collectionId = config?.topLevelCollectionId ?: "",
-            height = columnHeightPx
+            collectionId = config?.topLevelCollectionId ?: ""
         )
     }
 }

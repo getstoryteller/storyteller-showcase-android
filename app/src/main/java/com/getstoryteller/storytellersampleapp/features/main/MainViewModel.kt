@@ -7,6 +7,7 @@ import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellersampleapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellersampleapp.services.SessionService
+import com.getstoryteller.storytellersampleapp.services.StorytellerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
