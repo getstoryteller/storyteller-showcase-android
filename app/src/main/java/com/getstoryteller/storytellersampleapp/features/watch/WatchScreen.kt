@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.getstoryteller.storytellersampleapp.domain.Config
-import com.getstoryteller.storytellersampleapp.ui.FragmentContainer
+import com.getstoryteller.storytellersampleapp.ui.StorytellerEmbeddedClips
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
@@ -26,7 +26,7 @@ fun WatchScreen(
       .fillMaxSize()
       .background(Color.Red),
   ) {
-    FragmentContainer(
+    StorytellerEmbeddedClips(
       modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight(),

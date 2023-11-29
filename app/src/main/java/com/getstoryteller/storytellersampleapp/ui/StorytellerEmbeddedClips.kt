@@ -19,7 +19,7 @@ import androidx.fragment.app.commit
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
-fun FragmentContainer(
+fun StorytellerEmbeddedClips(
   modifier: Modifier = Modifier,
   onCommit: FragmentTransaction.(containerId: Int) -> Unit,
 ) {
