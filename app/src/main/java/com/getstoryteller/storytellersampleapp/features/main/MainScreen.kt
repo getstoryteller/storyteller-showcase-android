@@ -32,10 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -60,7 +60,10 @@ fun MainScreen(
   activity: Activity,
   navController: NavHostController,
   viewModel: MainViewModel,
-  fragmentManager: FragmentManager
+  onCommit: (
+    fragment: Fragment,
+    tag: String,
+  ) -> (FragmentTransaction.(containerId: Int) -> Unit),
 ) {
   val isLoginDialogVisible = viewModel.loginDialogVisible.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
@@ -91,12 +94,12 @@ fun MainScreen(
               onClick = {
                 Storyteller.openSearch(activity)
               },
-              enabled = !mainPageUiState.isRefreshing
+              enabled = !mainPageUiState.isRefreshing,
             ) {
               Icon(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "",
-                tint = MaterialTheme.colors.onBackground
+                tint = MaterialTheme.colors.onBackground,
               )
             }
             IconButton(
@@ -110,12 +113,12 @@ fun MainScreen(
                   restoreState = true
                 }
               },
-              enabled = !mainPageUiState.isRefreshing
+              enabled = !mainPageUiState.isRefreshing,
             ) {
               Icon(
                 imageVector = Icons.Filled.AccountCircle,
                 contentDescription = "",
-                tint = MaterialTheme.colors.onBackground
+                tint = MaterialTheme.colors.onBackground,
               )
             }
           }
@@ -124,22 +127,21 @@ fun MainScreen(
           IconButton(onClick = {
             navController.navigateUp()
           }) {
-            if (navigationState != PageState.HOME)
+            if (navigationState != PageState.HOME) {
               Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = null,
-                tint = MaterialTheme.colors.onBackground
+                tint = MaterialTheme.colors.onBackground,
               )
-            else {
+            } else {
               Icon(
                 painter = painterResource(id = R.drawable.ic_logo_icon),
                 contentDescription = null,
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
               )
             }
-
           }
-        }
+        },
       )
     },
     bottomBar = {
@@ -147,7 +149,7 @@ fun MainScreen(
         visible = navigationState == PageState.HOME,
         content = {
           BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background
+            backgroundColor = MaterialTheme.colors.background,
           ) {
             val backStackEntry = navController.currentBackStackEntryAsState()
             val navbackEntry by navController.currentBackStackEntryAsState()
@@ -158,13 +160,13 @@ fun MainScreen(
                 Icon(
                   painter = painterResource(id = R.drawable.ic_home),
                   contentDescription = null,
-                  tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+                  tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
                 )
               },
               label = {
                 Text(
                   text = "Home",
-                  color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+                  color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
                 )
               },
               selected = navbackEntry?.destination?.route == "home",
@@ -177,20 +179,20 @@ fun MainScreen(
                   launchSingleTop = true
                   restoreState = true
                 }
-              }
+              },
             )
             BottomNavigationItem(
               icon = {
                 Icon(
                   painter = painterResource(id = R.drawable.ic_watch),
                   contentDescription = null,
-                  tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+                  tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
                 )
               },
               label = {
                 Text(
                   text = "Watch",
-                  color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+                  color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
                 )
               },
               selected = navbackEntry?.destination?.route == "watch",
@@ -203,17 +205,18 @@ fun MainScreen(
                   launchSingleTop = true
                   restoreState = true
                 }
-              }
+              },
             )
           }
-        })
-    }
+        },
+      )
+    },
   ) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize()) {
       NavHost(
-        navController = navController, startDestination = "home"
+        navController = navController,
+        startDestination = "home",
       ) {
-
         composable("home") {
           shouldPlay.value = false
           navigationState = PageState.HOME
@@ -221,7 +224,7 @@ fun MainScreen(
             viewModel = hiltViewModel(),
             config = mainPageUiState.config,
             navController = navController,
-            isRefreshing = mainPageUiState.isRefreshing
+            isRefreshing = mainPageUiState.isRefreshing,
           )
         }
         composable("watch") {
@@ -229,11 +232,9 @@ fun MainScreen(
           shouldPlay.value = true
           WatchScreen(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
-            activity = activity,
-            viewModel = hiltViewModel(),
-            fragmentManager = fragmentManager,
             config = mainPageUiState.config,
-            shouldPlay = shouldPlay
+            tag = "watch",
+            onCommit = onCommit,
           )
         }
         composable("account") {
@@ -250,7 +251,7 @@ fun MainScreen(
             onRefresh = {
               navigationState = PageState.HOME
               viewModel.refreshMainPage()
-            }
+            },
           )
         }
         composable("account/{option}") {
@@ -261,7 +262,7 @@ fun MainScreen(
             navController = navController,
             viewModel = hiltViewModel(),
             optionSelectType = option,
-            config = mainPageUiState.config!!
+            config = mainPageUiState.config!!,
           )
         }
         composable("moreClips/{model}") { backStackEntry ->
@@ -273,7 +274,7 @@ fun MainScreen(
             MoreScreen(
               pageItemUiModel = it,
               viewModel = hiltViewModel(),
-              navController = navController
+              navController = navController,
             )
           }
         }
@@ -286,7 +287,7 @@ fun MainScreen(
             MoreScreen(
               pageItemUiModel = it,
               viewModel = hiltViewModel(),
-              navController = navController
+              navController = navController,
             )
           }
         }
@@ -296,7 +297,7 @@ fun MainScreen(
           modifier = Modifier
             .padding(16.dp)
             .background(color = MaterialTheme.colors.surface)
-            .align(Alignment.Center)
+            .align(Alignment.Center),
         )
       }
     }

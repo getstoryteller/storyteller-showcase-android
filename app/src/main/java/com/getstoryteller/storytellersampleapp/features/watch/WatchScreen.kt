@@ -1,47 +1,39 @@
 package com.getstoryteller.storytellersampleapp.features.watch
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.getstoryteller.storytellersampleapp.domain.Config
-import com.getstoryteller.storytellersampleapp.ui.StorytellerClipsFragmentComponent
+import com.getstoryteller.storytellersampleapp.ui.FragmentContainer
+import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
 fun WatchScreen(
-    modifier: Modifier,
-    activity: Activity,
-    viewModel: WatchViewModel,
-    fragmentManager: FragmentManager,
-    config: Config?,
-    shouldPlay: MutableState<Boolean>
+  modifier: Modifier,
+  config: Config?,
+  onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
+  tag: String,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Red)
-    ) {
-        StorytellerClipsFragmentComponent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            fragmentManager = fragmentManager,
-          activity = activity,
-            collectionId = config?.topLevelCollectionId ?: "",
-          shouldPlay = shouldPlay
-        )
-    }
+  Box(
+    modifier = modifier
+      .fillMaxSize()
+      .background(Color.Red),
+  ) {
+    FragmentContainer(
+      modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight(),
+      onCommit = onCommit(
+        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: ""),
+        tag,
+      ),
+    )
+  }
 }
