@@ -70,72 +70,76 @@ fun MainScreen(
     var title by remember {
         mutableStateOf("")
     }
+    var showTopBar by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
-            TopAppBar(
+            if(showTopBar) {
+              TopAppBar(
                 backgroundColor = MaterialTheme.colors.background,
                 contentColor = MaterialTheme.colors.onBackground,
                 title = {
-                    if (navigationState != PageState.HOME) {
-                        Text(text = title)
-                    }
+                  if (navigationState != PageState.HOME) {
+                    Text(text = title)
+                  }
                 },
                 actions = {
-                    if (navigationState == PageState.HOME) {
-                        IconButton(
-                            onClick = {
-                                Storyteller.openSearch(activity)
-                            },
-                            enabled = !mainPageUiState.isRefreshing
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = "",
-                                tint = MaterialTheme.colors.onBackground
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                navigationState = PageState.ACCOUNT
-                                navController.navigate("account") {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            enabled = !mainPageUiState.isRefreshing
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.AccountCircle,
-                                contentDescription = "",
-                                tint = MaterialTheme.colors.onBackground
-                            )
-                        }
+                  if (navigationState == PageState.HOME) {
+                    IconButton(
+                      onClick = {
+                        Storyteller.openSearch(activity)
+                      },
+                      enabled = !mainPageUiState.isRefreshing
+                    ) {
+                      Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.onBackground
+                      )
                     }
+                    IconButton(
+                      onClick = {
+                        navigationState = PageState.ACCOUNT
+                        navController.navigate("account") {
+                          popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                          }
+                          launchSingleTop = true
+                          restoreState = true
+                        }
+                      },
+                      enabled = !mainPageUiState.isRefreshing
+                    ) {
+                      Icon(
+                        imageVector = Icons.Filled.AccountCircle,
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.onBackground
+                      )
+                    }
+                  }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        if (navigationState != PageState.HOME)
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.onBackground
-                            )
-                        else {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_logo_icon),
-                                contentDescription = null,
-                                tint = Color.Unspecified
-                            )
-                        }
-
+                  IconButton(onClick = {
+                    navController.navigateUp()
+                  }) {
+                    if (navigationState != PageState.HOME)
+                      Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onBackground
+                      )
+                    else {
+                      Icon(
+                        painter = painterResource(id = R.drawable.ic_logo_icon),
+                        contentDescription = null,
+                        tint = Color.Unspecified
+                      )
                     }
+
+                  }
                 }
-            )
+              )
+            }
         },
         bottomBar = {
             AnimatedVisibility(
@@ -164,6 +168,7 @@ fun MainScreen(
                             },
                             selected = navbackEntry?.destination?.route == "home",
                             onClick = {
+                                showTopBar = true
                                 navController.navigate("home") {
                                     navigationState = PageState.HOME
                                     popUpTo(navController.graph.startDestinationId) {
@@ -190,6 +195,7 @@ fun MainScreen(
                             },
                             selected = navbackEntry?.destination?.route == "watch",
                             onClick = {
+                                showTopBar = false
                                 navigationState = PageState.HOME
                                 navController.navigate("watch") {
                                     popUpTo(navController.graph.startDestinationId) {
