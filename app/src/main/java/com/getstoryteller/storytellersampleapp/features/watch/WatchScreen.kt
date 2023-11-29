@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellersampleapp.features.watch
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,9 +23,11 @@ import com.getstoryteller.storytellersampleapp.ui.StorytellerClipsFragmentCompon
 @Composable
 fun WatchScreen(
     modifier: Modifier,
+    activity: Activity,
     viewModel: WatchViewModel,
     fragmentManager: FragmentManager,
-    config: Config?
+    config: Config?,
+    shouldPlay: MutableState<Boolean>
 ) {
     Box(
         modifier = modifier
@@ -35,7 +39,9 @@ fun WatchScreen(
                 .fillMaxWidth()
                 .fillMaxHeight(),
             fragmentManager = fragmentManager,
-            collectionId = config?.topLevelCollectionId ?: ""
+          activity = activity,
+            collectionId = config?.topLevelCollectionId ?: "",
+          shouldPlay = shouldPlay
         )
     }
 }
