@@ -41,14 +41,13 @@ class HomeViewModel @Inject constructor(
 
             val homeItems =
                 if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
-            _uiState.emit(
+            _uiState.value =
                 HomePageUiState(
                     isRefreshing = false,
                     tabsEnabled = config.tabsEnabled,
                     homeItems = homeItems,
                     tabs = config.tabs
                 )
-            )
         }
     }
 }

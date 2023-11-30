@@ -59,7 +59,10 @@ fun OptionSelectScreen(
                 RadioButton(selected = uiState.selectedOption == model.key, onClick = {
                     viewModel.selectOption(model.key)
                 })
-                Text(model.value)
+                Text(
+                  color = MaterialTheme.colors.onBackground,
+                  text = model.value
+                )
             }
         }
     }

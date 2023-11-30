@@ -29,63 +29,64 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
+import java.util.UUID
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
-    config: Config?,
-    navController: NavController,
-    isRefreshing: Boolean
+  viewModel: HomeViewModel,
+  config: Config?,
+  navController: NavController,
+  isRefreshing: Boolean
 ) {
-    LaunchedEffect(key1 = config?.topLevelCollectionId ?: "home", block = {
-        config?.let {
-            viewModel.loadHomePage(it)
-        }
-    })
+  LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
+    config?.let {
+      viewModel.loadHomePage(it)
+    }
+  })
 
-    val pageUiState by viewModel.uiState.collectAsState()
-    val refreshState = rememberPullRefreshState(
-        refreshing = pageUiState.isRefreshing,
-        onRefresh = { viewModel.onRefresh() }
-    )
-    val listState = rememberLazyListState()
-    val listItems = pageUiState.homeItems
-    var columnHeightPx by remember {
-        mutableIntStateOf(0)
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pullRefresh(
-                state = refreshState
-            )
-            .onGloballyPositioned {
-                columnHeightPx = it.size.height
-            }
-    ) {
-        if (!pageUiState.tabsEnabled) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(top = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                state = listState
-            ) {
-                itemsIndexed(items = listItems) { _, uiModel ->
-                    StorytellerItem(
-                        uiModel = uiModel,
-                        isRefreshing = pageUiState.isRefreshing || isRefreshing,
-                        navController = navController
-                    )
-                }
-            }
-        } else {
-            TabLayout(
-                tabs = pageUiState.tabs,
-                rootNavController = navController,
-                isRefreshing = isRefreshing
-            )
+  val pageUiState by viewModel.uiState.collectAsState()
+  val refreshState = rememberPullRefreshState(
+    refreshing = pageUiState.isRefreshing,
+    onRefresh = { viewModel.onRefresh() }
+  )
+  val listState = rememberLazyListState()
+  val listItems = pageUiState.homeItems
+  var columnHeightPx by remember {
+    mutableIntStateOf(0)
+  }
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .pullRefresh(
+        state = refreshState
+      )
+      .onGloballyPositioned {
+        columnHeightPx = it.size.height
+      }
+  ) {
+    if (!pageUiState.tabsEnabled) {
+      LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(top = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = listState
+      ) {
+        itemsIndexed(items = listItems) { _, uiModel ->
+          StorytellerItem(
+            uiModel = uiModel,
+            isRefreshing = pageUiState.isRefreshing || isRefreshing,
+            navController = navController
+          )
         }
+      }
+    } else {
+      TabLayout(
+        tabs = pageUiState.tabs,
+        rootNavController = navController,
+        isRefreshing = isRefreshing
+      )
     }
+  }
 }

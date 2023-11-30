@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
@@ -49,7 +48,7 @@ import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
 import com.getstoryteller.storytellersampleapp.features.home.MoreScreen
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
-import com.getstoryteller.storytellersampleapp.features.watch.WatchScreen
+import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
 import com.storyteller.Storyteller
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -100,7 +99,7 @@ fun MainScreen(
                     IconButton(
                       onClick = {
                         navigationState = PageState.ACCOUNT
-                        navController.navigate("account") {
+                        navController.navigate("home/account") {
                           popUpTo(navController.graph.startDestinationId) {
                             saveState = true
                           }
@@ -193,11 +192,11 @@ fun MainScreen(
                                     color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                                 )
                             },
-                            selected = navbackEntry?.destination?.route == "watch",
+                            selected = navbackEntry?.destination?.route == "home/watch",
                             onClick = {
                                 showTopBar = false
                                 navigationState = PageState.HOME
-                                navController.navigate("watch") {
+                                navController.navigate("home/moments") {
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
                                     }
@@ -212,28 +211,29 @@ fun MainScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             NavHost(
-                navController = navController, startDestination = "home"
+                navController = navController,
+                startDestination = "home"
             ) {
 
                 composable("home") {
                     navigationState = PageState.HOME
                     HomeScreen(
-                        viewModel = hiltViewModel(),
+                        viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
                         config = mainPageUiState.config,
                         navController = navController,
                         isRefreshing = mainPageUiState.isRefreshing
                     )
                 }
-                composable("watch") {
+                composable("home/moments") {
                     navigationState = PageState.HOME
-                    WatchScreen(
+                    MomentsScreen(
                         modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
                         viewModel = hiltViewModel(),
                         fragmentManager = fragmentManager,
                         config = mainPageUiState.config
                     )
                 }
-                composable("account") {
+                composable("home/account") {
                     navigationState = PageState.ACCOUNT
                     title = "Account"
                     AccountScreen(
