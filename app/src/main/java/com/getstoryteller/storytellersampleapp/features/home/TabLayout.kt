@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.TabDto
+import com.getstoryteller.storytellersampleapp.domain.Config
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 fun TabLayout(
   tabs: List<TabDto>,
   rootNavController: NavController,
-  isRefreshing: Boolean
+  isRefreshing: Boolean,
+  config: Config?
 ) {
   val titles = tabs.map { it.name }
   val pagerState = rememberPagerState(pageCount = tabs.size)
@@ -66,7 +68,8 @@ fun TabLayout(
         tabId = tabValue,
         viewModel = viewModel,
         rootNavController = rootNavController,
-        isRefreshing = isRefreshing
+        isRefreshing = isRefreshing,
+        config = config
       )
     }
   }

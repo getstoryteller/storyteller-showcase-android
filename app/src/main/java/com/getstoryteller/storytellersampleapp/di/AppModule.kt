@@ -68,8 +68,9 @@ object AppModule {
 
     @Provides
     fun provideGetConfigUseCase(
-        tenantRepository: TenantRepository
-    ): GetConfigurationUseCase = GetConfigurationUseCaseImpl(tenantRepository)
+        tenantRepository: TenantRepository,
+        @ApplicationContext context: Context
+    ): GetConfigurationUseCase = GetConfigurationUseCaseImpl(tenantRepository, context)
 
     @Provides
     fun provideGetTabContentUseCase(

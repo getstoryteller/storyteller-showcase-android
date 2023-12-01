@@ -25,63 +25,67 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.ui.PullToRefresh
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TabScreen(
-    tabId: String,
-    viewModel: TabViewModel,
-    rootNavController: NavController,
-    isRefreshing: Boolean
+  tabId: String,
+  viewModel: TabViewModel,
+  rootNavController: NavController,
+  isRefreshing: Boolean,
+  config: Config?
 ) {
-    LaunchedEffect(key1 = tabId, block = {
-        viewModel.loadTab(tabId)
-    })
+  LaunchedEffect(key1 = tabId, block = {
+    viewModel.loadTab(tabId)
+  })
 
-    val pageUiState by viewModel.uiState.collectAsState()
-    val refreshState = rememberPullRefreshState(
-        refreshing = pageUiState.isRefreshing,
-        onRefresh = { viewModel.onRefresh() }
-    )
-    val listState = rememberLazyListState()
-    val listItems = pageUiState.tabItems
-    var columnHeightPx by remember {
-        mutableIntStateOf(0)
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.surface)
-            .pullRefresh(
-                state = refreshState
-            )
-            .onGloballyPositioned {
-                columnHeightPx = it.size.height
-            }
+  val pageUiState by viewModel.uiState.collectAsState()
+  val refreshState = rememberPullRefreshState(
+    refreshing = pageUiState.isRefreshing,
+    onRefresh = { viewModel.onRefresh() }
+  )
+  val listState = rememberLazyListState()
+  val listItems = pageUiState.tabItems
+  var columnHeightPx by remember {
+    mutableIntStateOf(0)
+  }
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = MaterialTheme.colors.surface)
+      .pullRefresh(
+        state = refreshState
+      )
+      .onGloballyPositioned {
+        columnHeightPx = it.size.height
+      }
+  ) {
+    LazyColumn(
+      modifier = Modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(12.dp),
+      contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      state = listState
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            state = listState
-        ) {
-            itemsIndexed(items = listItems) { _, uiModel ->
-                StorytellerItem(
-                    uiModel = uiModel,
-                    isRefreshing = pageUiState.isRefreshing || isRefreshing,
-                    navController = rootNavController
-                )
-            }
-        }
-
-        PullToRefresh(
-            modifier = Modifier
-                .align(Alignment.TopCenter),
-            state = refreshState,
-            refreshing = pageUiState.isRefreshing || isRefreshing
+      itemsIndexed(items = listItems) { _, uiModel ->
+        StorytellerItem(
+          uiModel = uiModel,
+          isRefreshing = pageUiState.isRefreshing || isRefreshing,
+          navController = rootNavController,
+          roundTheme = config?.roundTheme,
+          squareTheme = config?.squareTheme
         )
+      }
     }
+
+    PullToRefresh(
+      modifier = Modifier
+        .align(Alignment.TopCenter),
+      state = refreshState,
+      refreshing = pageUiState.isRefreshing || isRefreshing
+    )
+  }
 }

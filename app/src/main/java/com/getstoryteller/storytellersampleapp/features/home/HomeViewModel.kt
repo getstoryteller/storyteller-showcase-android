@@ -68,5 +68,5 @@ data class PageItemUiModel(
     val title: String,
     val categories: List<String>,
     val displayLimit: Int,
-    val collectionId: String?
+    val collectionId: String?,
 )
