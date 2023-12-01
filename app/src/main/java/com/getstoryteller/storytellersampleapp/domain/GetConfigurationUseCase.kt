@@ -45,6 +45,7 @@ class GetConfigurationUseCaseImpl(
 
         light.lists.row.startInset = 12
         light.lists.row.endInset = 12
+        light.lists.grid.topInset = 12
 
         light.colors.primary = ofHexCode("#FBCD44")
         light.colors.success = ofHexCode("#3BB327")
@@ -83,9 +84,6 @@ class GetConfigurationUseCaseImpl(
         light.storyTiles.title.lineHeight = 13
 
         light.instructions.button.textColor = ofHexCode("#000000")
-
-        light.lists.row.startInset = 0
-        light.lists.row.endInset = 0
 
         dark = light
 
