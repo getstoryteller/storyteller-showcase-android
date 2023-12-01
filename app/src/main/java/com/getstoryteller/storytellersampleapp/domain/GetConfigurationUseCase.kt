@@ -42,6 +42,10 @@ class GetConfigurationUseCaseImpl(
   private val squareTheme: UiTheme
     get() {
       return buildTheme(context) {
+
+        light.lists.row.startInset = 12
+        light.lists.row.endInset = 12
+
         light.colors.primary = ofHexCode("#FBCD44")
         light.colors.success = ofHexCode("#3BB327")
         light.colors.alert = ofHexCode("#C8102E")

@@ -36,7 +36,8 @@ fun StorytellerItem(
   navController: NavController,
   roundTheme: UiTheme?,
   squareTheme: UiTheme?,
-  disableHeader: Boolean = false
+  disableHeader: Boolean = false,
+  isScrollable: Boolean = false
 ) {
   Column(
     modifier = Modifier
@@ -102,7 +103,7 @@ fun StorytellerItem(
                 }
               ),
               delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
-              isScrollable = false,
+              isScrollable = isScrollable,
               isRefreshing = isRefreshing
             )
           }
@@ -263,7 +264,7 @@ fun StorytellerItem(
                   TileType.ROUND -> StorytellerListViewCellType.ROUND
                 }
               ),
-              isScrollable = false,
+              isScrollable = isScrollable,
               delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
               isRefreshing = isRefreshing
             )

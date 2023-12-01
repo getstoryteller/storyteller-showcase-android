@@ -22,7 +22,6 @@ fun MoreScreen(
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .padding(12.dp)
   ) {
     StorytellerItem(
       uiModel = pageItemUiModel.copy(
@@ -33,7 +32,8 @@ fun MoreScreen(
       navController = navController,
       disableHeader = true,
       squareTheme = config?.squareTheme,
-      roundTheme = config?.roundTheme
+      roundTheme = config?.roundTheme,
+      isScrollable = true
     )
   }
 }
