@@ -122,6 +122,7 @@ fun StorytellerItem(
                     light = it.light.copy(
                       lists = it.light.lists.copy(
                         grid = it.light.lists.grid.copy(
+                          topInset = 0,
                           columns = 1
                         )
                       ),
@@ -136,6 +137,7 @@ fun StorytellerItem(
                     dark = it.dark.copy(
                       lists = it.dark.lists.copy(
                         grid = it.dark.lists.grid.copy(
+                          topInset = 0,
                           columns = 1
                         )
                       ),
@@ -205,6 +207,7 @@ fun StorytellerItem(
                     light = it.light.copy(
                       lists = it.light.lists.copy(
                         grid = it.light.lists.grid.copy(
+                          topInset = 0,
                           columns = 1
                         )
                       ),
@@ -219,6 +222,7 @@ fun StorytellerItem(
                     dark = it.dark.copy(
                       lists = it.dark.lists.copy(
                         grid = it.dark.lists.grid.copy(
+                          topInset = 0,
                           columns = 1
                         )
                       ),

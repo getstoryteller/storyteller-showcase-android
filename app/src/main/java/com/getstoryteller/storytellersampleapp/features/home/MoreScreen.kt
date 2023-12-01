@@ -31,7 +31,24 @@ fun MoreScreen(
       isRefreshing = true,
       navController = navController,
       disableHeader = true,
-      squareTheme = config?.squareTheme,
+      squareTheme = config?.squareTheme?.let {
+        it.copy(
+          light = it.light.copy(
+            lists = it.light.lists.copy(
+              grid = it.light.lists.grid.copy(
+                topInset = 12
+              )
+            )
+          ),
+          dark = it.dark.copy(
+            lists = it.dark.lists.copy(
+              grid = it.dark.lists.grid.copy(
+                topInset = 12
+              )
+            )
+          )
+        )
+      },
       roundTheme = config?.roundTheme,
       isScrollable = true
     )

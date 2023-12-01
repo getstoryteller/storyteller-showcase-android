@@ -45,7 +45,7 @@ class GetConfigurationUseCaseImpl(
 
         light.lists.row.startInset = 12
         light.lists.row.endInset = 12
-        light.lists.grid.topInset = 12
+        light.lists.grid.topInset = 0
 
         light.colors.primary = ofHexCode("#FBCD44")
         light.colors.success = ofHexCode("#3BB327")

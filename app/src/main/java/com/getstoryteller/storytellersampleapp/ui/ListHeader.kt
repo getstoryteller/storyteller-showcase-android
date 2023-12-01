@@ -15,49 +15,55 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ListHeader(
-    text: String,
-    moreButtonTitle: String = "More",
-    collectionId: String? = null,
-    categories: List<String> = emptyList(),
-    onMoreClicked: (String?, List<String>) -> Unit = { _, _ -> }
+  text: String,
+  moreButtonTitle: String = "More",
+  collectionId: String? = null,
+  categories: List<String> = emptyList(),
+  onMoreClicked: (String?, List<String>) -> Unit = { _, _ -> }
 ) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 12.dp, end = 12.dp, bottom = 16.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+  ) {
+    Text(
+      text = text,
+      textAlign = TextAlign.Start,
+      fontSize = 20.sp,
+      fontWeight = FontWeight.W600,
+      color = MaterialTheme.colors.secondaryVariant
+    )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, bottom = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+      modifier = Modifier
+        .fillMaxHeight()
+        .clickable {
+          onMoreClicked(collectionId, categories)
+        },
+      verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = text,
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onBackground
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .clickable {
-                    onMoreClicked(collectionId, categories)
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = moreButtonTitle,
-                color = MaterialTheme.colors.onBackground
-            )
-        }
+      Text(
+        text = moreButtonTitle,
+        fontWeight = FontWeight.W400,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.onSurface
+      )
     }
+  }
 }
 
 private fun String.modify(moreTextCapitalized: Boolean): String {
-    return if (moreTextCapitalized) {
-        this.uppercase()
-    } else {
-        this
-    }
+  return if (moreTextCapitalized) {
+    this.uppercase()
+  } else {
+    this
+  }
 }

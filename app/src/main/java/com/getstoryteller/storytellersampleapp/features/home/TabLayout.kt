@@ -10,7 +10,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.TabDto
@@ -45,6 +47,8 @@ fun TabLayout(
           text = {
             Text(
               text = title,
+              fontSize = 16.sp,
+              fontWeight = FontWeight.W600,
               color = if (pagerState.currentPage == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
             )
           },
