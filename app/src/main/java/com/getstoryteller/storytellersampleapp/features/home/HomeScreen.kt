@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
 import java.util.*
@@ -81,10 +82,12 @@ fun HomeScreen(
       }
     } else {
       TabLayout(
-        tabs = pageUiState.tabs,
         rootNavController = navController,
-        isRefreshing = isRefreshing,
-        config = config
+        state = TabLayoutUiState(
+          tabs = pageUiState.tabs,
+          isRefreshing = pageUiState.isRefreshing || isRefreshing,
+          config = config
+        )
       )
     }
   }
