@@ -40,11 +40,6 @@ fun TabLayout(
   val scope = rememberCoroutineScope()
   val currentPage = remember(tabs) { derivedStateOf { pagerState.targetPage } }
 
-//  val fling = PagerDefaults.flingBehavior(
-//    state = pagerState,
-//    pagerSnapDistance = PagerSnapDistance.atMost(1)
-//  )
-
   Column(modifier = Modifier.fillMaxSize()) {
     ScrollableTabRow(
       selectedTabIndex = currentPage.value,
@@ -73,7 +68,7 @@ fun TabLayout(
     }
     HorizontalPager(
       state = pagerState,
-      beyondBoundsPageCount = 10
+      beyondBoundsPageCount = 4
     ) { index ->
       val tabValue = remember(tabs.hashCode(), index) {
         tabs[index].value
