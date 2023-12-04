@@ -53,14 +53,15 @@ android {
 }
 
 dependencies {
-  val storytellerVersion = "9.8.0"
+  val storytellerVersion = "9.8.2"
   val ktorVersion = "1.5.0"
 
   implementation(group = "Storyteller", name = "sdk", version = storytellerVersion)
 
   implementation(platform("androidx.compose:compose-bom:2023.10.01"))
 
-  implementation("androidx.activity:activity-compose:1.8.0")
+  implementation ("androidx.fragment:fragment-ktx:1.6.2")
+  implementation("androidx.activity:activity-compose:1.8.1")
   implementation("androidx.compose.ui:ui")
   implementation("androidx.compose.material:material")
   implementation("androidx.compose.material3:material3")

@@ -34,7 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -59,7 +61,10 @@ fun MainScreen(
   activity: Activity,
   navController: NavHostController,
   viewModel: MainViewModel,
-  fragmentManager: FragmentManager
+  onCommit: (
+    fragment: Fragment,
+    tag: String,
+  ) -> (FragmentTransaction.(containerId: Int) -> Unit),
 ) {
   val isLoginDialogVisible = viewModel.loginDialogVisible.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
@@ -69,11 +74,14 @@ fun MainScreen(
   var title by remember {
     mutableStateOf("")
   }
-  var showTopBar by remember { mutableStateOf(true) }
+
+  var topBarVisible by remember {
+    mutableStateOf(true)
+  }
 
   Scaffold(
     topBar = {
-      if (showTopBar) {
+      if (topBarVisible) {
         TopAppBar(
           backgroundColor = MaterialTheme.colors.background,
           contentColor = MaterialTheme.colors.onBackground,
@@ -167,7 +175,7 @@ fun MainScreen(
               },
               selected = navbackEntry?.destination?.route == "home",
               onClick = {
-                showTopBar = true
+                topBarVisible = true
                 navController.navigate("home") {
                   navigationState = PageState.HOME
                   popUpTo(navController.graph.startDestinationId) {
@@ -194,7 +202,7 @@ fun MainScreen(
               },
               selected = navbackEntry?.destination?.route == "home/watch",
               onClick = {
-                showTopBar = false
+                topBarVisible = false
                 navigationState = PageState.HOME
                 navController.navigate("home/moments") {
                   popUpTo(navController.graph.startDestinationId) {
@@ -228,9 +236,9 @@ fun MainScreen(
           navigationState = PageState.HOME
           MomentsScreen(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
-            viewModel = hiltViewModel(),
-            fragmentManager = fragmentManager,
-            config = mainPageUiState.config
+            config = mainPageUiState.config,
+            tag = "watch",
+            onCommit = onCommit,
           )
         }
         composable("home/account") {
@@ -301,16 +309,16 @@ fun MainScreen(
     }
   }
 
-  if (isLoginDialogVisible.value) {
-    LoginDialog(viewModel)
-  }
+    if (isLoginDialogVisible.value) {
+        LoginDialog(viewModel)
+    }
 }
 
 enum class PageState {
-  HOME, ACCOUNT, MORE
+    HOME, ACCOUNT, MORE
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-  Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
-  else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+    Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
 }

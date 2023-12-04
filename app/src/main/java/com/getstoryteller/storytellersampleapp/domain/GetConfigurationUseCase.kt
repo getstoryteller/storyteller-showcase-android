@@ -41,7 +41,7 @@ class GetConfigurationUseCaseImpl(
 
   private val squareTheme: UiTheme
     get() {
-      return buildTheme(context) {
+      return buildTheme {
 
         light.lists.row.startInset = 12
         light.lists.row.endInset = 12
