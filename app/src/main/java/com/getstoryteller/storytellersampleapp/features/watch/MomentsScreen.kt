@@ -15,7 +15,7 @@ import com.getstoryteller.storytellersampleapp.ui.StorytellerEmbeddedClips
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
-fun WatchScreen(
+fun MomentsScreen(
   modifier: Modifier,
   config: Config?,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,

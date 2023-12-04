@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -49,7 +50,7 @@ import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
 import com.getstoryteller.storytellersampleapp.features.home.MoreScreen
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
-import com.getstoryteller.storytellersampleapp.features.watch.WatchScreen
+import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
 import com.storyteller.Storyteller
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -74,16 +75,13 @@ fun MainScreen(
     mutableStateOf("")
   }
 
-  val shouldPlay = remember {
-    mutableStateOf(false)
-  }
-
   var topBarVisible by remember {
     mutableStateOf(true)
   }
+
   Scaffold(
     topBar = {
-      if(topBarVisible) {
+      if (topBarVisible) {
         TopAppBar(
           backgroundColor = MaterialTheme.colors.background,
           contentColor = MaterialTheme.colors.onBackground,
@@ -98,18 +96,18 @@ fun MainScreen(
                 onClick = {
                   Storyteller.openSearch(activity)
                 },
-                enabled = !mainPageUiState.isRefreshing,
+                enabled = !mainPageUiState.isRefreshing
               ) {
                 Icon(
                   imageVector = Icons.Filled.Search,
                   contentDescription = "",
-                  tint = MaterialTheme.colors.onBackground,
+                  tint = MaterialTheme.colors.onBackground
                 )
               }
               IconButton(
                 onClick = {
                   navigationState = PageState.ACCOUNT
-                  navController.navigate("account") {
+                  navController.navigate("home/account") {
                     popUpTo(navController.graph.startDestinationId) {
                       saveState = true
                     }
@@ -117,12 +115,12 @@ fun MainScreen(
                     restoreState = true
                   }
                 },
-                enabled = !mainPageUiState.isRefreshing,
+                enabled = !mainPageUiState.isRefreshing
               ) {
                 Icon(
                   imageVector = Icons.Filled.AccountCircle,
                   contentDescription = "",
-                  tint = MaterialTheme.colors.onBackground,
+                  tint = MaterialTheme.colors.onBackground
                 )
               }
             }
@@ -131,21 +129,22 @@ fun MainScreen(
             IconButton(onClick = {
               navController.navigateUp()
             }) {
-              if (navigationState != PageState.HOME) {
+              if (navigationState != PageState.HOME)
                 Icon(
                   imageVector = Icons.Filled.ArrowBack,
                   contentDescription = null,
-                  tint = MaterialTheme.colors.onBackground,
+                  tint = MaterialTheme.colors.onBackground
                 )
-              } else {
+              else {
                 Icon(
                   painter = painterResource(id = R.drawable.ic_logo_icon),
                   contentDescription = null,
-                  tint = Color.Unspecified,
+                  tint = Color.Unspecified
                 )
               }
+
             }
-          },
+          }
         )
       }
     },
@@ -154,7 +153,7 @@ fun MainScreen(
         visible = navigationState == PageState.HOME,
         content = {
           BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colors.background
           ) {
             val backStackEntry = navController.currentBackStackEntryAsState()
             val navbackEntry by navController.currentBackStackEntryAsState()
@@ -165,19 +164,19 @@ fun MainScreen(
                 Icon(
                   painter = painterResource(id = R.drawable.ic_home),
                   contentDescription = null,
-                  tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
+                  tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                 )
               },
               label = {
                 Text(
                   text = "Home",
-                  color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
+                  color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                 )
               },
               selected = navbackEntry?.destination?.route == "home",
               onClick = {
+                topBarVisible = true
                 navController.navigate("home") {
-                  topBarVisible = true
                   navigationState = PageState.HOME
                   popUpTo(navController.graph.startDestinationId) {
                     saveState = true
@@ -185,66 +184,64 @@ fun MainScreen(
                   launchSingleTop = true
                   restoreState = true
                 }
-              },
+              }
             )
             BottomNavigationItem(
               icon = {
                 Icon(
                   painter = painterResource(id = R.drawable.ic_watch),
                   contentDescription = null,
-                  tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
+                  tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                 )
               },
               label = {
                 Text(
                   text = "Watch",
-                  color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface,
+                  color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                 )
               },
-              selected = navbackEntry?.destination?.route == "watch",
+              selected = navbackEntry?.destination?.route == "home/watch",
               onClick = {
-                navigationState = PageState.HOME
                 topBarVisible = false
-                navController.navigate("watch") {
+                navigationState = PageState.HOME
+                navController.navigate("home/moments") {
                   popUpTo(navController.graph.startDestinationId) {
                     saveState = true
                   }
                   launchSingleTop = true
                   restoreState = true
                 }
-              },
+              }
             )
           }
-        },
-      )
-    },
+        })
+    }
   ) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize()) {
       NavHost(
         navController = navController,
-        startDestination = "home",
+        startDestination = "home"
       ) {
+
         composable("home") {
-          shouldPlay.value = false
           navigationState = PageState.HOME
           HomeScreen(
-            viewModel = hiltViewModel(),
+            viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             config = mainPageUiState.config,
             navController = navController,
-            isRefreshing = mainPageUiState.isRefreshing,
+            isRefreshing = mainPageUiState.isRefreshing
           )
         }
-        composable("watch") {
+        composable("home/moments") {
           navigationState = PageState.HOME
-          shouldPlay.value = true
-          WatchScreen(
+          MomentsScreen(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             config = mainPageUiState.config,
             tag = "watch",
             onCommit = onCommit,
           )
         }
-        composable("account") {
+        composable("home/account") {
           navigationState = PageState.ACCOUNT
           title = "Account"
           AccountScreen(
@@ -258,7 +255,7 @@ fun MainScreen(
             onRefresh = {
               navigationState = PageState.HOME
               viewModel.refreshMainPage()
-            },
+            }
           )
         }
         composable("account/{option}") {
@@ -269,7 +266,7 @@ fun MainScreen(
             navController = navController,
             viewModel = hiltViewModel(),
             optionSelectType = option,
-            config = mainPageUiState.config!!,
+            config = mainPageUiState.config!!
           )
         }
         composable("moreClips/{model}") { backStackEntry ->
@@ -282,6 +279,7 @@ fun MainScreen(
               pageItemUiModel = it,
               viewModel = hiltViewModel(),
               navController = navController,
+              config = mainPageUiState.config
             )
           }
         }
@@ -295,6 +293,7 @@ fun MainScreen(
               pageItemUiModel = it,
               viewModel = hiltViewModel(),
               navController = navController,
+              config = mainPageUiState.config
             )
           }
         }
@@ -304,22 +303,22 @@ fun MainScreen(
           modifier = Modifier
             .padding(16.dp)
             .background(color = MaterialTheme.colors.surface)
-            .align(Alignment.Center),
+            .align(Alignment.Center)
         )
       }
     }
   }
 
-  if (isLoginDialogVisible.value) {
-    LoginDialog(viewModel)
-  }
+    if (isLoginDialogVisible.value) {
+        LoginDialog(viewModel)
+    }
 }
 
 enum class PageState {
-  HOME, ACCOUNT, MORE
+    HOME, ACCOUNT, MORE
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-  Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
-  else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+    Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
 }

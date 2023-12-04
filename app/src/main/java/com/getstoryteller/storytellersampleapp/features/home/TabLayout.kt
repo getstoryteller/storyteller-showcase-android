@@ -1,77 +1,80 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellersampleapp.data.TabDto
+import com.getstoryteller.storytellersampleapp.domain.Config
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TabLayout(
-    tabs: List<TabDto>,
-    rootNavController: NavController,
-    isRefreshing: Boolean
+  tabs: List<TabDto>,
+  rootNavController: NavController,
+  isRefreshing: Boolean,
+  config: Config?
 ) {
-    val titles = tabs.map { it.name }
-    var tabIndex by remember { mutableIntStateOf(0) }
-    val navController = rememberNavController()
+  val titles = tabs.map { it.name }
+  val pagerState = rememberPagerState(pageCount = tabs.size)
+  val scope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = {
-            TabRow(
-                selectedTabIndex = tabIndex,
-                backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.primary
-            ) {
-                titles.forEachIndexed { index, title ->
-                    Tab(
-                        text = {
-                            Text(
-                                text = title,
-                                color = if (tabIndex == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                            )
-                        },
-                        selected = tabIndex == index,
-                        onClick = {
-                            tabIndex = index
-                            navController.navigate(tabs[index].value)
-                        }
-                    )
-                }
+  Column(modifier = Modifier.fillMaxSize()) {
+    ScrollableTabRow(
+      selectedTabIndex = pagerState.currentPage,
+      backgroundColor = MaterialTheme.colors.surface,
+      contentColor = MaterialTheme.colors.primary,
+      edgePadding = 0.dp,
+    ) {
+      titles.forEachIndexed { index, title ->
+        Tab(
+          text = {
+            Text(
+              text = title,
+              fontSize = 16.sp,
+              fontWeight = FontWeight.W600,
+              color = if (pagerState.currentPage == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+            )
+          },
+          selected = pagerState.currentPage == index,
+          onClick = {
+            scope.launch {
+              pagerState.animateScrollToPage(index)
             }
-        },
-        content = { _ ->
-            NavHost(
-                navController = navController, startDestination = "home",
-            ) {
-                tabs.forEach { tab ->
-                    composable(route = tab.value) {
-                        TabScreen(
-                            tabId = tab.value,
-                            viewModel = hiltViewModel(),
-                            rootNavController = rootNavController,
-                            isRefreshing = isRefreshing
-                        )
-                    }
-                }
-            }
-        }
-    )
+          }
+        )
+      }
+    }
+    HorizontalPager(
+      state = pagerState,
+      dragEnabled = false
+    ) { index ->
+      val tabValue = tabs[index].value
+      val viewModel: TabViewModel =
+        hiltViewModel<TabViewModel>(key = tabValue).apply { loadTab(tabValue) }
+      TabScreen(
+        tabId = tabValue,
+        viewModel = viewModel,
+        rootNavController = rootNavController,
+        isRefreshing = isRefreshing,
+        config = config
+      )
+    }
+  }
 }

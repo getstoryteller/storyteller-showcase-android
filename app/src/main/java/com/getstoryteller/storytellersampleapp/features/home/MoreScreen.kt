@@ -9,27 +9,48 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.LayoutType
 import com.getstoryteller.storytellersampleapp.data.TileType
+import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
 
 @Composable
 fun MoreScreen(
-    pageItemUiModel: PageItemUiModel,
-    viewModel: MoreViewModel,
-    navController: NavController
+  pageItemUiModel: PageItemUiModel,
+  viewModel: MoreViewModel,
+  navController: NavController,
+  config: Config?
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {
-        StorytellerItem(
-            uiModel = pageItemUiModel.copy(
-                tileType = TileType.RECTANGULAR,
-                layout = LayoutType.GRID
-            ),
-            isRefreshing = true,
-            navController = navController,
-            disableHeader = true
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+  ) {
+    StorytellerItem(
+      uiModel = pageItemUiModel.copy(
+        tileType = TileType.RECTANGULAR,
+        layout = LayoutType.GRID
+      ),
+      isRefreshing = true,
+      navController = navController,
+      disableHeader = true,
+      squareTheme = config?.squareTheme?.let {
+        it.copy(
+          light = it.light.copy(
+            lists = it.light.lists.copy(
+              grid = it.light.lists.grid.copy(
+                topInset = 12
+              )
+            )
+          ),
+          dark = it.dark.copy(
+            lists = it.dark.lists.copy(
+              grid = it.dark.lists.grid.copy(
+                topInset = 12
+              )
+            )
+          )
         )
-    }
+      },
+      roundTheme = config?.roundTheme,
+      isScrollable = true
+    )
+  }
 }
