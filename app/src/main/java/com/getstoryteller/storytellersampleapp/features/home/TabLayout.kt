@@ -75,11 +75,11 @@ fun TabLayout(
       state = pagerState,
       beyondBoundsPageCount = 10
     ) { index ->
-      val tabValue = remember(tabs, index) {
+      val tabValue = remember(tabs.hashCode(), index) {
         tabs[index].value
       }
       val viewModel: TabViewModel =
-        hiltViewModel<TabViewModel>(key = "$tabs, $index").apply { loadTab(tabValue) }
+        hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $index").apply { loadTab(tabValue) }
       TabScreen(
         tabId = tabValue,
         viewModel = viewModel,
