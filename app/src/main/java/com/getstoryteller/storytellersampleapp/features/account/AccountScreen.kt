@@ -1,7 +1,5 @@
 package com.getstoryteller.storytellersampleapp.features.account
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -32,7 +30,6 @@ import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.storyteller.ui.pager.StorytellerClipsFragment
-
 
 
 @Composable
