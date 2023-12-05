@@ -17,7 +17,7 @@ class GetTabContentUseCaseImpl(private val tenantRepository: TenantRepository) :
                     title = it.title ?: "",
                     categories = it.categories,
                     collectionId = it.collection ?: "",
-                    displayLimit = Int.MAX_VALUE,
+                    displayLimit = it.displayLimit ?: Int.MAX_VALUE,
                     type = it.videoType,
                     layout = it.layout,
                     tileType = it.tileType,

@@ -52,6 +52,7 @@ data class StorytellerItemApiDto(
     @SerialName("tileType") val tileType: TileType,
     @SerialName("videoType") val videoType: VideoType,
     @SerialName("id") val id: String,
+    @SerialName("count") val displayLimit: Int?,
 )
 
 @kotlinx.serialization.Serializable(with = LayoutTypeSerializer::class)

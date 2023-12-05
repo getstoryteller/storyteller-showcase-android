@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellersampleapp.ui
 
+import android.util.Log
 import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

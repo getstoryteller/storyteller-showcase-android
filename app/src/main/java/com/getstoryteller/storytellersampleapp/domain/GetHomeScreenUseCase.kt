@@ -19,7 +19,7 @@ class GetHomeScreenUseCaseImpl(
                     title = it.title ?: "",
                     categories = it.categories ?: emptyList(),
                     collectionId = it.collection ?: "",
-                    displayLimit = Int.MAX_VALUE,
+                    displayLimit = it.displayLimit ?: Int.MAX_VALUE,
                     type = it.videoType,
                     layout = it.layout,
                     tileType = it.tileType,
