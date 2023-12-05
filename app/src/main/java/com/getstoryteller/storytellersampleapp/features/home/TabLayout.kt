@@ -68,7 +68,7 @@ fun TabLayout(
     }
     HorizontalPager(
       state = pagerState,
-      beyondBoundsPageCount = 4
+      beyondBoundsPageCount = 2
     ) { index ->
       val tabValue = remember(tabs.hashCode(), index) {
         tabs[index].value
