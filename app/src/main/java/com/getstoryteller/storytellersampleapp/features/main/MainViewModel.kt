@@ -32,6 +32,9 @@ class MainViewModel @Inject constructor(
   private val _reloadMomentsDataTrigger = MutableLiveData<String>()
   val reloadMomentsDataTrigger: LiveData<String> = _reloadMomentsDataTrigger
 
+  private val _reloadHomeTrigger = MutableLiveData<String>()
+  val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
+
   val loginDialogVisible = MutableStateFlow(sessionService.apiKey == null)
   val loginProgress = MutableStateFlow(false)
   val loginError = MutableStateFlow<String?>(null)
@@ -78,11 +81,7 @@ class MainViewModel @Inject constructor(
   }
 
   fun refreshMainPage() {
-    viewModelScope.launch {
-      _uiState.update {
-        it.copy(isHomeRefreshing = true)
-      }
-    }
+    _reloadHomeTrigger.value = UUID.randomUUID().toString()
   }
 }
 

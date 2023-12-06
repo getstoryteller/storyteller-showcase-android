@@ -232,6 +232,7 @@ fun MainScreen(
           navigationState = PageState.HOME
           HomeScreen(
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
+            sharedViewModel = viewModel,
             config = mainPageUiState.config,
             navController = navController,
             isRefreshing = mainPageUiState.isHomeRefreshing,
