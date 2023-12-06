@@ -94,6 +94,7 @@ fun HomeScreen(
     } else {
       TabLayout(
         rootNavController = navController,
+        sharedViewModel = sharedViewModel,
         state = TabLayoutUiState(
           tabs = pageUiState.tabs,
           isRefreshing = pageUiState.isRefreshing || isRefreshing,
