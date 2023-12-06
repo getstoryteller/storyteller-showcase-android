@@ -17,7 +17,6 @@ class AccountViewModel @Inject constructor(
     private val storytellerService: StorytellerService
 ) : ViewModel() {
     val isLoggedOut = MutableStateFlow(false)
-    val refreshMainPage = MutableStateFlow(false)
 
     fun logout() {
         viewModelScope.launch {

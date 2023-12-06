@@ -34,7 +34,7 @@ fun HomeScreen(
   viewModel: HomeViewModel,
   config: Config?,
   navController: NavController,
-  isRefreshing: Boolean
+  isRefreshing: Boolean,
 ) {
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
     config?.let {

@@ -1,19 +1,20 @@
 package com.getstoryteller.storytellersampleapp.features.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.getstoryteller.storytellersampleapp.data.TenantSettingsDto
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellersampleapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellersampleapp.services.SessionService
-import com.getstoryteller.storytellersampleapp.services.StorytellerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,18 +29,26 @@ class MainViewModel @Inject constructor(
   private val _uiState = MutableStateFlow(MainPageUiState())
   val uiState: StateFlow<MainPageUiState> = _uiState.asStateFlow()
 
+  private val _reloadMomentsDataTrigger = MutableLiveData<String>()
+  val reloadMomentsDataTrigger: LiveData<String> = _reloadMomentsDataTrigger
+
   val loginDialogVisible = MutableStateFlow(sessionService.apiKey == null)
   val loginProgress = MutableStateFlow(false)
   val loginError = MutableStateFlow<String?>(null)
 
   fun setup() {
-    _uiState.update { it.copy(isRefreshing = true) }
+    _uiState.update { it.copy(isMainScreenLoading = true) }
     if (sessionService.apiKey != null) {
       viewModelScope.launch {
         config = getConfigurationUseCase.getConfiguration()
         _uiState.emit(MainPageUiState(config = config))
       }
     }
+  }
+
+  fun triggerMomentsReloadData() {
+    // open to suggestions for a different way to do this. This requires a unique key for LaunchedEffect in MomentsScreen on every button click
+    _reloadMomentsDataTrigger.value = UUID.randomUUID().toString()
   }
 
   fun verifyCode(code: String) {
@@ -69,13 +78,16 @@ class MainViewModel @Inject constructor(
   }
 
   fun refreshMainPage() {
-    _uiState.update {
-      it.copy(isRefreshing = true)
+    viewModelScope.launch {
+      _uiState.update {
+        it.copy(isHomeRefreshing = true)
+      }
     }
   }
 }
 
 data class MainPageUiState(
-  val isRefreshing: Boolean = false,
+  val isHomeRefreshing: Boolean = false,
+  val isMainScreenLoading: Boolean = false,
   val config: Config? = null,
 )

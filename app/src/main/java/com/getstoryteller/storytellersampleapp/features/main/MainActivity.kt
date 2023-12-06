@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellersampleapp.ui.SampleAppTheme
+import com.storyteller.ui.pager.StorytellerClipsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,10 +48,15 @@ class MainActivity : AppCompatActivity() {
             navController = navController,
             viewModel = viewModel,
             onCommit = ::onCommit,
+            getClipsFragment = ::getStorytellerClipsFragment,
           )
         }
       }
     }
+  }
+
+  private fun getStorytellerClipsFragment(): StorytellerClipsFragment? {
+    return supportFragmentManager.fragments.firstOrNull { it is StorytellerClipsFragment } as? StorytellerClipsFragment
   }
 
   private fun onCommit(
