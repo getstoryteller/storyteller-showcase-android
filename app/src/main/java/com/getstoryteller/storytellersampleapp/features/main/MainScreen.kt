@@ -97,7 +97,7 @@ fun MainScreen(
                 onClick = {
                   Storyteller.openSearch(activity)
                 },
-                enabled = !mainPageUiState.isHomeRefreshing
+                enabled = !mainPageUiState.isMainScreenLoading
               ) {
                 Icon(
                   imageVector = Icons.Filled.Search,
@@ -116,7 +116,7 @@ fun MainScreen(
                     restoreState = true
                   }
                 },
-                enabled = !mainPageUiState.isHomeRefreshing
+                enabled = !mainPageUiState.isMainScreenLoading
               ) {
                 Icon(
                   imageVector = Icons.Filled.AccountCircle,
