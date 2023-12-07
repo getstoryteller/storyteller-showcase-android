@@ -7,38 +7,31 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    @Singleton
-    @Provides
-    fun provideHttpClient() = HttpClient(Android) {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(
-                Json {
-                    prettyPrint = true
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                    explicitNulls = false
-                }
-            )
-
-            engine {
-                connectTimeout = 60000
-                socketTimeout = 60000
-            }
-        }
+  @Singleton
+  @Provides
+  fun provideHttpClient() = HttpClient(CIO) {
+    install(ContentNegotiation) {
+      json(json = Json {
+        prettyPrint = true
+        isLenient = true
+        ignoreUnknownKeys = true
+        explicitNulls = false
+      })
     }
+  }
 
-    @Provides
-    fun provideApiService(
-        client: HttpClient,
-        sessionService: SessionService
-    ): ApiService = ApiService(client, sessionService)
+  @Provides
+  fun provideApiService(
+    client: HttpClient,
+    sessionService: SessionService
+  ): ApiService = ApiService(client, sessionService)
 }
