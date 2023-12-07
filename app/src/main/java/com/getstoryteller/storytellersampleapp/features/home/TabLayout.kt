@@ -11,8 +11,11 @@ import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -23,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.domain.Config
+import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -30,8 +34,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabLayout(
   rootNavController: NavController,
-  state: TabLayoutUiState
+  state: TabLayoutUiState,
+  sharedViewModel: MainViewModel
 ) {
+  val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
+
   val tabs = remember(state.tabs) {
     state.tabs
   }
@@ -39,6 +46,14 @@ fun TabLayout(
   val pagerState = rememberPagerState(pageCount = { tabs.size })
   val scope = rememberCoroutineScope()
   val currentPage = remember(tabs) { derivedStateOf { pagerState.targetPage } }
+
+  LaunchedEffect(reloadDataTrigger) {
+    reloadDataTrigger?.let {
+      scope.launch {
+        pagerState.animateScrollToPage(0)
+      }
+    }
+  }
 
   Column(modifier = Modifier.fillMaxSize()) {
     ScrollableTabRow(
@@ -78,6 +93,7 @@ fun TabLayout(
       TabScreen(
         tabId = tabValue,
         viewModel = viewModel,
+        sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
         isRefreshing = state.isRefreshing,
         config = state.config

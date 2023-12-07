@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -52,6 +51,7 @@ import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
 import com.storyteller.Storyteller
+import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -65,6 +65,7 @@ fun MainScreen(
     fragment: Fragment,
     tag: String,
   ) -> (FragmentTransaction.(containerId: Int) -> Unit),
+  getClipsFragment: () -> StorytellerClipsFragment?
 ) {
   val isLoginDialogVisible = viewModel.loginDialogVisible.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
@@ -96,7 +97,7 @@ fun MainScreen(
                 onClick = {
                   Storyteller.openSearch(activity)
                 },
-                enabled = !mainPageUiState.isRefreshing
+                enabled = !mainPageUiState.isMainScreenLoading
               ) {
                 Icon(
                   imageVector = Icons.Filled.Search,
@@ -115,7 +116,7 @@ fun MainScreen(
                     restoreState = true
                   }
                 },
-                enabled = !mainPageUiState.isRefreshing
+                enabled = !mainPageUiState.isMainScreenLoading
               ) {
                 Icon(
                   imageVector = Icons.Filled.AccountCircle,
@@ -200,8 +201,12 @@ fun MainScreen(
                   color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
                 )
               },
-              selected = navbackEntry?.destination?.route == "home/watch",
+              selected = navbackEntry?.destination?.route == "home/moments",
               onClick = {
+                if (navbackEntry?.destination?.route == "home/moments") {
+                  viewModel.triggerMomentsReloadData()
+                }
+
                 topBarVisible = false
                 navigationState = PageState.HOME
                 navController.navigate("home/moments") {
@@ -227,9 +232,10 @@ fun MainScreen(
           navigationState = PageState.HOME
           HomeScreen(
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
+            sharedViewModel = viewModel,
             config = mainPageUiState.config,
             navController = navController,
-            isRefreshing = mainPageUiState.isRefreshing
+            isRefreshing = mainPageUiState.isHomeRefreshing,
           )
         }
         composable("home/moments") {
@@ -239,6 +245,8 @@ fun MainScreen(
             config = mainPageUiState.config,
             tag = "watch",
             onCommit = onCommit,
+            getClipsFragment = getClipsFragment,
+            sharedViewModel = viewModel
           )
         }
         composable("home/account") {
@@ -247,14 +255,11 @@ fun MainScreen(
           AccountScreen(
             navController = navController,
             viewModel = hiltViewModel(),
+            sharedViewModel = viewModel,
             config = mainPageUiState.config,
             onLogout = {
               navigationState = PageState.HOME
               viewModel.logout()
-            },
-            onRefresh = {
-              navigationState = PageState.HOME
-              viewModel.refreshMainPage()
             }
           )
         }
@@ -298,7 +303,7 @@ fun MainScreen(
           }
         }
       }
-      if (mainPageUiState.isRefreshing) {
+      if (mainPageUiState.isMainScreenLoading) {
         CircularProgressIndicator(
           modifier = Modifier
             .padding(16.dp)
@@ -309,16 +314,16 @@ fun MainScreen(
     }
   }
 
-    if (isLoginDialogVisible.value) {
-        LoginDialog(viewModel)
-    }
+  if (isLoginDialogVisible.value) {
+    LoginDialog(viewModel)
+  }
 }
 
 enum class PageState {
-    HOME, ACCOUNT, MORE
+  HOME, ACCOUNT, MORE
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-    Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
-    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+  Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
+  else -> @Suppress("DEPRECATION") getParcelable(key) as? T
 }

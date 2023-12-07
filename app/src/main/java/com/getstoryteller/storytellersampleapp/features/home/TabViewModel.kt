@@ -15,39 +15,42 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TabViewModel @Inject constructor(
-    private val getTabContentUseCase: GetTabContentUseCase
+  private val getTabContentUseCase: GetTabContentUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(TabPageUiState())
-    val uiState: StateFlow<TabPageUiState> = _uiState.asStateFlow()
+  private val _uiState = MutableStateFlow(TabPageUiState())
+  val uiState: StateFlow<TabPageUiState> = _uiState.asStateFlow()
 
-    fun loadTab(tabId: String) {
-        viewModelScope.launch {
-            val items = getTabContentUseCase.getTabContent(tabId)
-            _uiState.emit(
-                TabPageUiState(
-                    isRefreshing = false,
-                    tabItems = items
-                )
-            )
-        }
+  fun loadTab(tabId: String) {
+    viewModelScope.launch {
+      val items = getTabContentUseCase.getTabContent(tabId)
+      _uiState.emit(
+        TabPageUiState(
+          isRefreshing = true,
+          tabItems = items
+        )
+      )
+      _uiState.update {
+        it.copy(isRefreshing = false)
+      }
     }
+  }
 
-    fun onRefresh() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(isRefreshing = true)
-            }
-            delay(1000)
-            _uiState.update {
-                it.copy(isRefreshing = false)
-            }
-        }
+  fun onRefresh() {
+    viewModelScope.launch {
+      _uiState.update {
+        it.copy(isRefreshing = true)
+      }
+      delay(1000)
+      _uiState.update {
+        it.copy(isRefreshing = false)
+      }
     }
+  }
 
 }
 
 data class TabPageUiState(
-    val isRefreshing: Boolean = false,
-    val tabItems: List<PageItemUiModel> = emptyList()
+  val isRefreshing: Boolean = false,
+  val tabItems: List<PageItemUiModel> = emptyList()
 )

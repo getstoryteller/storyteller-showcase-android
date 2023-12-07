@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.domain.Config
+import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
 
@@ -36,20 +37,15 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 fun AccountScreen(
   navController: NavController,
   viewModel: AccountViewModel,
+  sharedViewModel: MainViewModel,
   config: Config?,
-  onLogout: () -> Unit,
-  onRefresh: () -> Unit
+  onLogout: () -> Unit
 ) {
   val localContext = LocalContext.current
   val isLoggedOut by viewModel.isLoggedOut.collectAsState()
-  val refreshMainPage by viewModel.refreshMainPage.collectAsState()
   if (isLoggedOut) {
     navController.navigateUp()
     onLogout()
-  }
-  if (refreshMainPage) {
-    navController.navigateUp()
-    onRefresh()
   }
 
   Box(
@@ -110,6 +106,7 @@ fun AccountScreen(
         text = "Reset",
         onClick = {
           viewModel.reset()
+          sharedViewModel.refreshMainPage()
           navController.navigateUp()
         }
       )
