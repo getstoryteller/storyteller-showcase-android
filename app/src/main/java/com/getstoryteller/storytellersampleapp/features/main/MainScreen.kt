@@ -183,7 +183,8 @@ fun MainScreen(
         composable("home/account") {
           navigationState = PageState.ACCOUNT
           title = "Account"
-          AccountScreen(navController = navController,
+          AccountScreen(
+            navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
