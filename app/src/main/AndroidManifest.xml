@@ -20,21 +20,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:label="Storyteller Links">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Example: adb shell am start -W -a android.intent.action.VIEW -d "https://marketing.shar.estori.es/go/d5ee0fa6-263b-ef3b-908e-39ffc903e828/5beb6dd2-c198-d55a-174c-39ffc904a433" -->
+                <!--
+                Paolo Banchero with Team USA - https://orlandomagic.shar.estori.es/go/7b0a7c37-27da-8d19-afcf-3a0d6874e26b/95ddc79c-1457-0ffc-6b83-3a0d687ec0633-->
                 <data
-                    android:scheme="https"
-                    android:host="marketing.ope.nstori.es"
-                    android:pathPattern="/open/.*/.*"
-                    />
-                <data
-                    android:scheme="https"
-                    android:host="marketing.shar.estori.es"
-                    android:pathPattern="/go/.*/.*"
-                    />
+                    android:host="orlandomagic.shar.estori.es"
+                    android:scheme="https" />
             </intent-filter>
 
             <intent-filter >
@@ -46,14 +41,6 @@
                     android:host="open"/>
             </intent-filter>
         </activity>
-        <activity android:name=".multiple.MultipleListsActivity"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".ads.AdsActivity"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".OtherActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".compose.JetpackComposeActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

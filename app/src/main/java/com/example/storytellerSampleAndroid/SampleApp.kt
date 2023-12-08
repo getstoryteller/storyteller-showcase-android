@@ -1,55 +1,64 @@
 package com.example.storytellerSampleAndroid
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.util.Log
+import android.webkit.WebView
 import com.storyteller.Storyteller
 import com.storyteller.domain.entities.UserInput
 import com.storyteller.domain.entities.theme.builders.buildTheme
 import com.storyteller.domain.entities.Error
+import com.storyteller.domain.entities.UserActivity
+import com.storyteller.domain.entities.UserActivityData
+import com.storyteller.domain.entities.ads.AdResponse
+import com.storyteller.domain.entities.ads.ClientStory
+import com.storyteller.domain.entities.ads.ListDescriptor
+import com.storyteller.ui.list.StorytellerDelegate
 import java.util.UUID
 
 class SampleApp : Application() {
 
-    companion object {
-        fun initializeStoryteller(
-            userId: String = UUID.randomUUID().toString(),
-            onSuccess: () -> Unit = {},
-            onFailure: (Error) -> Unit = {}
-        ) {
-            /*
-               The SDK requires initialization before it can be used
-               This can be done by using a valid API key
-               For more info, see - https://www.getstoryteller.com/documentation/android/getting-started#SDKInitialization
-                */
-            Storyteller.initialize(
-                // change to your own [API-KEY]
-                apiKey = "6a0ea73b-7b5d-42ab-bbf9-0584a696d9bb",
-                userInput = UserInput(userId),
-                onSuccess = onSuccess,
-                onFailure = onFailure
-            )
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
-        /*
-        The SDK allows to customize theme for Storyteller.
-        Make sure that global theme is initialized before views are being inflated or created.
-        */
-        Storyteller.theme = buildTheme(this) {
-            /* MODIFY your theme here
-             eg.
-            light.colors.primary = ofHexCode("#FF00FF")
-            dark from light
+        Storyteller.storytellerDelegate = storytellerDelegate
+        Storyteller.initialize(
+            // change to your own [API-KEY]
+            apiKey = "[API-KEY]",
+            userInput = UserInput(UUID.randomUUID().toString()),
+            onFailure = { error ->
+                Log.e("Storyteller Sample", "Failed to initialize Storyteller: $error")
+            },
+            onSuccess = {
+                Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
+            }
+        )
 
-            */
+    }
+
+    private val storytellerDelegate = object :StorytellerDelegate{
+
+        override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
+            Log.i("Storyteller Sample", "onUserActivityOccurred $type")
         }
-        initializeStoryteller(onSuccess = {
-            Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
-        }, onFailure = { error ->
-            Log.i("Storyteller Sample", "initialize failed, error $error")
-        })
+
+        override fun userNavigatedToApp(url: String) {
+            Log.i("Storyteller Sample", "userNavigatedToApp url = $url")
+        }
+
+        override fun configureWebView(view: WebView, url: String?, favicon: Bitmap?) = Unit
+
+        override fun getAdsForList(
+            listDescriptor: ListDescriptor,
+            stories: List<ClientStory>,
+            onComplete: (AdResponse) -> Unit,
+            onError: () -> Unit
+        ) = Unit
+
+        override fun getAdsForList(
+            stories: List<ClientStory>,
+            onComplete: (AdResponse) -> Unit,
+            onError: () -> Unit
+        ) = Unit
 
     }
 }
