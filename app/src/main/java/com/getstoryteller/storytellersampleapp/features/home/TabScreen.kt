@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.ui.PullToRefresh
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
 import kotlinx.coroutines.launch
@@ -41,7 +42,9 @@ fun TabScreen(
   sharedViewModel: MainViewModel,
   rootNavController: NavController,
   isRefreshing: Boolean,
-  config: Config?
+  config: Config?,
+  onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
+  setParentInterceptor: () -> Unit = {}
 ) {
   LaunchedEffect(key1 = tabId, block = {
     viewModel.loadTab(tabId)
@@ -67,6 +70,25 @@ fun TabScreen(
       scope.launch {
         listState.scrollToItem(0)
       }
+    }
+  }
+
+  LaunchedEffect(listState.canScrollBackward, listState.canScrollForward) {
+    if (listState.canScrollBackward) {
+      onSetNavigationInterceptor(
+        NavigationInterceptor.TargetRoute(
+          targetRoute = "home",
+          shouldIntercept = {
+            listState.canScrollBackward
+          },
+          onIntercepted = {
+            listState.animateScrollToItem(0)
+            viewModel.onRefresh()
+          },
+        ),
+      )
+    } else {
+      setParentInterceptor()
     }
   }
   Box(

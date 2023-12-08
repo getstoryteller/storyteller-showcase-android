@@ -39,8 +39,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(isRefreshing = true)
             }
 
-            val homeItems =
-                if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
+            val homeItems = if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
             _uiState.value =
                 HomePageUiState(
                     isRefreshing = false,

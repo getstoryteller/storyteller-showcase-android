@@ -45,6 +45,8 @@ import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
 import com.getstoryteller.storytellersampleapp.features.home.MoreScreen
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
@@ -53,14 +55,10 @@ import kotlinx.serialization.json.Json
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-  activity: Activity,
-  navController: NavHostController,
-  viewModel: MainViewModel,
-  onCommit: (
+  activity: Activity, navController: NavHostController, viewModel: MainViewModel, onCommit: (
     fragment: Fragment,
     tag: String,
-  ) -> (FragmentTransaction.(containerId: Int) -> Unit),
-  getClipsFragment: () -> StorytellerClipsFragment?
+  ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
 ) {
   val isLoginDialogVisible = viewModel.loginDialogVisible.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
@@ -75,104 +73,101 @@ fun MainScreen(
     mutableStateOf(true)
   }
 
-  Scaffold(
-    topBar = {
-      if (topBarVisible) {
-        TopAppBar(
-          backgroundColor = MaterialTheme.colors.background,
-          contentColor = MaterialTheme.colors.onBackground,
-          title = {
-            if (navigationState != PageState.HOME) {
-              Text(text = title)
-            }
-          },
-          actions = {
-            if (navigationState == PageState.HOME) {
-              IconButton(
-                onClick = {
-                  Storyteller.openSearch(activity)
-                },
-                enabled = !mainPageUiState.isMainScreenLoading
-              ) {
-                Icon(
-                  imageVector = Icons.Filled.Search,
-                  contentDescription = "",
-                  tint = MaterialTheme.colors.onBackground
-                )
-              }
-              IconButton(
-                onClick = {
-                  navigationState = PageState.ACCOUNT
-                  navController.navigate("home/account") {
-                    popUpTo(navController.graph.startDestinationId) {
-                      saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                  }
-                },
-                enabled = !mainPageUiState.isMainScreenLoading
-              ) {
-                Icon(
-                  imageVector = Icons.Filled.AccountCircle,
-                  contentDescription = "",
-                  tint = MaterialTheme.colors.onBackground
-                )
-              }
-            }
-          },
-          navigationIcon = {
-            IconButton(onClick = {
-              navController.navigateUp()
-            }) {
-              if (navigationState != PageState.HOME)
-                Icon(
-                  imageVector = Icons.Filled.ArrowBack,
-                  contentDescription = null,
-                  tint = MaterialTheme.colors.onBackground
-                )
-              else {
-                Icon(
-                  painter = painterResource(id = R.drawable.ic_logo_icon),
-                  contentDescription = null,
-                  tint = Color.Unspecified
-                )
-              }
+  var navigationInterceptor by remember {
+    mutableStateOf<NavigationInterceptor>(
+      NavigationInterceptor.None,
+    )
+  }
 
+  Scaffold(topBar = {
+    if (topBarVisible) {
+      TopAppBar(backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.onBackground,
+        title = {
+          if (navigationState != PageState.HOME) {
+            Text(text = title)
+          }
+        },
+        actions = {
+          if (navigationState == PageState.HOME) {
+            IconButton(
+              onClick = {
+                Storyteller.openSearch(activity)
+              }, enabled = !mainPageUiState.isMainScreenLoading
+            ) {
+              Icon(
+                imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
+              )
+            }
+            IconButton(
+              onClick = {
+                navigationState = PageState.ACCOUNT
+                navController.navigate("home/account") {
+                  popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                  }
+                  launchSingleTop = true
+                  restoreState = true
+                }
+              }, enabled = !mainPageUiState.isMainScreenLoading
+            ) {
+              Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "",
+                tint = MaterialTheme.colors.onBackground
+              )
             }
           }
-        )
-      }
-    },
-    bottomBar = {
-      BottomNavigationBar(
-        navController = navController,
-        onSetTopBarVisible = {
-          topBarVisible = it
         },
-        navigationState = navigationState,
-        onSetNavigationState = {
-          navigationState = it
-        },
-        viewModel = viewModel
-      )
+        navigationIcon = {
+          IconButton(onClick = {
+            navController.navigateUp()
+          }) {
+            if (navigationState != PageState.HOME) Icon(
+              imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = MaterialTheme.colors.onBackground
+            )
+            else {
+              Icon(
+                painter = painterResource(id = R.drawable.ic_logo_icon),
+                contentDescription = null,
+                tint = Color.Unspecified
+              )
+            }
+
+          }
+        })
     }
-  ) { innerPadding ->
+  }, bottomBar = {
+    BottomNavigationBar(
+      navController = navController,
+      onSetTopBarVisible = {
+        topBarVisible = it
+      },
+      navigationState = navigationState,
+      onSetNavigationState = {
+        navigationState = it
+      },
+      onTriggerMomentReload = {
+        viewModel.triggerMomentsReloadData()
+      },
+      onSetNavigationInterceptor = { navigationInterceptor },
+    )
+  }) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize()) {
       NavHost(
-        navController = navController,
-        startDestination = "home"
+        navController = navController, startDestination = "home"
       ) {
 
         composable("home") {
           navigationState = PageState.HOME
-          HomeScreen(
-            viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
+          HomeScreen(viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             navController = navController,
             isRefreshing = mainPageUiState.isHomeRefreshing,
-          )
+            onSetNavigationInterceptor = {
+              navigationInterceptor = it
+            })
         }
         composable("home/moments") {
           navigationState = PageState.HOME
@@ -188,16 +183,14 @@ fun MainScreen(
         composable("home/account") {
           navigationState = PageState.ACCOUNT
           title = "Account"
-          AccountScreen(
-            navController = navController,
+          AccountScreen(navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             onLogout = {
               navigationState = PageState.HOME
               viewModel.logout()
-            }
-          )
+            })
         }
         composable("account/{option}") {
           navigationState = PageState.ACCOUNT
@@ -211,8 +204,7 @@ fun MainScreen(
           )
         }
         composable("moreClips/{model}") { backStackEntry ->
-          val uiModel: PageItemUiModel? =
-            Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
+          val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
           uiModel?.let {
             navigationState = PageState.MORE
             title = it.title
@@ -225,8 +217,7 @@ fun MainScreen(
           }
         }
         composable("moreStories/{model}") { backStackEntry ->
-          val uiModel: PageItemUiModel? =
-            Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
+          val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
           uiModel?.let {
             navigationState = PageState.MORE
             title = it.title

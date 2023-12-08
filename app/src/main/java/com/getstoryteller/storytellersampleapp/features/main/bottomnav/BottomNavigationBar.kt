@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellersampleapp.features.main
+package com.getstoryteller.storytellersampleapp.features.main.bottomnav
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.BottomNavigation
@@ -8,10 +8,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellersampleapp.R
+import com.getstoryteller.storytellersampleapp.features.main.PageState
+import kotlinx.coroutines.launch
 
 @Composable
 fun BottomNavigationBar(
@@ -19,8 +22,9 @@ fun BottomNavigationBar(
   onSetTopBarVisible: (Boolean) -> Unit,
   navigationState: PageState,
   onSetNavigationState: (PageState) -> Unit,
-  viewModel: MainViewModel
-) {
+  onTriggerMomentReload: () -> Unit,
+  onSetNavigationInterceptor: () -> NavigationInterceptor = { NavigationInterceptor.None },
+  ) {
   AnimatedVisibility(
     visible = navigationState == PageState.HOME,
     content = {
@@ -29,7 +33,7 @@ fun BottomNavigationBar(
       ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val homeSelected = navBackStackEntry?.destination?.route == "home"
-
+        val coroutineScope = rememberCoroutineScope()
         BottomNavigationItem(
           icon = {
             Icon(
@@ -46,6 +50,16 @@ fun BottomNavigationBar(
           },
           selected = navBackStackEntry?.destination?.route == "home",
           onClick = {
+            val interceptor = onSetNavigationInterceptor()
+            if (interceptor is NavigationInterceptor.TargetRoute &&
+              homeSelected && interceptor.shouldIntercept()
+            ) {
+              coroutineScope.launch {
+                interceptor.onIntercepted()
+              }
+              return@BottomNavigationItem
+            }
+
             navController.navigate("home") {
               onSetNavigationState(PageState.HOME)
               popUpTo(navController.graph.startDestinationId) {
@@ -73,8 +87,18 @@ fun BottomNavigationBar(
           },
           selected = navBackStackEntry?.destination?.route == "home/moments",
           onClick = {
+            val interceptor = onSetNavigationInterceptor()
+            if (interceptor is NavigationInterceptor.TargetRoute &&
+              !homeSelected && interceptor.shouldIntercept()
+            ) {
+              coroutineScope.launch {
+                interceptor.onIntercepted()
+              }
+              return@BottomNavigationItem
+            }
+
             if (navBackStackEntry?.destination?.route == "home/moments") {
-              viewModel.triggerMomentsReloadData()
+              onTriggerMomentReload()
             }
             onSetNavigationState(PageState.HOME)
             onSetTopBarVisible(false)

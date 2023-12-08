@@ -2,7 +2,6 @@ package com.getstoryteller.storytellersampleapp.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.domain.GetTabContentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -19,7 +18,7 @@ class TabViewModel @Inject constructor(
 ) : ViewModel() {
 
   private val _uiState = MutableStateFlow(TabPageUiState())
-  val uiState: StateFlow<TabPageUiState> = _uiState.asStateFlow()
+  val uiState = _uiState.asStateFlow()
 
   fun loadTab(tabId: String) {
     viewModelScope.launch {
@@ -33,8 +32,14 @@ class TabViewModel @Inject constructor(
     }
   }
 
+  private var refreshJob: kotlinx.coroutines.Job? = null
+    set(value) {
+      field?.cancel()
+      field = value
+    }
+
   fun onRefresh() {
-    viewModelScope.launch {
+    refreshJob = viewModelScope.launch {
       _uiState.update {
         it.copy(isRefreshing = true)
       }

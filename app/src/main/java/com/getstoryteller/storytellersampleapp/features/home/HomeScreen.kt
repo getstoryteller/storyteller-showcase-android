@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
 import java.util.*
 
@@ -37,6 +38,7 @@ fun HomeScreen(
   config: Config?,
   navController: NavController,
   isRefreshing: Boolean,
+  onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
 ) {
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
     config?.let {
@@ -65,13 +67,13 @@ fun HomeScreen(
   }
   Box(
     modifier = Modifier
-      .fillMaxSize()
-      .pullRefresh(
-        state = refreshState
-      )
-      .onGloballyPositioned {
-        columnHeightPx = it.size.height
-      }
+        .fillMaxSize()
+        .pullRefresh(
+            state = refreshState
+        )
+        .onGloballyPositioned {
+            columnHeightPx = it.size.height
+        }
   ) {
     if (!pageUiState.tabsEnabled) {
       LazyColumn(
@@ -87,7 +89,7 @@ fun HomeScreen(
             isRefreshing = pageUiState.isRefreshing || isRefreshing,
             navController = navController,
             roundTheme = config?.roundTheme,
-            squareTheme = config?.squareTheme
+            squareTheme = config?.squareTheme,
           )
         }
       }
@@ -95,11 +97,12 @@ fun HomeScreen(
       TabLayout(
         rootNavController = navController,
         sharedViewModel = sharedViewModel,
-        state = TabLayoutUiState(
+        parentState = TabLayoutUiState(
           tabs = pageUiState.tabs,
           isRefreshing = pageUiState.isRefreshing || isRefreshing,
           config = config
-        )
+        ),
+        onSetNavigationInterceptor = onSetNavigationInterceptor,
       )
     }
   }

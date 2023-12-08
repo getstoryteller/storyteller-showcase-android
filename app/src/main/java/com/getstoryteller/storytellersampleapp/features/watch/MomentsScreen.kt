@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.ui.StorytellerEmbeddedClips
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
@@ -25,7 +26,7 @@ fun MomentsScreen(
   sharedViewModel: MainViewModel,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
   getClipsFragment: () -> StorytellerClipsFragment?,
-  tag: String,
+  tag: String
 ) {
 
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.observeAsState()
@@ -34,7 +35,6 @@ fun MomentsScreen(
       getClipsFragment()?.reloadData()
     }
   }
-
 
   Box(
     modifier = modifier

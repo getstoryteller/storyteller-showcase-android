@@ -1,13 +1,10 @@
 package com.getstoryteller.storytellersampleapp.ui
 
-import android.util.Log
 import android.view.Gravity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,7 +15,7 @@ import com.getstoryteller.storytellersampleapp.data.TileType
 import com.getstoryteller.storytellersampleapp.data.VideoType
 import com.getstoryteller.storytellersampleapp.features.home.PageItemStorytellerDelegate
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
-import com.storyteller.Storyteller
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.storyteller.data.StorytellerClipsDataModel
 import com.storyteller.data.StorytellerStoriesDataModel
 import com.storyteller.domain.entities.StorytellerListViewCellType
@@ -38,7 +35,7 @@ fun StorytellerItem(
   roundTheme: UiTheme?,
   squareTheme: UiTheme?,
   disableHeader: Boolean = false,
-  isScrollable: Boolean = false
+  isScrollable: Boolean = false,
 ) {
   Column(
     modifier = Modifier
