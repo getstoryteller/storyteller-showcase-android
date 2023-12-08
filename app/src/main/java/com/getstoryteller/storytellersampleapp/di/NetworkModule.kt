@@ -10,15 +10,20 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+  @OptIn(ExperimentalSerializationApi::class)
   @Singleton
   @Provides
-  fun provideHttpClient() = HttpClient(CIO) {
+  fun provideHttpClient(): HttpClient = HttpClient(CIO) {
+    engine {
+      requestTimeout = 0
+    }
     install(ContentNegotiation) {
       json(json = Json {
         prettyPrint = true

@@ -39,9 +39,7 @@ fun TabLayout(
 ) {
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
-  val tabs = remember(state.tabs) {
-    state.tabs
-  }
+  val tabs = remember(state.tabs) { state.tabs }
 
   val pagerState = rememberPagerState(pageCount = { tabs.size })
   val scope = rememberCoroutineScope()
@@ -83,13 +81,16 @@ fun TabLayout(
     }
     HorizontalPager(
       state = pagerState,
-      beyondBoundsPageCount = 2
+      beyondBoundsPageCount = 1,
+      key = { tabs[it].name }
     ) { index ->
-      val tabValue = remember(tabs.hashCode(), index) {
-        tabs[index].value
+      val tabValue = remember(tabs.hashCode(), index) { tabs[index].value }
+      val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $index")
+
+      LaunchedEffect(tabs.hashCode(), index) {
+        viewModel.loadTab(tabValue)
       }
-      val viewModel: TabViewModel =
-        hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $index").apply { loadTab(tabValue) }
+
       TabScreen(
         tabId = tabValue,
         viewModel = viewModel,

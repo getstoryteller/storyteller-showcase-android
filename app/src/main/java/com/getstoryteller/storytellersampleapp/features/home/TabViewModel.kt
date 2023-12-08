@@ -24,14 +24,11 @@ class TabViewModel @Inject constructor(
   fun loadTab(tabId: String) {
     viewModelScope.launch {
       val items = getTabContentUseCase.getTabContent(tabId)
-      _uiState.emit(
+      _uiState.update {
         TabPageUiState(
-          isRefreshing = true,
+          isRefreshing = false,
           tabItems = items
         )
-      )
-      _uiState.update {
-        it.copy(isRefreshing = false)
       }
     }
   }
