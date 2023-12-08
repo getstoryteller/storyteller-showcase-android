@@ -21,6 +21,15 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
+  signingConfigs {
+    create("release") {
+      storeFile = rootProject.file("keystore.jks")
+      storePassword = "password"
+      keyAlias = "alias"
+      keyPassword = "password"
+    }
+  }
+
   buildTypes {
     named("release") {
       isDebuggable = false
@@ -30,7 +39,9 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      signingConfig = signingConfigs.getByName("release")
     }
+
     named("debug") {
       isDebuggable = true
       isMinifyEnabled = false
