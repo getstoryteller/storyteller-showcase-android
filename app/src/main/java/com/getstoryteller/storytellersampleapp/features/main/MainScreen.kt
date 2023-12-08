@@ -79,80 +79,83 @@ fun MainScreen(
     )
   }
 
-  Scaffold(topBar = {
-    if (topBarVisible) {
-      TopAppBar(backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.onBackground,
-        title = {
-          if (navigationState != PageState.HOME) {
-            Text(text = title)
-          }
-        },
-        actions = {
-          if (navigationState == PageState.HOME) {
-            IconButton(
-              onClick = {
-                Storyteller.openSearch(activity)
-              }, enabled = !mainPageUiState.isMainScreenLoading
-            ) {
-              Icon(
-                imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
-              )
+  Scaffold(
+    topBar = {
+      if (topBarVisible) {
+        TopAppBar(backgroundColor = MaterialTheme.colors.background,
+          contentColor = MaterialTheme.colors.onBackground,
+          title = {
+            if (navigationState != PageState.HOME) {
+              Text(text = title)
             }
-            IconButton(
-              onClick = {
-                navigationState = PageState.ACCOUNT
-                navController.navigate("home/account") {
-                  popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
+          },
+          actions = {
+            if (navigationState == PageState.HOME) {
+              IconButton(
+                onClick = {
+                  Storyteller.openSearch(activity)
+                }, enabled = !mainPageUiState.isMainScreenLoading
+              ) {
+                Icon(
+                  imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
+                )
+              }
+              IconButton(
+                onClick = {
+                  navigationState = PageState.ACCOUNT
+                  navController.navigate("home/account") {
+                    popUpTo(navController.graph.startDestinationId) {
+                      saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                   }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              }, enabled = !mainPageUiState.isMainScreenLoading
-            ) {
-              Icon(
-                imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "",
+                }, enabled = !mainPageUiState.isMainScreenLoading
+              ) {
+                Icon(
+                  imageVector = Icons.Filled.AccountCircle,
+                  contentDescription = "",
+                  tint = MaterialTheme.colors.onBackground
+                )
+              }
+            }
+          },
+          navigationIcon = {
+            IconButton(onClick = {
+              navController.navigateUp()
+            }) {
+              if (navigationState != PageState.HOME) Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = null,
                 tint = MaterialTheme.colors.onBackground
               )
-            }
-          }
-        },
-        navigationIcon = {
-          IconButton(onClick = {
-            navController.navigateUp()
-          }) {
-            if (navigationState != PageState.HOME) Icon(
-              imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = MaterialTheme.colors.onBackground
-            )
-            else {
-              Icon(
-                painter = painterResource(id = R.drawable.ic_logo_icon),
-                contentDescription = null,
-                tint = Color.Unspecified
-              )
-            }
+              else {
+                Icon(
+                  painter = painterResource(id = R.drawable.ic_logo_icon),
+                  contentDescription = null,
+                  tint = Color.Unspecified
+                )
+              }
 
-          }
-        })
-    }
-  }, bottomBar = {
-    BottomNavigationBar(
-      navController = navController,
-      onSetTopBarVisible = {
-        topBarVisible = it
-      },
-      navigationState = navigationState,
-      onSetNavigationState = {
-        navigationState = it
-      },
-      onTriggerMomentReload = {
-        viewModel.triggerMomentsReloadData()
-      },
-      onSetNavigationInterceptor = { navigationInterceptor },
-    )
-  }) { innerPadding ->
+            }
+          })
+      }
+    }, bottomBar = {
+      BottomNavigationBar(
+        navController = navController,
+        onSetTopBarVisible = {
+          topBarVisible = it
+        },
+        navigationState = navigationState,
+        onSetNavigationState = {
+          navigationState = it
+        },
+        onTriggerMomentReload = {
+          viewModel.triggerMomentsReloadData()
+        },
+        onSetNavigationInterceptor = { navigationInterceptor },
+      )
+    }) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize()) {
       NavHost(
         navController = navController, startDestination = "home"

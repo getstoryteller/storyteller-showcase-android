@@ -81,7 +81,7 @@ fun BottomNavigationBar(
           },
           label = {
             Text(
-              text = "Watch",
+              text = "Moments",
               color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
             )
           },
