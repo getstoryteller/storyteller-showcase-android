@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -77,12 +78,16 @@ fun TabLayout(
         })
       }
     }
-    HorizontalPager(state = pagerState, beyondBoundsPageCount = 1, key = { tabs[it].name }) { index ->
-      val tabValue = remember(tabs.hashCode(), index) { tabs[index].value }
-      val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $index")
+    HorizontalPager(
+      state = pagerState,
+      beyondBoundsPageCount = 0 /* This needs to be zero or nav interception will not work */,
+      key = { tabs[it].name }
+    ) { pageIndex ->
+      val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }
+      val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $pageIndex")
       val coroutineScope = rememberCoroutineScope()
 
-      LaunchedEffect(tabs.hashCode(), index) {
+      LaunchedEffect(tabs.hashCode(), pageIndex) {
         viewModel.loadTab(tabValue)
       }
 
@@ -94,14 +99,14 @@ fun TabLayout(
         config = parentState.config,
         onSetNavigationInterceptor = onSetNavigationInterceptor,
         setParentInterceptor = {
-          if (pagerState.currentPage == index) {
+          if (pagerState.currentPage == pageIndex) {
             onSetNavigationInterceptor(
               NavigationInterceptor.TargetRoute(
                 targetRoute = "home",
                 shouldIntercept = { true },
                 onIntercepted = {
                   coroutineScope.launch {
-                    pagerState.animateScrollToPage(0)
+                    pagerState.scrollToPage(0)
                   }
                   if (pagerState.currentPage == 0) {
                     viewModel.onRefresh()
