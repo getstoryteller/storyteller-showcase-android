@@ -5,13 +5,10 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -40,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.features.account.AccountScreen
 import com.getstoryteller.storytellersampleapp.features.account.OptionSelectScreen
@@ -52,7 +48,6 @@ import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -150,76 +145,17 @@ fun MainScreen(
       }
     },
     bottomBar = {
-      AnimatedVisibility(
-        visible = navigationState == PageState.HOME,
-        content = {
-          BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background
-          ) {
-            val backStackEntry = navController.currentBackStackEntryAsState()
-            val navbackEntry by navController.currentBackStackEntryAsState()
-            val homeSelected = backStackEntry.value?.destination?.route == "home"
-
-            BottomNavigationItem(
-              icon = {
-                Icon(
-                  painter = painterResource(id = R.drawable.ic_home),
-                  contentDescription = null,
-                  tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              label = {
-                Text(
-                  text = "Home",
-                  color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              selected = navbackEntry?.destination?.route == "home",
-              onClick = {
-                topBarVisible = true
-                navController.navigate("home") {
-                  navigationState = PageState.HOME
-                  popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              }
-            )
-            BottomNavigationItem(
-              icon = {
-                Icon(
-                  painter = painterResource(id = R.drawable.ic_watch),
-                  contentDescription = null,
-                  tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              label = {
-                Text(
-                  text = "Watch",
-                  color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              selected = navbackEntry?.destination?.route == "home/moments",
-              onClick = {
-                if (navbackEntry?.destination?.route == "home/moments") {
-                  viewModel.triggerMomentsReloadData()
-                }
-
-                topBarVisible = false
-                navigationState = PageState.HOME
-                navController.navigate("home/moments") {
-                  popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              }
-            )
-          }
-        })
+      BottomNavigationBar(
+        navController = navController,
+        onSetTopBarVisible = {
+          topBarVisible = it
+        },
+        navigationState = navigationState,
+        onSetNavigationState = {
+          navigationState = it
+        },
+        viewModel = viewModel
+      )
     }
   ) { innerPadding ->
     Box(modifier = Modifier.fillMaxSize()) {

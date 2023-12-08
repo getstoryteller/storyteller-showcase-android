@@ -2,6 +2,7 @@ package com.getstoryteller.storytellersampleapp.domain
 
 import android.content.Context
 import android.view.Gravity
+import androidx.compose.runtime.Stable
 import com.getstoryteller.storytellersampleapp.data.KeyValueDto
 import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.data.repo.TenantRepository
@@ -126,6 +127,7 @@ class GetConfigurationUseCaseImpl(
 
 }
 
+@Stable
 data class Config(
   val configId: String,
   val topLevelCollectionId: String?,
