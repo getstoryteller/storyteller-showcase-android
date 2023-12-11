@@ -62,6 +62,7 @@ fun TabLayout(
       backgroundColor = MaterialTheme.colors.surface,
       contentColor = MaterialTheme.colors.primary,
       edgePadding = 0.dp,
+      divider = {}
     ) {
       tabs.forEachIndexed { index, tab ->
         Tab(text = {

@@ -43,6 +43,7 @@ android {
     }
 
     named("debug") {
+      applicationIdSuffix = ".debug"
       isDebuggable = true
       isMinifyEnabled = false
       isShrinkResources = false

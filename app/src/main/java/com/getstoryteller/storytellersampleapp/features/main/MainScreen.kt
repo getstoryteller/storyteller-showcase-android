@@ -83,6 +83,7 @@ fun MainScreen(
     topBar = {
       if (topBarVisible) {
         TopAppBar(backgroundColor = MaterialTheme.colors.background,
+          elevation = 0.dp,
           contentColor = MaterialTheme.colors.onBackground,
           title = {
             if (navigationState != PageState.HOME) {
