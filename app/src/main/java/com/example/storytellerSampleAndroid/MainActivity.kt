@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main),
         val deepLink = intent?.dataString
         if (deepLink != null && Storyteller.isStorytellerDeepLink(deepLink)) {
             Storyteller.openDeepLink(this, deepLink)
+            finish()
         }
     }
 
