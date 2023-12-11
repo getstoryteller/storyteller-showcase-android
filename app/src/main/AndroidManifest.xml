@@ -20,26 +20,64 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="Storyteller Links">
+
+
+
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--
-                Paolo Banchero with Team USA - https://orlandomagic.shar.estori.es/go/7b0a7c37-27da-8d19-afcf-3a0d6874e26b/95ddc79c-1457-0ffc-6b83-3a0d687ec0633-->
+                <!-- dont edit this file read the readme for help -->
                 <data
+                    android:scheme="orlandomagicstories"
+                    android:host="open" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="orlandomagic.ope.nstori.es"
+                    android:pathPattern="/open/.*/.*" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="orlandomagic.ope.nstori.es"
+                    android:pathPattern="/go/.*/.*" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
                     android:host="orlandomagic.shar.estori.es"
-                    android:scheme="https" />
+                    android:pathPattern="/open/.*/.*" />
             </intent-filter>
-
-            <intent-filter >
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="marketingstories"
-                    android:host="open"/>
+                    android:scheme="https"
+                    android:host="orlandomagic.shar.estori.es"
+                    android:pathPattern="/go/.*/.*" />
             </intent-filter>
+
         </activity>
 
         <meta-data

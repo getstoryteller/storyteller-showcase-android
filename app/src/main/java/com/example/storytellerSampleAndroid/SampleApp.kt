@@ -23,7 +23,7 @@ class SampleApp : Application() {
         Storyteller.storytellerDelegate = storytellerDelegate
         Storyteller.initialize(
             // change to your own [API-KEY]
-            apiKey = "[API-KEY]",
+            apiKey = "b69b1ffe-b2fa-436a-ad75-108806e795a6",
             userInput = UserInput(UUID.randomUUID().toString()),
             onFailure = { error ->
                 Log.e("Storyteller Sample", "Failed to initialize Storyteller: $error")
