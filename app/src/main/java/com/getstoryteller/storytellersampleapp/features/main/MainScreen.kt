@@ -5,6 +5,7 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,7 @@ import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
+import com.skydoves.cloudy.Cloudy
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
@@ -157,7 +160,10 @@ fun MainScreen(
         onSetNavigationInterceptor = { navigationInterceptor },
       )
     }) { innerPadding ->
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+    ) {
       NavHost(
         navController = navController, startDestination = "home"
       ) {
@@ -246,7 +252,13 @@ fun MainScreen(
     }
   }
 
-  if (isLoginDialogVisible.value) {
+  if( isLoginDialogVisible.value) {
+    Cloudy(radius = 25) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+      )
+    }
     LoginDialog(viewModel)
   }
 }
