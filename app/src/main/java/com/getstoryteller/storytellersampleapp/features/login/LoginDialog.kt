@@ -2,11 +2,12 @@ package com.getstoryteller.storytellersampleapp.features.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -103,7 +104,7 @@ fun LoginDialog(
           }
         )
 
-        if (loginState is Error){
+        if (loginState is Error) {
           val annotatedText = buildAnnotatedString {
             appendInlineContent("leadingIcon", "[icon]")
             append(" ${loginState.message}")
@@ -140,23 +141,30 @@ fun LoginDialog(
           onClick = {
             viewModel.verifyCode(text)
           }) {
-          when(loginState){
+          when (loginState) {
             is Error -> {
-              Icon(painterResource(id = R.drawable.ic_error), "", tint = MaterialTheme.colors.error)
+              Text(text = stringResource(id = R.string.action_login_retry))
             }
+
             LoginState.Idle -> {
               Text(text = stringResource(id = R.string.action_login_verify))
             }
+
             LoginState.Loading -> {
               CircularProgressIndicator(
-                modifier = Modifier
-                  .height(24.dp)
-                  .width(24.dp),
+                modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colors.onPrimary
               )
             }
+
             LoginState.Success -> {
-              Icon(Icons.Filled.CheckCircle, "", tint = LocalStorytellerColorsPalette.current.success)
+              Icon(
+                modifier = Modifier.size(24.dp),
+                imageVector = Icons.Filled.CheckCircle, contentDescription = "Success icon",
+                tint = LocalStorytellerColorsPalette.current.success
+              )
+              Spacer(modifier = Modifier.width(8.dp))
+              Text(text = stringResource(id = R.string.action_login_success))
             }
           }
         }
