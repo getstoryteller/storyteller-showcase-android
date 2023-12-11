@@ -120,7 +120,7 @@ fun AccountScreen(
           if (existingFragment != null) {
             fmgr.beginTransaction().remove(existingFragment).commit()
           }
-
+          navController.navigate("home")
           viewModel.logout()
         }
       )

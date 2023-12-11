@@ -13,17 +13,20 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class StorytellerColors(
-  val background: Color = Color.Unspecified
+  val background: Color = Color.Unspecified,
+  val success: Color = Color.Unspecified,
 )
 
 val LocalStorytellerColorsPalette = staticCompositionLocalOf { StorytellerColors() }
 
 private val StorytellerLightColorPalette = StorytellerColors(
-  background = Color(0xFFE5E5E5)
+  background = Color(0xFFE5E5E5),
+  success = Color(0xFF57F35D)
 )
 
 private val StorytellerDarkColorPalette = StorytellerColors(
-  background = Color(0xFF1A1A1A)
+  background = Color(0xFF1A1A1A),
+  success = Color(0xFF57F35D)
 )
 
 @SuppressLint("ConflictingOnColor")

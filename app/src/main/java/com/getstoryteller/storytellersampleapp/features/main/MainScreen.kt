@@ -63,7 +63,7 @@ fun MainScreen(
     tag: String,
   ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
 ) {
-  val isLoginDialogVisible = viewModel.loginDialogVisible.collectAsState()
+  val isLoginDialogVisible = viewModel.loginUiState.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember {
     mutableStateOf(PageState.HOME)
@@ -252,7 +252,7 @@ fun MainScreen(
     }
   }
 
-  if( isLoginDialogVisible.value) {
+  if( isLoginDialogVisible.value.isLoggedIn.not()) {
     Cloudy(radius = 25) {
       Box(
         modifier = Modifier

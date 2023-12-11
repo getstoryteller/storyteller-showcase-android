@@ -9,6 +9,7 @@ import com.getstoryteller.storytellersampleapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellersampleapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellersampleapp.services.SessionService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +18,19 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
+data class LoginUiState(
+  val isLoggedIn: Boolean = false,
+  val loginState: LoginState = LoginState.Idle,
+)
+
+sealed class LoginState {
+  data object Idle : LoginState()
+  data object Loading : LoginState()
+
+  data object Success : LoginState()
+  data class Error(val message: String) : LoginState()
+}
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
   private val verifyCodeUseCase: VerifyCodeUseCase,
@@ -24,6 +38,9 @@ class MainViewModel @Inject constructor(
   private val sessionService: SessionService
 ) : ViewModel() {
 
+  companion object {
+    const val DELAY = 5000L
+  }
   private var config: Config? = null
 
   private val _uiState = MutableStateFlow(MainPageUiState())
@@ -35,10 +52,8 @@ class MainViewModel @Inject constructor(
   private val _reloadHomeTrigger = MutableLiveData<String>()
   val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
 
-  val loginDialogVisible = MutableStateFlow(sessionService.apiKey == null)
-  val loginProgress = MutableStateFlow(false)
-  val loginError = MutableStateFlow<String?>(null)
-
+  private val _loginUiState = MutableStateFlow(LoginUiState(isLoggedIn = sessionService.apiKey != null))
+  val loginUiState = _loginUiState.asStateFlow()
   fun setup() {
     _uiState.update { it.copy(isMainScreenLoading = true) }
     if (sessionService.apiKey != null) {
@@ -57,27 +72,45 @@ class MainViewModel @Inject constructor(
   fun verifyCode(code: String) {
     viewModelScope.launch {
       if (code.isEmpty()) {
-        loginError.value = "Please enter a code."
+        _loginUiState.update {
+          it.copy(loginState = LoginState.Error("Please enter a code"))
+        }
         return@launch
       }
-      loginProgress.value = true
+      _loginUiState.update {
+        it.copy(loginState = LoginState.Loading)
+      }
       try {
         verifyCodeUseCase.verifyCode(code)
         config = getConfigurationUseCase.getConfiguration()
-        loginDialogVisible.value = false
-        _uiState.emit(MainPageUiState(config = config))
+        _loginUiState.update {
+          it.copy(loginState = LoginState.Success)
+        }
+        viewModelScope.launch {
+          delay(3000)
+          _loginUiState.update {
+            it.copy(isLoggedIn = true)
+          }
+          _uiState.emit(MainPageUiState(config = config))
+        }
+
       } catch (ex: Exception) {
-        loginError.value =
-          "The access code you entered is incorrect. Please double-check your code and try again."
-      } finally {
-        loginProgress.value = false
+        viewModelScope.launch {
+          _loginUiState.update {
+            it.copy(loginState = LoginState.Error("The access code you entered is incorrect. Please double-check your code and try again."))
+          }
+          delay(DELAY)
+          _loginUiState.update {
+            it.copy(loginState = LoginState.Idle)
+          }
+        }
       }
     }
   }
 
   fun logout() {
     _uiState.value = MainPageUiState()
-    loginDialogVisible.value = true
+    _loginUiState.value = LoginUiState()
   }
 
   fun refreshMainPage() {
