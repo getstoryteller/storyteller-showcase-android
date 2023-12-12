@@ -59,7 +59,7 @@ fun TabLayout(
   Column(modifier = Modifier.fillMaxSize()) {
     ScrollableTabRow(
       selectedTabIndex = currentPage.value,
-      backgroundColor = MaterialTheme.colors.surface,
+      backgroundColor = MaterialTheme.colors.background,
       contentColor = MaterialTheme.colors.primary,
       edgePadding = 0.dp,
       divider = {}

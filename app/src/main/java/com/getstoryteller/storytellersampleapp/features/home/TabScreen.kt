@@ -94,7 +94,7 @@ fun TabScreen(
   Box(
     modifier = Modifier
       .fillMaxSize()
-      .background(color = MaterialTheme.colors.surface)
+      .background(color = MaterialTheme.colors.background)
       .pullRefresh(
         state = refreshState
       )

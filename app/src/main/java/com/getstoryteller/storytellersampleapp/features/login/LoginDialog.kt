@@ -68,10 +68,7 @@ fun LoginDialog(
           .fillMaxWidth()
           .padding(16.dp)
       ) {
-        var text by rememberSaveable { mutableStateOf("") }
-        val codeBeingVerified by rememberSaveable {
-          mutableStateOf("")
-        }
+        var text by rememberSaveable { mutableStateOf("EUROS") }
         Image(
           modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
           painter = painterResource(id = if (isDarkTheme) R.drawable.ic_logo_dark else R.drawable.ic_logo),

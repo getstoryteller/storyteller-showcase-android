@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -175,6 +176,9 @@ fun MainScreen(
             config = mainPageUiState.config,
             navController = navController,
             isRefreshing = mainPageUiState.isHomeRefreshing,
+            onSetNavigationInterceptor = {
+              navigationInterceptor = it
+            }
           )
         }
         composable("home/moments") {
@@ -251,7 +255,7 @@ fun MainScreen(
     }
   }
 
-  if( isLoginDialogVisible.value.isLoggedIn.not()) {
+  if(isLoginDialogVisible.value.isLoggedIn.not()) {
     Cloudy(radius = 25) {
       Box(
         modifier = Modifier
