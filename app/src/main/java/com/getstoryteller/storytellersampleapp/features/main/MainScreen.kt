@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -200,6 +202,9 @@ fun MainScreen(
         }
         composable("home/moments") {
           navigationState = PageState.HOME
+          LaunchedEffect(Unit) {
+            navigationInterceptor = NavigationInterceptor.None
+          }
           MomentsScreen(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             config = mainPageUiState.config,
