@@ -39,13 +39,13 @@ fun BottomNavigationBar(
             Icon(
               painter = painterResource(id = R.drawable.ic_home),
               contentDescription = null,
-              tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+              tint = if (homeSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
             )
           },
           label = {
             Text(
               text = "Home",
-              color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+              color = if (homeSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
             )
           },
           selected = navBackStackEntry?.destination?.route == "home",
@@ -76,13 +76,13 @@ fun BottomNavigationBar(
             Icon(
               painter = painterResource(id = R.drawable.ic_watch),
               contentDescription = null,
-              tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+              tint = if (!homeSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
             )
           },
           label = {
             Text(
               text = "Moments",
-              color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+              color = if (!homeSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
             )
           },
           selected = navBackStackEntry?.destination?.route == "home/moments",

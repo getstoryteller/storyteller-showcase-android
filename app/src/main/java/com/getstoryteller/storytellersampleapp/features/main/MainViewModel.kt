@@ -38,9 +38,6 @@ class MainViewModel @Inject constructor(
   private val sessionService: SessionService
 ) : ViewModel() {
 
-  companion object {
-    const val DELAY = 5000L
-  }
   private var config: Config? = null
 
   private val _uiState = MutableStateFlow(MainPageUiState())
@@ -83,25 +80,15 @@ class MainViewModel @Inject constructor(
       try {
         verifyCodeUseCase.verifyCode(code)
         config = getConfigurationUseCase.getConfiguration()
-        _loginUiState.update {
-          it.copy(loginState = LoginState.Success)
-        }
+        _loginUiState.value = LoginUiState(isLoggedIn = true, loginState = LoginState.Success)
         viewModelScope.launch {
-          delay(3000)
-          _loginUiState.update {
-            it.copy(isLoggedIn = true)
-          }
           _uiState.emit(MainPageUiState(config = config))
         }
 
       } catch (ex: Exception) {
         viewModelScope.launch {
           _loginUiState.update {
-            it.copy(loginState = LoginState.Error("The access code you entered is incorrect. Please double-check your code and try again."))
-          }
-          delay(DELAY)
-          _loginUiState.update {
-            it.copy(loginState = LoginState.Idle)
+            it.copy(isLoggedIn = false,loginState = LoginState.Error("The access code you entered is incorrect. Please double-check your code and try again."))
           }
         }
       }
@@ -115,6 +102,12 @@ class MainViewModel @Inject constructor(
 
   fun refreshMainPage() {
     _reloadHomeTrigger.value = UUID.randomUUID().toString()
+  }
+
+  fun clearErrorState() {
+    _loginUiState.update {
+      it.copy(loginState = LoginState.Idle)
+    }
   }
 }
 

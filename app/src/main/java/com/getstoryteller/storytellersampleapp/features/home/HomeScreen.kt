@@ -40,6 +40,7 @@ fun HomeScreen(
   isRefreshing: Boolean,
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
 ) {
+
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
     config?.let {
       viewModel.loadHomePage(it)

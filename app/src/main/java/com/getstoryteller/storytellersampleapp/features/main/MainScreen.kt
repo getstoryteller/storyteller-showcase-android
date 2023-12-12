@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -170,14 +169,8 @@ fun MainScreen(
 
         composable("home") {
           navigationState = PageState.HOME
-          HomeScreen(viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
-            sharedViewModel = viewModel,
-            config = mainPageUiState.config,
-            navController = navController,
-            isRefreshing = mainPageUiState.isHomeRefreshing,
-            onSetNavigationInterceptor = {
-              navigationInterceptor = it
-            })
+
+
         }
         composable("home/moments") {
           navigationState = PageState.HOME
@@ -201,6 +194,7 @@ fun MainScreen(
             onLogout = {
               navigationState = PageState.HOME
               viewModel.logout()
+              navController.navigate("home")
             })
         }
         composable("account/{option}") {

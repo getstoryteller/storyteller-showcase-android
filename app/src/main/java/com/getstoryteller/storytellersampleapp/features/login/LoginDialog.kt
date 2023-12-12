@@ -3,17 +3,16 @@ package com.getstoryteller.storytellersampleapp.features.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -21,8 +20,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -72,6 +69,9 @@ fun LoginDialog(
           .padding(16.dp)
       ) {
         var text by rememberSaveable { mutableStateOf("") }
+        val codeBeingVerified by rememberSaveable {
+          mutableStateOf("")
+        }
         Image(
           modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
           painter = painterResource(id = if (isDarkTheme) R.drawable.ic_logo_dark else R.drawable.ic_logo),
@@ -92,7 +92,10 @@ fun LoginDialog(
             .fillMaxWidth()
             .padding(top = 16.dp),
           value = text,
-          onValueChange = { text = it },
+          onValueChange = {
+            text = it
+            viewModel.clearErrorState()
+          },
           isError = loginState is Error,
           placeholder = { Text(text = stringResource(id = R.string.label_login_enter_code)) },
           colors = TextFieldDefaults.outlinedTextFieldColors(backgroundColor = LocalStorytellerColorsPalette.current.background),
@@ -124,32 +127,25 @@ fun LoginDialog(
               }
             )
           )
+
           Text(
             text = annotatedText,
             color = MaterialTheme.colors.error,
             modifier = Modifier.padding(top = 8.dp),
             inlineContent = inlineContent,
           )
-
         }
 
         Button(modifier = Modifier
           .height(48.dp)
           .padding(top = 8.dp)
           .fillMaxWidth(),
-          enabled = !loginUiState.value.isLoggedIn,
+          colors = ButtonDefaults.buttonColors(disabledBackgroundColor = MaterialTheme.colors.primary),
+          enabled = !loginUiState.value.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
             viewModel.verifyCode(text)
           }) {
           when (loginState) {
-            is Error -> {
-              Text(text = stringResource(id = R.string.action_login_retry))
-            }
-
-            LoginState.Idle -> {
-              Text(text = stringResource(id = R.string.action_login_verify))
-            }
-
             LoginState.Loading -> {
               CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
@@ -157,14 +153,8 @@ fun LoginDialog(
               )
             }
 
-            LoginState.Success -> {
-              Icon(
-                modifier = Modifier.size(24.dp),
-                imageVector = Icons.Filled.CheckCircle, contentDescription = "Success icon",
-                tint = LocalStorytellerColorsPalette.current.success
-              )
-              Spacer(modifier = Modifier.width(8.dp))
-              Text(text = stringResource(id = R.string.action_login_success))
+            else -> {
+              Text(text = stringResource(id = R.string.action_login_verify))
             }
           }
         }
