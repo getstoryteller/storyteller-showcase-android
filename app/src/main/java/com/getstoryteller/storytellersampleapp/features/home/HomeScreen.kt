@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,7 +29,7 @@ import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
-import java.util.*
+import java.util.UUID
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -39,6 +40,7 @@ fun HomeScreen(
   navController: NavController,
   isRefreshing: Boolean,
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
+  onNavigateToLogin: () -> Unit = {},
 ) {
 
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
@@ -50,6 +52,8 @@ fun HomeScreen(
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
   val pageUiState by viewModel.uiState.collectAsState()
+  val loginState by sharedViewModel.loginUiState.collectAsState()
+
   val refreshState = rememberPullRefreshState(
     refreshing = pageUiState.isRefreshing,
     onRefresh = { viewModel.onRefresh() }
@@ -58,6 +62,11 @@ fun HomeScreen(
   val listItems = pageUiState.homeItems
   var columnHeightPx by remember {
     mutableIntStateOf(0)
+  }
+  LaunchedEffect(loginState.isLoggedIn, config) {
+    if (!loginState.isLoggedIn && config == null) {
+      onNavigateToLogin()
+    }
   }
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
@@ -68,13 +77,13 @@ fun HomeScreen(
   }
   Box(
     modifier = Modifier
-        .fillMaxSize()
-        .pullRefresh(
-            state = refreshState
-        )
-        .onGloballyPositioned {
-            columnHeightPx = it.size.height
-        }
+      .fillMaxSize()
+      .pullRefresh(
+        state = refreshState
+      )
+      .onGloballyPositioned {
+        columnHeightPx = it.size.height
+      }
   ) {
     if (!pageUiState.tabsEnabled) {
       LazyColumn(

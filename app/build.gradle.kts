@@ -101,7 +101,6 @@ dependencies {
   // DI Hilt
   implementation("com.google.dagger:hilt-android:2.48")
   kapt("com.google.dagger:hilt-android-compiler:2.48")
-  implementation ("com.github.skydoves:cloudy:0.1.2")
 
   /**
    * GAM for Storyteller Ads

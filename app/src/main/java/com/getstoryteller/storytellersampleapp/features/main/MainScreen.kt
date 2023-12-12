@@ -5,6 +5,7 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,11 +45,10 @@ import com.getstoryteller.storytellersampleapp.features.account.OptionSelectType
 import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
 import com.getstoryteller.storytellersampleapp.features.home.MoreScreen
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
-import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
+import com.getstoryteller.storytellersampleapp.features.login.LoginScreen
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
-import com.skydoves.cloudy.Cloudy
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
@@ -61,7 +61,6 @@ fun MainScreen(
     tag: String,
   ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
 ) {
-  val isLoginDialogVisible = viewModel.loginUiState.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember {
     mutableStateOf(PageState.HOME)
@@ -82,6 +81,8 @@ fun MainScreen(
 
   Scaffold(
     topBar = {
+      if (navigationState == PageState.LOGIN) return@Scaffold
+
       if (topBarVisible) {
         TopAppBar(backgroundColor = MaterialTheme.colors.background,
           elevation = 0.dp,
@@ -143,6 +144,8 @@ fun MainScreen(
           })
       }
     }, bottomBar = {
+      if (navigationState == PageState.LOGIN) return@Scaffold
+
       BottomNavigationBar(
         navController = navController,
         onSetTopBarVisible = {
@@ -175,8 +178,25 @@ fun MainScreen(
             isRefreshing = mainPageUiState.isHomeRefreshing,
             onSetNavigationInterceptor = {
               navigationInterceptor = it
+            },
+            onNavigateToLogin = {
+              navController.navigate("login"){
+                popUpTo(navController.graph.startDestinationId) {
+                  inclusive = true
+                }
+              }
             }
           )
+        }
+        composable("login") {
+          navigationState = PageState.LOGIN
+          LoginScreen(viewModel = viewModel) {
+            navController.navigate("home") {
+              popUpTo("home"){
+                inclusive = true
+              }
+            }
+          }
         }
         composable("home/moments") {
           navigationState = PageState.HOME
@@ -198,9 +218,7 @@ fun MainScreen(
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             onLogout = {
-              navigationState = PageState.HOME
               viewModel.logout()
-              navController.navigate("home")
             })
         }
         composable("account/{option}") {
@@ -251,19 +269,10 @@ fun MainScreen(
       }
     }
   }
-  if (isLoginDialogVisible.value.isLoggedIn.not()) {
-    Cloudy(radius = 25) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-      )
-    }
-    LoginDialog(viewModel)
-  }
 }
 
 enum class PageState {
-  HOME, ACCOUNT, MORE
+  HOME, ACCOUNT, MORE, LOGIN
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {

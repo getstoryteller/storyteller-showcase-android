@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,11 +44,12 @@ fun AccountScreen(
 ) {
   val localContext = LocalContext.current
   val isLoggedOut by viewModel.isLoggedOut.collectAsState()
-  if (isLoggedOut) {
-    navController.navigateUp()
-    onLogout()
+  LaunchedEffect(isLoggedOut) {
+    if (isLoggedOut) {
+      onLogout()
+      navController.navigate("home")
+    }
   }
-
   Box(
     modifier = Modifier
       .fillMaxSize()

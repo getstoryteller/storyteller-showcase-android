@@ -21,6 +21,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,14 +46,24 @@ import com.getstoryteller.storytellersampleapp.ui.LocalStorytellerColorsPalette
 
 @Composable
 fun LoginDialog(
-  viewModel: MainViewModel
+  viewModel: MainViewModel,
+  onLoggedIn: () -> Unit
 ) {
+  val loginUiState by viewModel.loginUiState.collectAsState()
+  val loginState = loginUiState.loginState
+
+  LaunchedEffect(loginUiState.isLoggedIn) {
+    if (loginUiState.isLoggedIn) {
+      onLoggedIn()
+    }
+  }
+
   Dialog(
     onDismissRequest = {},
     properties = DialogProperties(
       dismissOnBackPress = false,
       dismissOnClickOutside = false,
-      usePlatformDefaultWidth = false
+      usePlatformDefaultWidth = false,
     )
   ) {
     val isDarkTheme = isSystemInDarkTheme()
@@ -68,7 +79,7 @@ fun LoginDialog(
           .fillMaxWidth()
           .padding(16.dp)
       ) {
-        var text by rememberSaveable { mutableStateOf("EUROS") }
+        var text by rememberSaveable { mutableStateOf("") }
         Image(
           modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
           painter = painterResource(id = if (isDarkTheme) R.drawable.ic_logo_dark else R.drawable.ic_logo),
@@ -80,10 +91,6 @@ fun LoginDialog(
             .align(alignment = Alignment.CenterHorizontally),
           text = stringResource(id = R.string.label_login_description)
         )
-        val loginUiState = viewModel.loginUiState.collectAsState()
-
-        val loginState = loginUiState.value.loginState
-
         OutlinedTextField(
           modifier = Modifier
             .fillMaxWidth()
@@ -137,8 +144,11 @@ fun LoginDialog(
           .height(48.dp)
           .padding(top = 8.dp)
           .fillMaxWidth(),
-          colors = ButtonDefaults.buttonColors(disabledBackgroundColor = MaterialTheme.colors.primary),
-          enabled = !loginUiState.value.isLoggedIn && loginState !is LoginState.Loading,
+          colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = MaterialTheme.colors.primary,
+            disabledContentColor = MaterialTheme.colors.onPrimary
+          ),
+          enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
             viewModel.verifyCode(text)
           }) {
