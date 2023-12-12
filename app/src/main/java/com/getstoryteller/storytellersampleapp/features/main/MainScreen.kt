@@ -7,9 +7,13 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -22,6 +26,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -40,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.features.account.AccountScreen
 import com.getstoryteller.storytellersampleapp.features.account.OptionSelectScreen
@@ -51,6 +57,7 @@ import com.getstoryteller.storytellersampleapp.features.login.LoginScreen
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
@@ -81,12 +88,30 @@ fun MainScreen(
     )
   }
 
+  val systemUiController = rememberSystemUiController()
+  val topBarColor = MaterialTheme.colors.background
+  val isSystemDark = isSystemInDarkTheme()
+
+  LaunchedEffect(navController.currentBackStackEntryAsState().value) {
+    when (navController.currentDestination?.route) {
+      "home/moments" -> systemUiController.setStatusBarColor(Color.Transparent, darkIcons = false)
+      else -> systemUiController.setStatusBarColor(topBarColor, darkIcons = !isSystemDark)
+    }
+  }
+
   Scaffold(
     topBar = {
       if (navigationState == PageState.LOGIN) return@Scaffold
 
       if (topBarVisible) {
-        TopAppBar(backgroundColor = MaterialTheme.colors.background,
+        TopAppBar(
+          modifier = Modifier
+            .padding(
+              top = WindowInsets.statusBars
+                .asPaddingValues()
+                .calculateTopPadding()
+            ),
+          backgroundColor = MaterialTheme.colors.background,
           elevation = 0.dp,
           contentColor = MaterialTheme.colors.onBackground,
           title = {

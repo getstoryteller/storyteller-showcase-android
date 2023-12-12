@@ -82,6 +82,7 @@ dependencies {
   implementation("androidx.compose.runtime:runtime:1.5.4")
   implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
   implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+  implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
   implementation("androidx.core:core-ktx:1.12.0")
   implementation("androidx.appcompat:appcompat:1.6.1")

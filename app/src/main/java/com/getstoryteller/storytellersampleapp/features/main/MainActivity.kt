@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.os.BundleCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.Fragment.SavedState
 import androidx.fragment.app.FragmentManager
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
       ) ?: savedStateSparseArray
       currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
     }
+    WindowCompat.setDecorFitsSystemWindows(window, false)
 
     viewModel.setup()
     setContent {
