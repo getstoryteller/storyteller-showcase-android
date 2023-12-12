@@ -21,7 +21,6 @@ class AccountViewModel @Inject constructor(
 
   fun logout() {
     viewModelScope.launch {
-      delay(100)
       logoutUseCase.logout()
       isLoggedOut.value = true
     }

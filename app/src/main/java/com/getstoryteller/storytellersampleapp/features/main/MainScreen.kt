@@ -5,7 +5,6 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -167,7 +165,6 @@ fun MainScreen(
       NavHost(
         navController = navController, startDestination = "home"
       ) {
-
         composable("home") {
           navigationState = PageState.HOME
           HomeScreen(
@@ -254,8 +251,7 @@ fun MainScreen(
       }
     }
   }
-
-  if(isLoginDialogVisible.value.isLoggedIn.not()) {
+  if (isLoginDialogVisible.value.isLoggedIn.not()) {
     Cloudy(radius = 25) {
       Box(
         modifier = Modifier
