@@ -172,6 +172,9 @@ fun MainScreen(
       ) {
         composable("home") {
           navigationState = PageState.HOME
+          LaunchedEffect(Unit) {
+            topBarVisible = true
+          }
           HomeScreen(
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
