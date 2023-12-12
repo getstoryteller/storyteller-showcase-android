@@ -169,8 +169,13 @@ fun MainScreen(
 
         composable("home") {
           navigationState = PageState.HOME
-
-
+          HomeScreen(
+            viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
+            sharedViewModel = viewModel,
+            config = mainPageUiState.config,
+            navController = navController,
+            isRefreshing = mainPageUiState.isHomeRefreshing,
+          )
         }
         composable("home/moments") {
           navigationState = PageState.HOME
