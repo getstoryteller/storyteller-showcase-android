@@ -84,14 +84,14 @@ class GetConfigurationUseCaseImpl(
         light.storyTiles.title.textSize = 13
         light.storyTiles.title.lineHeight = 13
 
-        light.instructions.button.textColor = ofHexCode("#000000")
+        light.instructions.button.textColor = ofHexCode("#ffffff")
 
         dark to light
 
         dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
         dark.lists.backgroundColor = ofHexCode("#000000")
 
-        dark.instructions.button.textColor = ofHexCode("#FFFFFF")
+        dark.instructions.button.textColor = ofHexCode("#000000")
       }
     }
 
