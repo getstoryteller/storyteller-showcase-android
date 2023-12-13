@@ -10,6 +10,8 @@ import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -204,17 +206,28 @@ fun MainScreen(
       ) {
         composable("home",
           enterTransition = {
-            slideIntoContainer(
-              towards = Right,
-              animationSpec = tween(700)
-            )
-
+            if (initialState.destination.route == "home/moments") {
+              fadeIn(
+                animationSpec = tween(700)
+              )
+            } else {
+              slideIntoContainer(
+                towards = Right,
+                animationSpec = tween(700)
+              )
+            }
           },
           exitTransition = {
-            slideOutOfContainer(
-              towards = Left,
-              animationSpec = tween(700)
-            )
+            if (targetState.destination.route == "home/moments") {
+              fadeOut(
+                animationSpec = tween(700)
+              )
+            } else {
+              slideOutOfContainer(
+                towards = Left,
+                animationSpec = tween(700)
+              )
+            }
           }
         ) {
           navigationState = PageState.HOME
