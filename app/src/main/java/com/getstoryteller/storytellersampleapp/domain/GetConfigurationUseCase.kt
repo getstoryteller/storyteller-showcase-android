@@ -66,7 +66,7 @@ class GetConfigurationUseCaseImpl(
         light.engagementUnits.poll.selectedAnswerBorderColor = ofHexCode("#B3FFFFFF")
 
         light.storyTiles.rectangularTile.unreadIndicator.backgroundColor = ofHexCode("#FBCD44")
-        light.storyTiles.rectangularTile.unreadIndicator.textColor = ofHexCode("#FFFFFF")
+        light.storyTiles.rectangularTile.unreadIndicator.textColor = ofHexCode("#000000")
         light.storyTiles.rectangularTile.chip.alignment = Gravity.START
 
         light.storyTiles.rectangularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
