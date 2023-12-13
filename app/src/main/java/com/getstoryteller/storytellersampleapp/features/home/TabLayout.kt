@@ -20,6 +20,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +61,7 @@ fun TabLayout(
     ScrollableTabRow(
       selectedTabIndex = currentPage.value,
       backgroundColor = MaterialTheme.colors.background,
-      contentColor = MaterialTheme.colors.primary,
+      contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
       divider = {}
     ) {
@@ -127,3 +128,5 @@ data class TabLayoutUiState(
   val isRefreshing: Boolean,
   val config: Config?
 )
+
+fun Color.Companion.fromHex(hexString: String) = Color(android.graphics.Color.parseColor(hexString))
