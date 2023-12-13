@@ -63,7 +63,6 @@ fun BottomNavigationBar(
             }
             return@BottomNavigationItem
           }
-
           navController.navigate("home") {
             onSetNavigationState(PageState.HOME)
             popUpTo(navController.graph.startDestinationId) {
@@ -91,13 +90,17 @@ fun BottomNavigationBar(
         },
         selected = navBackStackEntry?.destination?.route == "home/moments",
         onClick = {
-          val interceptor = onSetNavigationInterceptor()
-          if (interceptor is NavigationInterceptor.TargetRoute &&
-            !homeSelected && interceptor.shouldIntercept()
-          ) {
+          val interceptor = NavigationInterceptor.TargetRoute(
+              targetRoute = "home/moments",
+              shouldIntercept = { true },
+              onIntercepted = {
+                onTriggerMomentReload()
+              },
+            )
+
+          if (!homeSelected && interceptor.shouldIntercept()) {
             coroutineScope.launch {
               interceptor.onIntercepted()
-              onTriggerMomentReload()
             }
             return@BottomNavigationItem
           }
