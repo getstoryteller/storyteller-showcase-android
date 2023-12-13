@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellersampleapp.ui
 
 import android.view.Gravity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,6 +44,11 @@ fun StorytellerItem(
     modifier = Modifier
       .fillMaxWidth()
   ) {
+    val uiStyle = if (isSystemInDarkTheme()) {
+      StorytellerListViewStyle.DARK
+    } else {
+      StorytellerListViewStyle.LIGHT
+    }
     if (uiModel.title.isNotEmpty() && !disableHeader) {
       ListHeader(
         text = uiModel.title,
@@ -71,7 +77,7 @@ fun StorytellerItem(
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
@@ -94,7 +100,7 @@ fun StorytellerItem(
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
@@ -151,7 +157,7 @@ fun StorytellerItem(
                     )
                   )
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = 1,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
@@ -180,7 +186,7 @@ fun StorytellerItem(
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {
@@ -236,7 +242,7 @@ fun StorytellerItem(
                     )
                   )
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = 1,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {
@@ -260,7 +266,7 @@ fun StorytellerItem(
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {

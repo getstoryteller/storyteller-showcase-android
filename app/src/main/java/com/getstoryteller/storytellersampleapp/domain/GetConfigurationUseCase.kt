@@ -75,7 +75,7 @@ class GetConfigurationUseCaseImpl(
         light.storyTiles.circularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
         light.storyTiles.circularTile.liveChip.readBackgroundColor = ofHexCode("#4E5356")
 
-        light.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
+        light.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
         light.storyTiles.circularTile.title.readTextColor = ofHexCode("#4E5356")
         light.storyTiles.circularTile.readIndicatorColor = ofHexCode("#C5C5C5")
         light.storyTiles.circularTile.unreadIndicatorColor = ofHexCode("#FBCD44")
@@ -86,9 +86,10 @@ class GetConfigurationUseCaseImpl(
 
         light.instructions.button.textColor = ofHexCode("#000000")
 
-        dark = light
+        dark to light
 
-        dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
+        dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
+        dark.lists.backgroundColor = ofHexCode("#000000")
 
         dark.instructions.button.textColor = ofHexCode("#FFFFFF")
       }
@@ -110,13 +111,13 @@ class GetConfigurationUseCaseImpl(
           )
         ),
         dark = squareTheme.dark.copy(
-          storyTiles = squareTheme.light.storyTiles.copy(
-            title = squareTheme.light.storyTiles.title.copy(
+          storyTiles = squareTheme.dark.storyTiles.copy(
+            title = squareTheme.dark.storyTiles.title.copy(
               alignment = Gravity.CENTER,
               titleSize = 10,
               lineHeight = 13
             ),
-            circularTile = squareTheme.light.storyTiles.circularTile.copy(
+            circularTile = squareTheme.dark.storyTiles.circularTile.copy(
               unreadIndicatorColor = ofHexCode("#C8102E")
             )
           )
