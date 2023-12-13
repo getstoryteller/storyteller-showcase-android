@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +29,7 @@ import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,14 +37,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabLayout(
   rootNavController: NavController,
-  state: TabLayoutUiState,
-  sharedViewModel: MainViewModel
+  parentState: TabLayoutUiState,
+  sharedViewModel: MainViewModel,
+  onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
 ) {
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
-  val tabs = remember(state.tabs) {
-    state.tabs
-  }
+  val tabs = remember(parentState.tabs) { parentState.tabs }
 
   val pagerState = rememberPagerState(pageCount = { tabs.size })
   val scope = rememberCoroutineScope()
@@ -58,46 +60,64 @@ fun TabLayout(
   Column(modifier = Modifier.fillMaxSize()) {
     ScrollableTabRow(
       selectedTabIndex = currentPage.value,
-      backgroundColor = MaterialTheme.colors.surface,
-      contentColor = MaterialTheme.colors.primary,
+      backgroundColor = MaterialTheme.colors.background,
+      contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
+      divider = {}
     ) {
       tabs.forEachIndexed { index, tab ->
-        Tab(
-          text = {
-            Text(
-              text = tab.name,
-              fontSize = 16.sp,
-              fontWeight = FontWeight.W600,
-              color = if (pagerState.currentPage == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-            )
-          },
-          selected = true,
-          onClick = {
-            scope.launch {
-              pagerState.animateScrollToPage(index)
-            }
+        Tab(text = {
+          Text(
+            text = tab.name,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.W600,
+            color = if (pagerState.currentPage == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+          )
+        }, selected = true, onClick = {
+          scope.launch {
+            pagerState.animateScrollToPage(index)
           }
-        )
+        })
       }
     }
     HorizontalPager(
       state = pagerState,
-      beyondBoundsPageCount = 2
-    ) { index ->
-      val tabValue = remember(tabs.hashCode(), index) {
-        tabs[index].value
+      beyondBoundsPageCount = 0 /* This needs to be zero or nav interception will not work */,
+      key = { tabs[it].name }
+    ) { pageIndex ->
+      val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }
+      val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $pageIndex")
+      val coroutineScope = rememberCoroutineScope()
+
+      LaunchedEffect(tabs.hashCode(), pageIndex) {
+        viewModel.loadTab(tabValue)
       }
-      val viewModel: TabViewModel =
-        hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $index").apply { loadTab(tabValue) }
-      TabScreen(
-        tabId = tabValue,
+
+      TabScreen(tabId = tabValue,
         viewModel = viewModel,
         sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
-        isRefreshing = state.isRefreshing,
-        config = state.config
-      )
+        isRefreshing = parentState.isRefreshing,
+        config = parentState.config,
+        onSetNavigationInterceptor = onSetNavigationInterceptor,
+        setParentInterceptor = {
+          if (pagerState.currentPage == pageIndex) {
+            onSetNavigationInterceptor(
+              NavigationInterceptor.TargetRoute(
+                targetRoute = "home",
+                shouldIntercept = { true },
+                onIntercepted = {
+                  coroutineScope.launch {
+                    pagerState.scrollToPage(0)
+                  }
+                  if (pagerState.currentPage == 0) {
+                    viewModel.onRefresh()
+                  }
+                },
+              ),
+            )
+          }
+        })
     }
   }
 }
@@ -108,3 +128,5 @@ data class TabLayoutUiState(
   val isRefreshing: Boolean,
   val config: Config?
 )
+
+fun Color.Companion.fromHex(hexString: String) = Color(android.graphics.Color.parseColor(hexString))

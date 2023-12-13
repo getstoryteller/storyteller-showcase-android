@@ -2,6 +2,7 @@ package com.getstoryteller.storytellersampleapp.domain
 
 import android.content.Context
 import android.view.Gravity
+import androidx.compose.runtime.Stable
 import com.getstoryteller.storytellersampleapp.data.KeyValueDto
 import com.getstoryteller.storytellersampleapp.data.TabDto
 import com.getstoryteller.storytellersampleapp.data.repo.TenantRepository
@@ -65,7 +66,7 @@ class GetConfigurationUseCaseImpl(
         light.engagementUnits.poll.selectedAnswerBorderColor = ofHexCode("#B3FFFFFF")
 
         light.storyTiles.rectangularTile.unreadIndicator.backgroundColor = ofHexCode("#FBCD44")
-        light.storyTiles.rectangularTile.unreadIndicator.textColor = ofHexCode("#FFFFFF")
+        light.storyTiles.rectangularTile.unreadIndicator.textColor = ofHexCode("#000000")
         light.storyTiles.rectangularTile.chip.alignment = Gravity.START
 
         light.storyTiles.rectangularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
@@ -74,7 +75,7 @@ class GetConfigurationUseCaseImpl(
         light.storyTiles.circularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
         light.storyTiles.circularTile.liveChip.readBackgroundColor = ofHexCode("#4E5356")
 
-        light.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
+        light.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
         light.storyTiles.circularTile.title.readTextColor = ofHexCode("#4E5356")
         light.storyTiles.circularTile.readIndicatorColor = ofHexCode("#C5C5C5")
         light.storyTiles.circularTile.unreadIndicatorColor = ofHexCode("#FBCD44")
@@ -83,14 +84,14 @@ class GetConfigurationUseCaseImpl(
         light.storyTiles.title.textSize = 13
         light.storyTiles.title.lineHeight = 13
 
-        light.instructions.button.textColor = ofHexCode("#000000")
+        light.instructions.button.textColor = ofHexCode("#ffffff")
 
-        dark = light
+        dark to light
 
-        dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
-        dark.lists.backgroundColor = dark.colors.black.primary
+        dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
+        dark.lists.backgroundColor = ofHexCode("#000000")
 
-        dark.instructions.button.textColor = ofHexCode("#FFFFFF")
+        dark.instructions.button.textColor = ofHexCode("#000000")
       }
     }
 
@@ -110,13 +111,13 @@ class GetConfigurationUseCaseImpl(
           )
         ),
         dark = squareTheme.dark.copy(
-          storyTiles = squareTheme.light.storyTiles.copy(
-            title = squareTheme.light.storyTiles.title.copy(
+          storyTiles = squareTheme.dark.storyTiles.copy(
+            title = squareTheme.dark.storyTiles.title.copy(
               alignment = Gravity.CENTER,
               titleSize = 10,
               lineHeight = 13
             ),
-            circularTile = squareTheme.light.storyTiles.circularTile.copy(
+            circularTile = squareTheme.dark.storyTiles.circularTile.copy(
               unreadIndicatorColor = ofHexCode("#C8102E")
             )
           )
@@ -126,6 +127,7 @@ class GetConfigurationUseCaseImpl(
 
 }
 
+@Stable
 data class Config(
   val configId: String,
   val topLevelCollectionId: String?,

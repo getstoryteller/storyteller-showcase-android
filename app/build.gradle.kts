@@ -21,6 +21,15 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
+  signingConfigs {
+    create("release") {
+      storeFile = rootProject.file("keystore.jks")
+      storePassword = "password"
+      keyAlias = "alias"
+      keyPassword = "password"
+    }
+  }
+
   buildTypes {
     named("release") {
       isDebuggable = false
@@ -30,8 +39,11 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      signingConfig = signingConfigs.getByName("release")
     }
+
     named("debug") {
+      applicationIdSuffix = ".debug"
       isDebuggable = true
       isMinifyEnabled = false
       isShrinkResources = false
@@ -82,7 +94,7 @@ dependencies {
   implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
   implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
 
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
 
   implementation("com.jakewharton.timber:timber:5.0.1")
 
@@ -93,5 +105,5 @@ dependencies {
   /**
    * GAM for Storyteller Ads
    */
-  implementation("com.google.android.gms:play-services-ads:22.5.0")
+  implementation("com.google.android.gms:play-services-ads:22.6.0")
 }

@@ -5,13 +5,16 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.compose.animation.AnimatedVisibility
+import android.view.View
+import android.view.WindowInsetsController
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -24,6 +27,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,11 +55,12 @@ import com.getstoryteller.storytellersampleapp.features.account.OptionSelectType
 import com.getstoryteller.storytellersampleapp.features.home.HomeScreen
 import com.getstoryteller.storytellersampleapp.features.home.MoreScreen
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
-import com.getstoryteller.storytellersampleapp.features.login.LoginDialog
+import com.getstoryteller.storytellersampleapp.features.login.LoginScreen
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -64,10 +72,8 @@ fun MainScreen(
   onCommit: (
     fragment: Fragment,
     tag: String,
-  ) -> (FragmentTransaction.(containerId: Int) -> Unit),
-  getClipsFragment: () -> StorytellerClipsFragment?
+  ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
 ) {
-  val isLoginDialogVisible = viewModel.loginDialogVisible.collectAsState()
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember {
     mutableStateOf(PageState.HOME)
@@ -80,11 +86,38 @@ fun MainScreen(
     mutableStateOf(true)
   }
 
+  var navigationInterceptor by remember {
+    mutableStateOf<NavigationInterceptor>(
+      NavigationInterceptor.None,
+    )
+  }
+
+  val topBarColor = MaterialTheme.colors.background
+  val isSystemDark = isSystemInDarkTheme()
+
+  LaunchedEffect(navController.currentBackStackEntryAsState().value) {
+    when (navController.currentDestination?.route) {
+      "home/moments" -> {
+        setStatusBarColor(activity, Color.Transparent, false)
+      }
+      else -> setStatusBarColor(activity, topBarColor, !isSystemDark)
+    }
+  }
+
   Scaffold(
     topBar = {
+      if (navigationState == PageState.LOGIN) return@Scaffold
+
       if (topBarVisible) {
         TopAppBar(
+          modifier = Modifier
+            .padding(
+              top = WindowInsets.statusBars
+                .asPaddingValues()
+                .calculateTopPadding()
+            ),
           backgroundColor = MaterialTheme.colors.background,
+          elevation = 0.dp,
           contentColor = MaterialTheme.colors.onBackground,
           title = {
             if (navigationState != PageState.HOME) {
@@ -96,13 +129,10 @@ fun MainScreen(
               IconButton(
                 onClick = {
                   Storyteller.openSearch(activity)
-                },
-                enabled = !mainPageUiState.isMainScreenLoading
+                }, enabled = !mainPageUiState.isMainScreenLoading
               ) {
                 Icon(
-                  imageVector = Icons.Filled.Search,
-                  contentDescription = "",
-                  tint = MaterialTheme.colors.onBackground
+                  imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
                 )
               }
               IconButton(
@@ -115,8 +145,7 @@ fun MainScreen(
                     launchSingleTop = true
                     restoreState = true
                   }
-                },
-                enabled = !mainPageUiState.isMainScreenLoading
+                }, enabled = !mainPageUiState.isMainScreenLoading
               ) {
                 Icon(
                   imageVector = Icons.Filled.AccountCircle,
@@ -130,12 +159,11 @@ fun MainScreen(
             IconButton(onClick = {
               navController.navigateUp()
             }) {
-              if (navigationState != PageState.HOME)
-                Icon(
-                  imageVector = Icons.Filled.ArrowBack,
-                  contentDescription = null,
-                  tint = MaterialTheme.colors.onBackground
-                )
+              if (navigationState != PageState.HOME) Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onBackground
+              )
               else {
                 Icon(
                   painter = painterResource(id = R.drawable.ic_logo_icon),
@@ -145,101 +173,71 @@ fun MainScreen(
               }
 
             }
-          }
-        )
+          })
       }
-    },
-    bottomBar = {
-      AnimatedVisibility(
-        visible = navigationState == PageState.HOME,
-        content = {
-          BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background
-          ) {
-            val backStackEntry = navController.currentBackStackEntryAsState()
-            val navbackEntry by navController.currentBackStackEntryAsState()
-            val homeSelected = backStackEntry.value?.destination?.route == "home"
+    }, bottomBar = {
+      if (navigationState == PageState.LOGIN) return@Scaffold
 
-            BottomNavigationItem(
-              icon = {
-                Icon(
-                  painter = painterResource(id = R.drawable.ic_home),
-                  contentDescription = null,
-                  tint = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              label = {
-                Text(
-                  text = "Home",
-                  color = if (homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              selected = navbackEntry?.destination?.route == "home",
-              onClick = {
-                topBarVisible = true
-                navController.navigate("home") {
-                  navigationState = PageState.HOME
-                  popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              }
-            )
-            BottomNavigationItem(
-              icon = {
-                Icon(
-                  painter = painterResource(id = R.drawable.ic_watch),
-                  contentDescription = null,
-                  tint = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              label = {
-                Text(
-                  text = "Watch",
-                  color = if (!homeSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
-                )
-              },
-              selected = navbackEntry?.destination?.route == "home/moments",
-              onClick = {
-                if (navbackEntry?.destination?.route == "home/moments") {
-                  viewModel.triggerMomentsReloadData()
-                }
-
-                topBarVisible = false
-                navigationState = PageState.HOME
-                navController.navigate("home/moments") {
-                  popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              }
-            )
-          }
-        })
-    }
-  ) { innerPadding ->
-    Box(modifier = Modifier.fillMaxSize()) {
-      NavHost(
+      BottomNavigationBar(
         navController = navController,
-        startDestination = "home"
+        onSetTopBarVisible = {
+          topBarVisible = it
+        },
+        navigationState = navigationState,
+        onSetNavigationState = {
+          navigationState = it
+        },
+        onTriggerMomentReload = {
+          viewModel.triggerMomentsReloadData()
+        },
+        onSetNavigationInterceptor = { navigationInterceptor },
+      )
+    }) { innerPadding ->
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+    ) {
+      NavHost(
+        navController = navController, startDestination = "home"
       ) {
-
         composable("home") {
           navigationState = PageState.HOME
+          LaunchedEffect(Unit) {
+            topBarVisible = true
+          }
           HomeScreen(
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             navController = navController,
             isRefreshing = mainPageUiState.isHomeRefreshing,
+            onSetNavigationInterceptor = {
+              navigationInterceptor = it
+            },
+            onNavigateToLogin = {
+              navController.navigate("login") {
+                popUpTo(navController.graph.startDestinationId) {
+                  inclusive = true
+                }
+              }
+            }
           )
+        }
+        composable("login") {
+          navigationState = PageState.LOGIN
+          LoginScreen(viewModel = viewModel) {
+            navController.navigate("home") {
+              popUpTo("home") {
+                inclusive = true
+              }
+            }
+          }
         }
         composable("home/moments") {
           navigationState = PageState.HOME
+          LaunchedEffect(Unit) {
+            navigationInterceptor = NavigationInterceptor.None
+          }
           MomentsScreen(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             config = mainPageUiState.config,
@@ -258,10 +256,8 @@ fun MainScreen(
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             onLogout = {
-              navigationState = PageState.HOME
               viewModel.logout()
-            }
-          )
+            })
         }
         composable("account/{option}") {
           navigationState = PageState.ACCOUNT
@@ -275,8 +271,7 @@ fun MainScreen(
           )
         }
         composable("moreClips/{model}") { backStackEntry ->
-          val uiModel: PageItemUiModel? =
-            Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
+          val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
           uiModel?.let {
             navigationState = PageState.MORE
             title = it.title
@@ -289,8 +284,7 @@ fun MainScreen(
           }
         }
         composable("moreStories/{model}") { backStackEntry ->
-          val uiModel: PageItemUiModel? =
-            Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
+          val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
           uiModel?.let {
             navigationState = PageState.MORE
             title = it.title
@@ -307,23 +301,37 @@ fun MainScreen(
         CircularProgressIndicator(
           modifier = Modifier
             .padding(16.dp)
-            .background(color = MaterialTheme.colors.surface)
+            .background(color = MaterialTheme.colors.background)
             .align(Alignment.Center)
         )
       }
     }
   }
-
-  if (isLoginDialogVisible.value) {
-    LoginDialog(viewModel)
-  }
 }
 
 enum class PageState {
-  HOME, ACCOUNT, MORE
+  HOME, ACCOUNT, MORE, LOGIN
 }
 
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
   Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
   else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+}
+
+fun setStatusBarColor(activity: Activity, color: Color, useDarkIcons: Boolean) {
+  activity.window.statusBarColor = color.toArgb()
+
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    activity.window.insetsController?.setSystemBarsAppearance(
+      if (useDarkIcons) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
+      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+    )
+  } else {
+    @Suppress("DEPRECATION")
+    activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
+      activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    } else {
+      activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+    }
+  }
 }

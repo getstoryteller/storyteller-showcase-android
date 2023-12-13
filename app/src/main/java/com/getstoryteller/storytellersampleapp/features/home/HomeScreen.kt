@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,8 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
-import java.util.*
+import java.util.UUID
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -37,7 +39,10 @@ fun HomeScreen(
   config: Config?,
   navController: NavController,
   isRefreshing: Boolean,
+  onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
+  onNavigateToLogin: () -> Unit = {},
 ) {
+
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
     config?.let {
       viewModel.loadHomePage(it)
@@ -47,6 +52,8 @@ fun HomeScreen(
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
   val pageUiState by viewModel.uiState.collectAsState()
+  val loginState by sharedViewModel.loginUiState.collectAsState()
+
   val refreshState = rememberPullRefreshState(
     refreshing = pageUiState.isRefreshing,
     onRefresh = { viewModel.onRefresh() }
@@ -55,6 +62,11 @@ fun HomeScreen(
   val listItems = pageUiState.homeItems
   var columnHeightPx by remember {
     mutableIntStateOf(0)
+  }
+  LaunchedEffect(loginState.isLoggedIn, config) {
+    if (!loginState.isLoggedIn && config == null) {
+      onNavigateToLogin()
+    }
   }
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
@@ -87,7 +99,7 @@ fun HomeScreen(
             isRefreshing = pageUiState.isRefreshing || isRefreshing,
             navController = navController,
             roundTheme = config?.roundTheme,
-            squareTheme = config?.squareTheme
+            squareTheme = config?.squareTheme,
           )
         }
       }
@@ -95,11 +107,12 @@ fun HomeScreen(
       TabLayout(
         rootNavController = navController,
         sharedViewModel = sharedViewModel,
-        state = TabLayoutUiState(
+        parentState = TabLayoutUiState(
           tabs = pageUiState.tabs,
           isRefreshing = pageUiState.isRefreshing || isRefreshing,
           config = config
-        )
+        ),
+        onSetNavigationInterceptor = onSetNavigationInterceptor,
       )
     }
   }

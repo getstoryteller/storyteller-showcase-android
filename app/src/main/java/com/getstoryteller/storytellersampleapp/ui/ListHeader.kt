@@ -12,13 +12,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.getstoryteller.storytellersampleapp.R
 
 @Composable
 fun ListHeader(
@@ -31,7 +36,7 @@ fun ListHeader(
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(start = 12.dp, end = 12.dp, bottom = 16.dp),
+      .padding(start = 12.dp, end = 0.dp, bottom = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
@@ -52,9 +57,17 @@ fun ListHeader(
     ) {
       Text(
         text = moreButtonTitle,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.W600,
         fontSize = 16.sp,
-        color = MaterialTheme.colors.onSurface
+        color = MaterialTheme.colors.secondaryVariant
+      )
+
+      Icon(
+        painterResource(id = R.drawable.baseline_chevron_right_24),
+        contentDescription = null,
+        tint = MaterialTheme.colors.secondaryVariant,
+        modifier = Modifier
+          .padding(start = 4.dp)
       )
     }
   }

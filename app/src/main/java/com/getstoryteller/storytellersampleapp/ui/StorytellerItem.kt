@@ -1,24 +1,24 @@
 package com.getstoryteller.storytellersampleapp.ui
 
-import android.util.Log
 import android.view.Gravity
-import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.encodeToString
 import androidx.navigation.NavController
+import com.getstoryteller.storytellersampleapp.data.ItemSize
 import com.getstoryteller.storytellersampleapp.data.LayoutType
 import com.getstoryteller.storytellersampleapp.data.TileType
 import com.getstoryteller.storytellersampleapp.data.VideoType
 import com.getstoryteller.storytellersampleapp.features.home.PageItemStorytellerDelegate
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
-import com.storyteller.Storyteller
+import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.storyteller.data.StorytellerClipsDataModel
 import com.storyteller.data.StorytellerStoriesDataModel
 import com.storyteller.domain.entities.StorytellerListViewCellType
@@ -38,12 +38,17 @@ fun StorytellerItem(
   roundTheme: UiTheme?,
   squareTheme: UiTheme?,
   disableHeader: Boolean = false,
-  isScrollable: Boolean = false
+  isScrollable: Boolean = false,
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
   ) {
+    val uiStyle = if (isSystemInDarkTheme()) {
+      StorytellerListViewStyle.DARK
+    } else {
+      StorytellerListViewStyle.LIGHT
+    }
     if (uiModel.title.isNotEmpty() && !disableHeader) {
       ListHeader(
         text = uiModel.title,
@@ -66,13 +71,13 @@ fun StorytellerItem(
             StorytellerStoriesRow(
               modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp),
+                .height(uiModel.getRowHeight()),
               dataModel = StorytellerStoriesDataModel(
                 theme = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
@@ -95,7 +100,7 @@ fun StorytellerItem(
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
@@ -152,7 +157,7 @@ fun StorytellerItem(
                     )
                   )
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = 1,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
@@ -174,14 +179,14 @@ fun StorytellerItem(
             StorytellerClipsRow(
               modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(uiModel.getRowHeight())
                 .padding(bottom = 15.dp),
               dataModel = StorytellerClipsDataModel(
                 theme = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {
@@ -237,7 +242,7 @@ fun StorytellerItem(
                     )
                   )
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = 1,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {
@@ -261,7 +266,7 @@ fun StorytellerItem(
                   TileType.RECTANGULAR -> squareTheme
                   TileType.ROUND -> roundTheme
                 },
-                uiStyle = StorytellerListViewStyle.AUTO,
+                uiStyle = uiStyle,
                 displayLimit = uiModel.displayLimit,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {
@@ -277,5 +282,18 @@ fun StorytellerItem(
         }
       }
     }
+  }
+}
+
+
+fun PageItemUiModel.getRowHeight(): Dp {
+  if (this.tileType == TileType.ROUND) {
+    return 128.dp
+  }
+  return when (this.size) {
+    ItemSize.SMALL -> 106.dp
+    ItemSize.MEDIUM -> 330.dp
+    ItemSize.LARGE -> 440.dp
+    ItemSize.REGULAR -> 220.dp
   }
 }
