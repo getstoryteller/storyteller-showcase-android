@@ -12,9 +12,11 @@ class EmbeddedClipActivity : AppCompatActivity(R.layout.activity_embeded_clip) {
             collectionId = "clipssample",
             topLevelBackEnabled = true,
         ).apply {
-            onTopLevelBackPressed = {
-                finish()
-                true
+            listener = object : StorytellerClipsFragment.Listener {
+                override fun onTopLevelBackPressed(): Boolean {
+                    finish()
+                    return true
+                }
             }
         }
         val transaction = supportFragmentManager.beginTransaction()
