@@ -9,9 +9,9 @@ import android.view.View
 import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -207,9 +207,7 @@ fun MainScreen(
         composable("home",
           enterTransition = {
             if (initialState.destination.route == "home/moments") {
-              fadeIn(
-                animationSpec = tween(700)
-              )
+              EnterTransition.None
             } else {
               slideIntoContainer(
                 towards = Right,
@@ -219,9 +217,7 @@ fun MainScreen(
           },
           exitTransition = {
             if (targetState.destination.route == "home/moments") {
-              fadeOut(
-                animationSpec = tween(700)
-              )
+              ExitTransition.None
             } else {
               slideOutOfContainer(
                 towards = Left,
@@ -262,7 +258,10 @@ fun MainScreen(
             }
           }
         }
-        composable("home/moments") {
+        composable("home/moments",
+          enterTransition = { EnterTransition.None },
+          exitTransition = { ExitTransition.None }
+        ) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
             navigationInterceptor = NavigationInterceptor.None
