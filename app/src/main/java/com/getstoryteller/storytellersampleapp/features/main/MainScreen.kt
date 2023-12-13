@@ -344,7 +344,7 @@ fun MainScreen(
         CircularProgressIndicator(
           modifier = Modifier
             .padding(16.dp)
-            .background(color = MaterialTheme.colors.background)
+            .background(color = Color.Transparent)
             .align(Alignment.Center)
         )
       }
