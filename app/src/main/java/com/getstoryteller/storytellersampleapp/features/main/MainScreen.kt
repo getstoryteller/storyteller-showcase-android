@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.WindowInsetsController
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -37,10 +40,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -100,6 +101,7 @@ fun MainScreen(
       "home/moments" -> {
         setStatusBarColor(activity, Color.Transparent, false)
       }
+
       else -> setStatusBarColor(activity, topBarColor, !isSystemDark)
     }
   }
@@ -200,7 +202,21 @@ fun MainScreen(
       NavHost(
         navController = navController, startDestination = "home"
       ) {
-        composable("home") {
+        composable("home",
+          enterTransition = {
+            slideIntoContainer(
+              towards = Right,
+              animationSpec = tween(700)
+            )
+
+          },
+          exitTransition = {
+            slideOutOfContainer(
+              towards = Left,
+              animationSpec = tween(700)
+            )
+          }
+        ) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
             topBarVisible = true
@@ -247,7 +263,21 @@ fun MainScreen(
             sharedViewModel = viewModel
           )
         }
-        composable("home/account") {
+        composable("home/account",
+          enterTransition = {
+            slideIntoContainer(
+              towards = Left,
+              animationSpec = tween(700)
+            )
+
+          },
+          exitTransition = {
+            slideOutOfContainer(
+              towards = Right,
+              animationSpec = tween(700)
+            )
+          }
+        ) {
           navigationState = PageState.ACCOUNT
           title = "Account"
           AccountScreen(
