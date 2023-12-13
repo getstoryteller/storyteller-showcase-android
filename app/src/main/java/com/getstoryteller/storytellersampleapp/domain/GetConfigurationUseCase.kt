@@ -89,7 +89,6 @@ class GetConfigurationUseCaseImpl(
         dark = light
 
         dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
-        dark.lists.backgroundColor = dark.colors.black.primary
 
         dark.instructions.button.textColor = ofHexCode("#FFFFFF")
       }
