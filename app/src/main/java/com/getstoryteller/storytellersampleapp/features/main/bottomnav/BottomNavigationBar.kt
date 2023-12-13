@@ -1,5 +1,10 @@
 package com.getstoryteller.storytellersampleapp.features.main.bottomnav
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -8,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,6 +32,7 @@ fun BottomNavigationBar(
 ) {
   if (navigationState == PageState.HOME) {
     BottomNavigation(
+      modifier = Modifier.padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()),
       backgroundColor = MaterialTheme.colors.background
     ) {
       val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -90,12 +97,9 @@ fun BottomNavigationBar(
           ) {
             coroutineScope.launch {
               interceptor.onIntercepted()
+              onTriggerMomentReload()
             }
             return@BottomNavigationItem
-          }
-
-          if (navBackStackEntry?.destination?.route == "home/moments") {
-            onTriggerMomentReload()
           }
           onSetNavigationState(PageState.HOME)
           onSetTopBarVisible(false)
