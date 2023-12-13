@@ -19,7 +19,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.features.main.PageState
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
 @Composable
@@ -33,6 +32,7 @@ fun BottomNavigationBar(
 ) {
   if (navigationState == PageState.HOME) {
     BottomNavigation(
+      modifier = Modifier.padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()),
       backgroundColor = MaterialTheme.colors.background
     ) {
       val navBackStackEntry by navController.currentBackStackEntryAsState()

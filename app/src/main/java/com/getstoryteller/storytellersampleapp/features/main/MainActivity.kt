@@ -3,6 +3,7 @@ package com.getstoryteller.storytellersampleapp.features.main
 import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -37,7 +38,6 @@ class MainActivity : AppCompatActivity() {
       currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
     }
     WindowCompat.setDecorFitsSystemWindows(window, false)
-
     viewModel.setup()
     setContent {
       val navController = rememberNavController()

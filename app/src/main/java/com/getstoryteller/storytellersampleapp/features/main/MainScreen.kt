@@ -5,7 +5,8 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
+import android.view.View
+import android.view.WindowInsetsController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -27,8 +28,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,8 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,7 +59,6 @@ import com.getstoryteller.storytellersampleapp.features.login.LoginScreen
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
@@ -65,7 +66,10 @@ import kotlinx.serialization.json.Json
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-  activity: Activity, navController: NavHostController, viewModel: MainViewModel, onCommit: (
+  activity: Activity,
+  navController: NavHostController,
+  viewModel: MainViewModel,
+  onCommit: (
     fragment: Fragment,
     tag: String,
   ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
@@ -88,14 +92,15 @@ fun MainScreen(
     )
   }
 
-  val systemUiController = rememberSystemUiController()
   val topBarColor = MaterialTheme.colors.background
   val isSystemDark = isSystemInDarkTheme()
 
   LaunchedEffect(navController.currentBackStackEntryAsState().value) {
     when (navController.currentDestination?.route) {
-      "home/moments" -> systemUiController.setStatusBarColor(Color.Transparent, darkIcons = false)
-      else -> systemUiController.setStatusBarColor(topBarColor, darkIcons = !isSystemDark)
+      "home/moments" -> {
+        setStatusBarColor(activity, Color.Transparent, false)
+      }
+      else -> setStatusBarColor(activity, topBarColor, !isSystemDark)
     }
   }
 
@@ -210,7 +215,7 @@ fun MainScreen(
               navigationInterceptor = it
             },
             onNavigateToLogin = {
-              navController.navigate("login"){
+              navController.navigate("login") {
                 popUpTo(navController.graph.startDestinationId) {
                   inclusive = true
                 }
@@ -222,7 +227,7 @@ fun MainScreen(
           navigationState = PageState.LOGIN
           LoginScreen(viewModel = viewModel) {
             navController.navigate("home") {
-              popUpTo("home"){
+              popUpTo("home") {
                 inclusive = true
               }
             }
@@ -311,4 +316,22 @@ enum class PageState {
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
   Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
   else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+}
+
+fun setStatusBarColor(activity: Activity, color: Color, useDarkIcons: Boolean) {
+  activity.window.statusBarColor = color.toArgb()
+
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    activity.window.insetsController?.setSystemBarsAppearance(
+      if (useDarkIcons) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
+      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+    )
+  } else {
+    @Suppress("DEPRECATION")
+    activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
+      activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    } else {
+      activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+    }
+  }
 }
