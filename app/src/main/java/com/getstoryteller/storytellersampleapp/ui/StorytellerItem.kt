@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.encodeToString
 import androidx.navigation.NavController
+import com.getstoryteller.storytellersampleapp.data.ItemSize
 import com.getstoryteller.storytellersampleapp.data.LayoutType
 import com.getstoryteller.storytellersampleapp.data.TileType
 import com.getstoryteller.storytellersampleapp.data.VideoType
@@ -63,7 +65,7 @@ fun StorytellerItem(
             StorytellerStoriesRow(
               modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp),
+                .height(uiModel.getRowHeight()),
               dataModel = StorytellerStoriesDataModel(
                 theme = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> squareTheme
@@ -171,7 +173,7 @@ fun StorytellerItem(
             StorytellerClipsRow(
               modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(uiModel.getRowHeight())
                 .padding(bottom = 15.dp),
               dataModel = StorytellerClipsDataModel(
                 theme = when (uiModel.tileType) {
@@ -274,5 +276,18 @@ fun StorytellerItem(
         }
       }
     }
+  }
+}
+
+
+fun PageItemUiModel.getRowHeight(): Dp {
+  if (this.tileType == TileType.ROUND) {
+    return 128.dp
+  }
+  return when (this.size) {
+    ItemSize.SMALL -> 106.dp
+    ItemSize.MEDIUM -> 330.dp
+    ItemSize.LARGE -> 440.dp
+    ItemSize.REGULAR -> 220.dp
   }
 }
