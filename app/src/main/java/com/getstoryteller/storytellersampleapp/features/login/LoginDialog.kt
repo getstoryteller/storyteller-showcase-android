@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.Button
@@ -17,6 +18,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -35,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -102,7 +105,13 @@ fun LoginDialog(
           },
           keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Characters,
-            keyboardType = KeyboardType.Text
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done,
+          ),
+          keyboardActions = KeyboardActions(
+            onDone = {
+              viewModel.verifyCode(text)
+            }
           ),
           singleLine = true,
           isError = loginState is Error,
@@ -126,13 +135,13 @@ fun LoginDialog(
                 width = 12.sp, height = 12.sp, placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline
               )
             ) {
-              Icon(painterResource(id = R.drawable.ic_error), "", tint = MaterialTheme.colors.error)
+              Icon(painterResource(id = R.drawable.ic_error), "", tint = colors.error)
             })
           )
 
           Text(
             text = annotatedText,
-            color = MaterialTheme.colors.error,
+            color = colors.error,
             fontSize = 12.sp,
             modifier = Modifier.padding(top = 8.dp),
             inlineContent = inlineContent,
@@ -144,20 +153,19 @@ fun LoginDialog(
           .padding(top = 8.dp)
           .fillMaxWidth(),
           colors = ButtonDefaults.buttonColors(
-            disabledBackgroundColor = MaterialTheme.colors.primary,
-            disabledContentColor = MaterialTheme.colors.onPrimary
+            disabledBackgroundColor = colors.primary,
+            disabledContentColor = colors.onPrimary
           ),
           enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
             viewModel.verifyCode(text)
           }) {
           when (loginState) {
-            LoginState.Loading -> {
+            LoginState.Loading, LoginState.Success -> {
               CircularProgressIndicator(
-                modifier = Modifier.size(24.dp), color = MaterialTheme.colors.onPrimary
+                modifier = Modifier.size(24.dp), color = colors.onPrimary
               )
             }
-
             else -> {
               Text(text = stringResource(id = R.string.action_login_verify))
             }
