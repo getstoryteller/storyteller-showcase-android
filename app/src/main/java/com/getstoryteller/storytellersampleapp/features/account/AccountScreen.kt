@@ -115,6 +115,7 @@ fun AccountScreen(
           viewModel.reset()
           sharedViewModel.refreshMainPage()
           navController.navigateUp()
+          context.toast("Reset successful")
         }
       )
       SettingsRow(
