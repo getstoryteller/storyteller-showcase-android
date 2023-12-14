@@ -308,6 +308,7 @@ fun MainScreen(
           OptionSelectScreen(
             navController = navController,
             viewModel = hiltViewModel(),
+            sharedViewModel = viewModel,
             optionSelectType = option,
             config = mainPageUiState.config!!
           )
