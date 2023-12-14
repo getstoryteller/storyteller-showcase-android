@@ -142,6 +142,7 @@ fun LoginDialog(
           Text(
             text = annotatedText,
             color = MaterialTheme.colors.error,
+            fontSize = 12.sp,
             modifier = Modifier.padding(top = 8.dp),
             inlineContent = inlineContent,
           )
