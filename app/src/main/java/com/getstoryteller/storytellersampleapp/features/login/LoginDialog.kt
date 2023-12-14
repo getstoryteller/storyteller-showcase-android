@@ -49,8 +49,7 @@ import com.getstoryteller.storytellersampleapp.ui.LocalStorytellerColorsPalette
 
 @Composable
 fun LoginDialog(
-  viewModel: MainViewModel,
-  onLoggedIn: () -> Unit
+  viewModel: MainViewModel, onLoggedIn: () -> Unit
 ) {
   val loginUiState by viewModel.loginUiState.collectAsState()
   val loginState = loginUiState.loginState
@@ -62,8 +61,7 @@ fun LoginDialog(
   }
 
   Dialog(
-    onDismissRequest = {},
-    properties = DialogProperties(
+    onDismissRequest = {}, properties = DialogProperties(
       dismissOnBackPress = false,
       dismissOnClickOutside = false,
       usePlatformDefaultWidth = false,
@@ -94,29 +92,27 @@ fun LoginDialog(
             .align(alignment = Alignment.CenterHorizontally),
           text = stringResource(id = R.string.label_login_description)
         )
-        OutlinedTextField(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp),
+        OutlinedTextField(modifier = Modifier
+          .fillMaxWidth()
+          .padding(top = 16.dp),
           value = text,
           onValueChange = {
             text = it
             viewModel.clearErrorState()
           },
           keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Characters, // This line sets the text to uppercase
+            capitalization = KeyboardCapitalization.Characters,
             keyboardType = KeyboardType.Text
           ),
-            isError = loginState is Error,
+          singleLine = true,
+          isError = loginState is Error,
           placeholder = { Text(text = stringResource(id = R.string.label_login_enter_code)) },
           colors = TextFieldDefaults.outlinedTextFieldColors(backgroundColor = LocalStorytellerColorsPalette.current.background),
           leadingIcon = {
             Image(
-              painter = painterResource(id = R.drawable.ic_key),
-              contentDescription = ""
+              painter = painterResource(id = R.drawable.ic_key), contentDescription = ""
             )
-          }
-        )
+          })
 
         if (loginState is Error) {
           val annotatedText = buildAnnotatedString {
@@ -125,18 +121,13 @@ fun LoginDialog(
           }
 
           val inlineContent = mapOf(
-            Pair(
-              "leadingIcon",
-              InlineTextContent(
-                Placeholder(
-                  width = 12.sp,
-                  height = 12.sp,
-                  placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline
-                )
-              ) {
-                Icon(painterResource(id = R.drawable.ic_error), "", tint = MaterialTheme.colors.error)
-              }
-            )
+            Pair("leadingIcon", InlineTextContent(
+              Placeholder(
+                width = 12.sp, height = 12.sp, placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline
+              )
+            ) {
+              Icon(painterResource(id = R.drawable.ic_error), "", tint = MaterialTheme.colors.error)
+            })
           )
 
           Text(
@@ -163,8 +154,7 @@ fun LoginDialog(
           when (loginState) {
             LoginState.Loading -> {
               CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                color = MaterialTheme.colors.onPrimary
+                modifier = Modifier.size(24.dp), color = MaterialTheme.colors.onPrimary
               )
             }
 
