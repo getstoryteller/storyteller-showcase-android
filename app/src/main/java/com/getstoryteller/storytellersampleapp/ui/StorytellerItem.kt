@@ -297,7 +297,7 @@ fun StorytellerItem(
 
 fun PageItemUiModel.getRowHeight(): Dp {
   if (this.tileType == TileType.ROUND) {
-    return 128.dp
+    return 113.dp
   }
   return when (this.size) {
     ItemSize.SMALL -> 106.dp
