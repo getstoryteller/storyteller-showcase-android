@@ -69,7 +69,7 @@ fun AccountScreen(
         )
         if (it.teams.isNotEmpty()) {
           SettingsRow(
-            text = "Favorite Teams",
+            text = "Favorite Team",
             arrowVisible = true,
             onClick = {
               navController.navigate("account/${OptionSelectType.TEAM.name}")
