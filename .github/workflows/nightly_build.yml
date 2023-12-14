@@ -1,0 +1,83 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at 00:00 UTC every day
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for changes in the main branch
+        uses: actions/github-script@v7
+        id: check_main
+        with:
+          script: |
+            try {
+              const yesterday = new Date();
+              yesterday.setDate(yesterday.getDate() - 1);
+              const response = await github.rest.repos.compareCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                base: 'main@{' + yesterday.toISOString().split('T')[0] + '}', // Simplified date format
+                head: 'main'
+              });
+              return response.data.files.length > 0;
+            } catch (error) {
+              console.error('Error comparing commits:', error);
+              return false; // or handle the error as needed
+            }
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          debug: true
+          user-agent: actions/github-script
+          result-encoding: json
+          retries: 0
+          retry-exempt-status-codes: 400,401,403,404,422
+      - name: Checkout Repository
+        if: steps.check_main.outputs.result == 'true'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        if: steps.check_main.outputs.result == 'true'
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Build APK
+        if: steps.check_main.outputs.result == 'true'
+        run: ./gradlew assembleRelease
+      - name: Zip APK
+        if: steps.check_main.outputs.result == 'true'
+        run: |
+          mkdir build
+          zip -r build/app-release.zip app/build/outputs/apk/release
+      - name: Get latest tag
+        if: steps.check_main.outputs.result == 'true'
+        id: latest_tag
+        run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
+      - name: Create Release
+        if: steps.check_main.outputs.result == 'true'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly-${{ github.run_id }}
+          release_name: Nightly Build ${{ github.run_id }}
+          body: |
+            **Changelog since last release (${{ env.LATEST_TAG }}):**
+            ${{ env.CHANGELOG }}
+          draft: false
+          prerelease: true
+      - name: Upload APK ZIP to Release
+        if: steps.check_main.outputs.result == 'true'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/app-release.zip
+          asset_name: app-release.zip
+          asset_content_type: application/zip
