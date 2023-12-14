@@ -3,6 +3,7 @@ package com.getstoryteller.storytellersampleapp.ui
 import android.view.Gravity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -70,7 +71,7 @@ fun StorytellerItem(
           LayoutType.ROW -> {
             val bottomPadding = remember {
               if (uiModel.tileType == TileType.ROUND) {
-                24.dp
+                36.dp
               } else {
                 0.dp
               }
@@ -79,7 +80,7 @@ fun StorytellerItem(
               modifier = Modifier
                 .fillMaxWidth()
                 .height(uiModel.getRowHeight())
-                .padding(bottom = bottomPadding),
+                .padding(top = 8.dp, bottom = bottomPadding),
               dataModel = StorytellerStoriesDataModel(
                 theme = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> squareTheme

@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -71,10 +70,7 @@ import kotlinx.serialization.json.Json
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-  activity: Activity,
-  navController: NavHostController,
-  viewModel: MainViewModel,
-  onCommit: (
+  activity: Activity, navController: NavHostController, viewModel: MainViewModel, onCommit: (
     fragment: Fragment,
     tag: String,
   ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
@@ -110,130 +106,118 @@ fun MainScreen(
     }
   }
 
-  Scaffold(
-    topBar = {
-      if (navigationState == PageState.LOGIN) return@Scaffold
+  Scaffold(topBar = {
+    if (navigationState == PageState.LOGIN) return@Scaffold
 
-      if (topBarVisible) {
-        TopAppBar(
-          modifier = Modifier
-            .padding(
-              top = WindowInsets.statusBars
-                .asPaddingValues()
-                .calculateTopPadding()
-            ),
-          backgroundColor = MaterialTheme.colors.background,
-          elevation = 0.dp,
-          contentColor = MaterialTheme.colors.onBackground,
-          title = {
-            if (navigationState != PageState.HOME) {
-              Text(text = title)
+    if (topBarVisible) {
+      TopAppBar(modifier = Modifier.padding(
+        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+      ),
+        backgroundColor = MaterialTheme.colors.background,
+        elevation = 0.dp,
+        contentColor = MaterialTheme.colors.onBackground,
+        title = {
+          if (navigationState != PageState.HOME) {
+            Text(text = title)
+          }
+        },
+        actions = {
+          if (navigationState == PageState.HOME) {
+            IconButton(
+              onClick = {
+                Storyteller.openSearch(activity)
+              }, enabled = !mainPageUiState.isMainScreenLoading
+            ) {
+              Icon(
+                imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
+              )
             }
-          },
-          actions = {
-            if (navigationState == PageState.HOME) {
-              IconButton(
-                onClick = {
-                  Storyteller.openSearch(activity)
-                }, enabled = !mainPageUiState.isMainScreenLoading
-              ) {
-                Icon(
-                  imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
-                )
-              }
-              IconButton(
-                onClick = {
-                  navigationState = PageState.ACCOUNT
-                  navController.navigate("home/account") {
-                    popUpTo(navController.graph.startDestinationId) {
-                      saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
+            IconButton(
+              onClick = {
+                navigationState = PageState.ACCOUNT
+                navController.navigate("home/account") {
+                  popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
                   }
-                }, enabled = !mainPageUiState.isMainScreenLoading
-              ) {
-                Icon(
-                  imageVector = Icons.Filled.AccountCircle,
-                  contentDescription = "",
-                  tint = MaterialTheme.colors.onBackground
-                )
-              }
-            }
-          },
-          navigationIcon = {
-            IconButton(onClick = {
-              navController.navigateUp()
-            }) {
-              if (navigationState != PageState.HOME) Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = null,
+                  launchSingleTop = true
+                  restoreState = true
+                }
+              }, enabled = !mainPageUiState.isMainScreenLoading
+            ) {
+              Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "",
                 tint = MaterialTheme.colors.onBackground
               )
-              else {
-                Icon(
-                  painter = painterResource(id = R.drawable.ic_logo_icon),
-                  contentDescription = null,
-                  tint = Color.Unspecified
-                )
-              }
-
             }
-          })
-      }
-    }, bottomBar = {
-      if (navigationState == PageState.LOGIN) return@Scaffold
+          }
+        },
+        navigationIcon = {
+          IconButton(onClick = {
+            navController.navigateUp()
+          }) {
+            if (navigationState != PageState.HOME) Icon(
+              imageVector = Icons.Filled.ArrowBack,
+              contentDescription = null,
+              tint = MaterialTheme.colors.onBackground
+            )
+            else {
+              Icon(
+                painter = painterResource(id = R.drawable.ic_logo_icon),
+                contentDescription = null,
+                tint = Color.Unspecified
+              )
+            }
 
-      BottomNavigationBar(
-        navController = navController,
-        onSetTopBarVisible = {
-          topBarVisible = it
-        },
-        navigationState = navigationState,
-        onSetNavigationState = {
-          navigationState = it
-        },
-        onTriggerMomentReload = {
-          viewModel.triggerMomentsReloadData()
-        },
-        onSetNavigationInterceptor = { navigationInterceptor },
-      )
-    }) { innerPadding ->
+          }
+        })
+    }
+  }, bottomBar = {
+    if (navigationState == PageState.LOGIN) return@Scaffold
+
+    BottomNavigationBar(
+      navController = navController,
+      onSetTopBarVisible = {
+        topBarVisible = it
+      },
+      navigationState = navigationState,
+      onSetNavigationState = {
+        navigationState = it
+      },
+      onTriggerMomentReload = {
+        viewModel.triggerMomentsReloadData()
+      },
+      onSetNavigationInterceptor = { navigationInterceptor },
+    )
+  }) { innerPadding ->
     Box(
-      modifier = Modifier
-        .fillMaxSize()
+      modifier = Modifier.fillMaxSize()
     ) {
       NavHost(
         navController = navController, startDestination = "home"
       ) {
-        composable("home",
-          enterTransition = {
-            if (initialState.destination.route == "home/moments") {
-              EnterTransition.None
-            } else {
-              slideIntoContainer(
-                towards = Right,
-                animationSpec = tween(700)
-              )
-            }
-          },
-          exitTransition = {
-            if (targetState.destination.route == "home/moments") {
-              ExitTransition.None
-            } else {
-              slideOutOfContainer(
-                towards = Left,
-                animationSpec = tween(700)
-              )
-            }
+        composable("home", enterTransition = {
+          if (initialState.destination.route == "home/moments") {
+            EnterTransition.None
+          } else {
+            slideIntoContainer(
+              towards = Right, animationSpec = tween(700)
+            )
           }
-        ) {
+        }, exitTransition = {
+          if (targetState.destination.route == "home/moments") {
+            ExitTransition.None
+          } else {
+            slideOutOfContainer(
+              towards = Left, animationSpec = tween(700)
+            )
+          }
+        }) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
             topBarVisible = true
           }
-          HomeScreen(
-            viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
+          HomeScreen(viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             navController = navController,
@@ -247,8 +231,7 @@ fun MainScreen(
                   inclusive = true
                 }
               }
-            }
-          )
+            })
         }
         composable("login") {
           navigationState = PageState.LOGIN
@@ -262,8 +245,7 @@ fun MainScreen(
         }
         composable("home/moments",
           enterTransition = { EnterTransition.None },
-          exitTransition = { ExitTransition.None }
-        ) {
+          exitTransition = { ExitTransition.None }) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
             navigationInterceptor = NavigationInterceptor.None
@@ -277,25 +259,19 @@ fun MainScreen(
             sharedViewModel = viewModel
           )
         }
-        composable("home/account",
-          enterTransition = {
-            slideIntoContainer(
-              towards = Left,
-              animationSpec = tween(700)
-            )
+        composable("home/account", enterTransition = {
+          slideIntoContainer(
+            towards = Left, animationSpec = tween(700)
+          )
 
-          },
-          exitTransition = {
-            slideOutOfContainer(
-              towards = Right,
-              animationSpec = tween(700)
-            )
-          }
-        ) {
+        }, exitTransition = {
+          slideOutOfContainer(
+            towards = Right, animationSpec = tween(700)
+          )
+        }) {
           navigationState = PageState.ACCOUNT
           title = "Account"
-          AccountScreen(
-            navController = navController,
+          AccountScreen(navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
@@ -315,7 +291,15 @@ fun MainScreen(
             config = mainPageUiState.config!!
           )
         }
-        composable("moreClips/{model}") { backStackEntry ->
+        composable("moreClips/{model}", enterTransition = {
+          slideIntoContainer(
+            towards = Left, animationSpec = tween(700)
+          )
+        }, exitTransition = {
+          slideOutOfContainer(
+            towards = Right, animationSpec = tween(700)
+          )
+        }) { backStackEntry ->
           val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
           uiModel?.let {
             navigationState = PageState.MORE
@@ -328,7 +312,15 @@ fun MainScreen(
             )
           }
         }
-        composable("moreStories/{model}") { backStackEntry ->
+        composable("moreStories/{model}", enterTransition = {
+          slideIntoContainer(
+            towards = Left, animationSpec = tween(700)
+          )
+        }, exitTransition = {
+          slideOutOfContainer(
+            towards = Right, animationSpec = tween(700)
+          )
+        }) { backStackEntry ->
           val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
           uiModel?.let {
             navigationState = PageState.MORE
@@ -372,8 +364,7 @@ fun setStatusBarColor(activity: Activity, color: Color, useDarkIcons: Boolean) {
       WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
     )
   } else {
-    @Suppress("DEPRECATION")
-    activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
+    @Suppress("DEPRECATION") activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
       activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     } else {
       activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()

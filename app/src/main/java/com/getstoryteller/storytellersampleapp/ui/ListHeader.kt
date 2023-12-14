@@ -36,7 +36,7 @@ fun ListHeader(
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(start = 12.dp, end = 0.dp, bottom = 16.dp),
+      .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
@@ -61,22 +61,6 @@ fun ListHeader(
         fontSize = 16.sp,
         color = MaterialTheme.colors.secondaryVariant
       )
-
-      Icon(
-        painterResource(id = R.drawable.baseline_chevron_right_24),
-        contentDescription = null,
-        tint = MaterialTheme.colors.secondaryVariant,
-        modifier = Modifier
-          .padding(start = 4.dp)
-      )
     }
-  }
-}
-
-private fun String.modify(moreTextCapitalized: Boolean): String {
-  return if (moreTextCapitalized) {
-    this.uppercase()
-  } else {
-    this
   }
 }
