@@ -28,10 +28,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
@@ -50,6 +55,7 @@ import com.getstoryteller.storytellersampleapp.features.main.LoginState.Error
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import com.getstoryteller.storytellersampleapp.ui.LocalStorytellerColorsPalette
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginDialog(
   viewModel: MainViewModel, onLoggedIn: () -> Unit
@@ -84,6 +90,16 @@ fun LoginDialog(
           .padding(16.dp)
       ) {
         var text by rememberSaveable { mutableStateOf("") }
+        val focusRequester = remember { FocusRequester() }
+        val keyboardController = LocalSoftwareKeyboardController.current
+
+        LaunchedEffect(loginUiState.loginState) {
+          if (loginUiState.loginState is LoginState.Error) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+          }
+        }
+
         Image(
           modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
           painter = painterResource(id = if (isDarkTheme) R.drawable.ic_logo_dark else R.drawable.ic_logo),
@@ -95,9 +111,11 @@ fun LoginDialog(
             .align(alignment = Alignment.CenterHorizontally),
           text = stringResource(id = R.string.label_login_description)
         )
+
         OutlinedTextField(modifier = Modifier
           .fillMaxWidth()
-          .padding(top = 16.dp),
+          .padding(top = 16.dp)
+          .focusRequester(focusRequester),
           value = text,
           onValueChange = {
             text = it
@@ -111,6 +129,7 @@ fun LoginDialog(
           keyboardActions = KeyboardActions(
             onDone = {
               viewModel.verifyCode(text)
+              keyboardController?.hide()
             }
           ),
           singleLine = true,
@@ -122,6 +141,7 @@ fun LoginDialog(
               painter = painterResource(id = R.drawable.ic_key), contentDescription = ""
             )
           })
+
 
         if (loginState is Error) {
           val annotatedText = buildAnnotatedString {
@@ -159,6 +179,7 @@ fun LoginDialog(
           enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
             viewModel.verifyCode(text)
+            keyboardController?.hide()
           }) {
           when (loginState) {
             LoginState.Loading, LoginState.Success -> {

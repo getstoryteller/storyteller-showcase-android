@@ -157,9 +157,7 @@ fun MainScreen(
             navController.navigateUp()
           }) {
             if (navigationState != PageState.HOME) Icon(
-              imageVector = Icons.Filled.ArrowBack,
-              contentDescription = null,
-              tint = MaterialTheme.colors.onBackground
+              imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = MaterialTheme.colors.onBackground
             )
             else {
               Icon(
@@ -260,14 +258,21 @@ fun MainScreen(
           )
         }
         composable("home/account", enterTransition = {
-          slideIntoContainer(
-            towards = Left, animationSpec = tween(700)
-          )
-
+          if (targetState.destination.route?.startsWith("home/account") == true) {
+            EnterTransition.None
+          } else {
+            slideIntoContainer(
+              towards = Left, animationSpec = tween(700)
+            )
+          }
         }, exitTransition = {
-          slideOutOfContainer(
-            towards = Right, animationSpec = tween(700)
-          )
+          if (initialState.destination.route?.startsWith("home/account") == true) {
+            ExitTransition.None
+          } else {
+            slideOutOfContainer(
+              towards = Right, animationSpec = tween(700)
+            )
+          }
         }) {
           navigationState = PageState.ACCOUNT
           title = "Account"
@@ -279,7 +284,9 @@ fun MainScreen(
               viewModel.logout()
             })
         }
-        composable("account/{option}") {
+        composable("account/{option}",
+          enterTransition = { EnterTransition.None },
+          exitTransition = { ExitTransition.None }) {
           navigationState = PageState.ACCOUNT
           val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
           title = option.title
