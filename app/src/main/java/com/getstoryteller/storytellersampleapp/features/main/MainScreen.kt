@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -62,6 +63,7 @@ import com.getstoryteller.storytellersampleapp.features.login.LoginScreen
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
+import com.getstoryteller.storytellersampleapp.ui.utils.isCurrentDestination
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
@@ -340,7 +342,7 @@ fun MainScreen(
           }
         }
       }
-      if (mainPageUiState.isMainScreenLoading) {
+      if (mainPageUiState.isMainScreenLoading && navController.isCurrentDestination("home")) {
         CircularProgressIndicator(
           modifier = Modifier
             .padding(16.dp)
