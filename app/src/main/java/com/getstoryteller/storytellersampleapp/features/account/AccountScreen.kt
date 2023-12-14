@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.ui.LocalStorytellerColorsPalette
 import com.getstoryteller.storytellersampleapp.ui.utils.copyToClipboard
 import com.getstoryteller.storytellersampleapp.ui.utils.formatterApplicationVersion
 import com.getstoryteller.storytellersampleapp.ui.utils.toast
@@ -54,15 +55,15 @@ fun AccountScreen(
   }
   Box(
     modifier = Modifier
-      .fillMaxSize()
-      .background(
-        color = MaterialTheme.colors.surface
-      )
+        .fillMaxSize()
+        .background(
+            color = MaterialTheme.colors.surface
+        )
   ) {
     Column(
       modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight()
+          .fillMaxWidth()
+          .wrapContentHeight()
     ) {
       config?.let {
         Text(
@@ -143,9 +144,9 @@ fun AccountScreen(
         }
       ) {
         Text(
-          text = context.formatterApplicationVersion ,
+          text = context.formatterApplicationVersion,
           modifier = Modifier.padding(end = 16.dp),
-          color = MaterialTheme.colors.onSurface
+          color = LocalStorytellerColorsPalette.current.subtitle
         )
       }
     }
@@ -157,24 +158,26 @@ fun AccountScreen(
 fun SettingsRow(
   text: String,
   arrowVisible: Boolean = false,
-  color: Color = colorResource(id = R.color.on_light_color_active),
+  color: Color = MaterialTheme.colors.onBackground,
   onClick: () -> Unit = {},
   content: @Composable () -> Unit = {}
 ) {
   val isDarkTheme = isSystemInDarkTheme()
   Row(
     modifier = Modifier
-      .fillMaxWidth()
-      .height(56.dp)
-      .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
-      .clickable {
-        onClick()
-      }, verticalAlignment = Alignment.CenterVertically
+        .fillMaxWidth()
+        .height(56.dp)
+        .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
+        .clickable {
+            onClick()
+        }, verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
-      text = text, modifier = Modifier
-        .padding(start = 16.dp)
-        .weight(1f), color = MaterialTheme.colors.onBackground
+      text = text,
+      color = color,
+      modifier = Modifier
+          .padding(start = 16.dp)
+          .weight(1f),
     )
     if (arrowVisible) {
       Icon(
