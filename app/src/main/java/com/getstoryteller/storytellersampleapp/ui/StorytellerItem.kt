@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -18,7 +19,6 @@ import com.getstoryteller.storytellersampleapp.data.TileType
 import com.getstoryteller.storytellersampleapp.data.VideoType
 import com.getstoryteller.storytellersampleapp.features.home.PageItemStorytellerDelegate
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
-import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
 import com.storyteller.data.StorytellerClipsDataModel
 import com.storyteller.data.StorytellerStoriesDataModel
 import com.storyteller.domain.entities.StorytellerListViewCellType
@@ -68,10 +68,18 @@ fun StorytellerItem(
       VideoType.STORY -> {
         when (uiModel.layout) {
           LayoutType.ROW -> {
+            val bottomPadding = remember {
+              if (uiModel.tileType == TileType.ROUND) {
+                24.dp
+              } else {
+                0.dp
+              }
+            }
             StorytellerStoriesRow(
               modifier = Modifier
                 .fillMaxWidth()
-                .height(uiModel.getRowHeight()),
+                .height(uiModel.getRowHeight())
+                .padding(bottom = bottomPadding),
               dataModel = StorytellerStoriesDataModel(
                 theme = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> squareTheme

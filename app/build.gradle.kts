@@ -65,7 +65,7 @@ android {
 }
 
 dependencies {
-  val storytellerVersion = "9.8.2"
+  val storytellerVersion = "9.8.3"
 
   implementation(group = "Storyteller", name = "sdk", version = storytellerVersion)
 
