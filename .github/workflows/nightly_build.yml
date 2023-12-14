@@ -45,14 +45,19 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
+      - name: Get today's date
+        if: steps.check_main.outputs.result == 'true'
+        run: echo "TODAYS_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Build APK
         if: steps.check_main.outputs.result == 'true'
-        run: ./gradlew assembleRelease
+        run: |
+          ./gradlew assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk app-release-${{ env.TODAYS_DATE }}.apk
       - name: Zip APK
         if: steps.check_main.outputs.result == 'true'
         run: |
           mkdir build
-          zip -r build/app-release.zip app/build/outputs/apk/release
+          zip -r build/app-release-${{ env.TODAYS_DATE }}.zip app-release-${{ env.TODAYS_DATE }}.apk
       - name: Get latest tag
         if: steps.check_main.outputs.result == 'true'
         id: latest_tag
@@ -71,13 +76,24 @@ jobs:
             ${{ env.CHANGELOG }}
           draft: false
           prerelease: true
-      - name: Upload APK ZIP to Release
+      - name: Upload APK to Release
         if: steps.check_main.outputs.result == 'true'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app-release.zip
-          asset_name: app-release.zip
+          asset_path: ./app-release-${{ env.TODAYS_DATE }}.apk
+          asset_name: app-release-${{ env.TODAYS_DATE }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload ZIP to Release
+        if: steps.check_main.outputs.result == 'true'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/app-release-${{ env.TODAYS_DATE }}.zip
+          asset_name: app-release-${{ env.TODAYS_DATE }}.zip
           asset_content_type: application/zip
