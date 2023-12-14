@@ -31,6 +31,9 @@ import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
+import com.getstoryteller.storytellersampleapp.ui.utils.copyToClipboard
+import com.getstoryteller.storytellersampleapp.ui.utils.formatterApplicationVersion
+import com.getstoryteller.storytellersampleapp.ui.utils.toast
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
@@ -41,7 +44,7 @@ fun AccountScreen(
   config: Config?,
   onLogout: () -> Unit
 ) {
-  val localContext = LocalContext.current
+  val context = LocalContext.current
   val isLoggedOut by viewModel.isLoggedOut.collectAsState()
   LaunchedEffect(isLoggedOut) {
     if (isLoggedOut) {
@@ -82,14 +85,16 @@ fun AccountScreen(
             arrowVisible = true,
             onClick = {
               navController.navigate("account/${OptionSelectType.LANGUAGE.name}")
-            })
+            }
+          )
         }
         SettingsRow(
           text = "Has Account",
           arrowVisible = true,
           onClick = {
             navController.navigate("account/${OptionSelectType.HAS_ACCOUNT.name}")
-          })
+          }
+        )
       }
       Text(
         text = "SETTINGS",
@@ -116,7 +121,7 @@ fun AccountScreen(
         color = colorResource(id = R.color.error),
         onClick = {
           // remove the moments fragment to avoid glitches when logging out and in with a new code
-          val fmgr = (localContext as? FragmentActivity)?.supportFragmentManager
+          val fmgr = (context as? FragmentActivity)?.supportFragmentManager
           val existingFragment = fmgr?.findFragmentByTag("watch") as? StorytellerClipsFragment
           if (existingFragment != null) {
             fmgr.beginTransaction().remove(existingFragment).commit()
@@ -125,6 +130,24 @@ fun AccountScreen(
           viewModel.logout()
         }
       )
+      Text(
+        text = "APP INFO",
+        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+        color = MaterialTheme.colors.onSurface
+      )
+      SettingsRow(
+        text = "Version",
+        onClick = {
+          context.copyToClipboard(context.formatterApplicationVersion)
+          context.toast("App version copied to clipboard")
+        }
+      ) {
+        Text(
+          text = context.formatterApplicationVersion ,
+          modifier = Modifier.padding(end = 16.dp),
+          color = MaterialTheme.colors.onSurface
+        )
+      }
     }
   }
 }
@@ -135,7 +158,8 @@ fun SettingsRow(
   text: String,
   arrowVisible: Boolean = false,
   color: Color = colorResource(id = R.color.on_light_color_active),
-  onClick: () -> Unit = {}
+  onClick: () -> Unit = {},
+  content: @Composable () -> Unit = {}
 ) {
   val isDarkTheme = isSystemInDarkTheme()
   Row(
@@ -145,15 +169,12 @@ fun SettingsRow(
       .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
       .clickable {
         onClick()
-      },
-    verticalAlignment = Alignment.CenterVertically
+      }, verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
-      text = text,
-      modifier = Modifier
+      text = text, modifier = Modifier
         .padding(start = 16.dp)
-        .weight(1f),
-      color = MaterialTheme.colors.onBackground
+        .weight(1f), color = MaterialTheme.colors.onBackground
     )
     if (arrowVisible) {
       Icon(
@@ -163,5 +184,6 @@ fun SettingsRow(
         tint = MaterialTheme.colors.onBackground
       )
     }
+    content()
   }
 }
