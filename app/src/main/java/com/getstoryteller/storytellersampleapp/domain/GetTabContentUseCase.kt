@@ -1,6 +1,6 @@
 package com.getstoryteller.storytellersampleapp.domain
 
-import com.getstoryteller.storytellersampleapp.data.repo.TenantRepository
+import com.getstoryteller.storytellersampleapp.domain.ports.TenantRepository
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 
 interface GetTabContentUseCase {

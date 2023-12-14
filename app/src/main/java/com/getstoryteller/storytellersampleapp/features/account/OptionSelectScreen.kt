@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.R
 import com.getstoryteller.storytellersampleapp.domain.Config
-
 @Composable
 fun OptionSelectScreen(
     navController: NavController,

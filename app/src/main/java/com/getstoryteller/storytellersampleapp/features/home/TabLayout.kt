@@ -1,7 +1,6 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.getstoryteller.storytellersampleapp.data.TabDto
+import com.getstoryteller.storytellersampleapp.data.entities.TabDto
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor

@@ -1,12 +1,10 @@
 package com.getstoryteller.storytellersampleapp.di
 
 import android.content.Context
-import com.getstoryteller.storytellersampleapp.ads.NativeAdsManager
-import com.getstoryteller.storytellersampleapp.ads.StorytellerAdsDelegate
 import com.getstoryteller.storytellersampleapp.api.ApiService
-import com.getstoryteller.storytellersampleapp.data.repo.AuthRepository
+import com.getstoryteller.storytellersampleapp.domain.ports.AuthRepository
 import com.getstoryteller.storytellersampleapp.data.repo.AuthRepositoryImpl
-import com.getstoryteller.storytellersampleapp.data.repo.TenantRepository
+import com.getstoryteller.storytellersampleapp.domain.ports.TenantRepository
 import com.getstoryteller.storytellersampleapp.data.repo.TenantRepositoryImpl
 import com.getstoryteller.storytellersampleapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellersampleapp.domain.GetConfigurationUseCaseImpl
@@ -42,9 +40,9 @@ object AppModule {
 
     @Provides
     fun provideVerifyCodeUseCase(
-        authRepository: AuthRepository,
-        sessionService: SessionService,
-        storytellerService: StorytellerService
+      authRepository: AuthRepository,
+      sessionService: SessionService,
+      storytellerService: StorytellerService
     ): VerifyCodeUseCase =
         VerifyCodeUseCaseImpl(authRepository, sessionService, storytellerService)
 
