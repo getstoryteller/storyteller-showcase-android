@@ -33,7 +33,6 @@ import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
-
 @Composable
 fun AccountScreen(
   navController: NavController,

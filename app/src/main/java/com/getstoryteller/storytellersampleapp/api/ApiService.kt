@@ -1,11 +1,11 @@
 package com.getstoryteller.storytellersampleapp.api
 
-import com.getstoryteller.storytellersampleapp.data.KeyValueDto
-import com.getstoryteller.storytellersampleapp.data.ResponseApiDto
-import com.getstoryteller.storytellersampleapp.data.ResponseApiListDto
-import com.getstoryteller.storytellersampleapp.data.StorytellerItemApiDto
-import com.getstoryteller.storytellersampleapp.data.TabDto
-import com.getstoryteller.storytellersampleapp.data.TenantSettingsApiDto
+import com.getstoryteller.storytellersampleapp.data.entities.KeyValueDto
+import com.getstoryteller.storytellersampleapp.data.entities.ResponseApiDto
+import com.getstoryteller.storytellersampleapp.data.entities.ResponseApiListDto
+import com.getstoryteller.storytellersampleapp.data.entities.StorytellerItemApiDto
+import com.getstoryteller.storytellersampleapp.data.entities.TabDto
+import com.getstoryteller.storytellersampleapp.data.entities.TenantSettingsApiDto
 import com.getstoryteller.storytellersampleapp.services.SessionService
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

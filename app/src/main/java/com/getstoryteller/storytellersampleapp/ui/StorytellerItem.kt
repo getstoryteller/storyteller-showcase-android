@@ -11,12 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.serialization.encodeToString
 import androidx.navigation.NavController
-import com.getstoryteller.storytellersampleapp.data.ItemSize
-import com.getstoryteller.storytellersampleapp.data.LayoutType
-import com.getstoryteller.storytellersampleapp.data.TileType
-import com.getstoryteller.storytellersampleapp.data.VideoType
+import com.getstoryteller.storytellersampleapp.data.entities.ItemSize
+import com.getstoryteller.storytellersampleapp.data.entities.LayoutType
+import com.getstoryteller.storytellersampleapp.data.entities.TileType
+import com.getstoryteller.storytellersampleapp.data.entities.VideoType
 import com.getstoryteller.storytellersampleapp.features.home.PageItemStorytellerDelegate
 import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 import com.storyteller.data.StorytellerClipsDataModel
@@ -28,6 +27,7 @@ import com.storyteller.ui.compose.components.lists.grid.StorytellerClipsGrid
 import com.storyteller.ui.compose.components.lists.grid.StorytellerStoriesGrid
 import com.storyteller.ui.compose.components.lists.row.StorytellerClipsRow
 import com.storyteller.ui.compose.components.lists.row.StorytellerStoriesRow
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.LayoutType
 import com.getstoryteller.storytellersampleapp.data.TileType
+import com.getstoryteller.storytellersampleapp.data.entities.TileType
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.ui.StorytellerItem
 

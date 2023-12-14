@@ -3,9 +3,9 @@ package com.getstoryteller.storytellersampleapp.domain
 import android.content.Context
 import android.view.Gravity
 import androidx.compose.runtime.Stable
-import com.getstoryteller.storytellersampleapp.data.KeyValueDto
-import com.getstoryteller.storytellersampleapp.data.TabDto
-import com.getstoryteller.storytellersampleapp.data.repo.TenantRepository
+import com.getstoryteller.storytellersampleapp.data.entities.KeyValueDto
+import com.getstoryteller.storytellersampleapp.data.entities.TabDto
+import com.getstoryteller.storytellersampleapp.domain.ports.TenantRepository
 import com.storyteller.domain.entities.theme.builders.UiTheme
 import com.storyteller.domain.entities.theme.builders.buildTheme
 import com.storyteller.domain.entities.theme.builders.ofHexCode
@@ -106,7 +106,7 @@ class GetConfigurationUseCaseImpl(
               lineHeight = 13
             ),
             circularTile = squareTheme.light.storyTiles.circularTile.copy(
-             unreadIndicatorColor = ofHexCode("#C8102E")
+              unreadIndicatorColor = ofHexCode("#C8102E")
             )
           )
         ),

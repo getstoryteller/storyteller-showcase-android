@@ -2,11 +2,11 @@ package com.getstoryteller.storytellersampleapp.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.getstoryteller.storytellersampleapp.data.ItemSize
-import com.getstoryteller.storytellersampleapp.data.LayoutType
-import com.getstoryteller.storytellersampleapp.data.TabDto
-import com.getstoryteller.storytellersampleapp.data.TileType
-import com.getstoryteller.storytellersampleapp.data.VideoType
+import com.getstoryteller.storytellersampleapp.data.entities.ItemSize
+import com.getstoryteller.storytellersampleapp.data.entities.LayoutType
+import com.getstoryteller.storytellersampleapp.data.entities.TabDto
+import com.getstoryteller.storytellersampleapp.data.entities.TileType
+import com.getstoryteller.storytellersampleapp.data.entities.VideoType
 import com.getstoryteller.storytellersampleapp.domain.Config
 import com.getstoryteller.storytellersampleapp.domain.GetHomeScreenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -15,7 +15,6 @@ class SampleApp : Application() {
   companion object {
     internal const val PREFS_NAME = "SampleAppPrefs"
   }
-
   override fun onCreate() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
