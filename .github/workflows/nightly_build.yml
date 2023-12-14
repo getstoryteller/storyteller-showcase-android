@@ -62,6 +62,14 @@ jobs:
         if: steps.check_main.outputs.result == 'true'
         id: latest_tag
         run: echo "LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_ENV
+      - name: Generate changelog
+        if: steps.check_main.outputs.result == 'true'
+        id: changelog
+        run: |
+          echo "CHANGELOG=$(git log ${{ steps.latest_tag.outputs.LATEST_TAG }}..HEAD --pretty=format:'%h %s')" >> $GITHUB_ENV
+      - name: Create compare link
+        if: steps.check_main.outputs.result == 'true'
+        run: echo "COMPARE_LINK=https://github.com/${{ github.repository }}/compare/${{ steps.latest_tag.outputs.LATEST_TAG }}...main" >> $GITHUB_ENV
       - name: Create Release
         if: steps.check_main.outputs.result == 'true'
         id: create_release
@@ -72,8 +80,10 @@ jobs:
           tag_name: nightly-${{ github.run_id }}
           release_name: Nightly Build ${{ github.run_id }}
           body: |
-            **Changelog since last release (${{ env.LATEST_TAG }}):**
+            **Changelog since last release (${{ steps.latest_tag.outputs.LATEST_TAG }}):**
             ${{ env.CHANGELOG }}
+
+            [Compare changes](${{ env.COMPARE_LINK }})
           draft: false
           prerelease: true
       - name: Upload APK to Release
