@@ -109,7 +109,7 @@ fun StorytellerItem(
                   TileType.ROUND -> roundTheme
                 },
                 uiStyle = uiStyle,
-                displayLimit = uiModel.displayLimit,
+                displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
                 categories = uiModel.categories,
                 cellType = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
@@ -275,7 +275,7 @@ fun StorytellerItem(
                   TileType.ROUND -> roundTheme
                 },
                 uiStyle = uiStyle,
-                displayLimit = uiModel.displayLimit,
+                displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
                 collection = uiModel.collectionId ?: "",
                 cellType = when (uiModel.tileType) {
                   TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
