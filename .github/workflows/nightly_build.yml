@@ -48,36 +48,6 @@ jobs:
       - name: Get today's date
         if: steps.check_main.outputs.result == 'true'
         run: echo "TODAYS_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-      - name: Get latest tag
-        if: steps.check_main.outputs.result == 'true'
-        id: latest_tag
-        run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-      - name: Generate changelog since ${{ env.LATEST_TAG }}
-        if: steps.check_main.outputs.result == 'true'
-        id: changelog
-        run: |
-          echo "CHANGELOG=$(git log ${{ env.LATEST_TAG }}..HEAD --pretty=format:'%h %s')" >> $GITHUB_ENV
-      - name: Create compare link
-        if: steps.check_main.outputs.result == 'true'
-        run: echo "COMPARE_LINK=https://github.com/${{ github.repository }}/compare/${{ env.LATEST_TAG }}...nightly-${{ github.run_id }}" >> $GITHUB_ENV
-      - name: Create Release
-        if: steps.check_main.outputs.result == 'true'
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: nightly-${{ github.run_id }}
-          release_name: Nightly Build ${{ github.run_id }}
-          body: |
-            **Changelog since last release (${{ env.LATEST_TAG }}):**
-            ${{ env.CHANGELOG }}
-
-            [Compare changes](${{ env.COMPARE_LINK }})
-          draft: false
-          prerelease: true
       - name: Build APK
         if: steps.check_main.outputs.result == 'true'
         run: |
@@ -88,24 +58,15 @@ jobs:
         run: |
           mkdir build
           zip -r build/app-release-${{ env.TODAYS_DATE }}.zip app-release-${{ env.TODAYS_DATE }}.apk
-      - name: Upload APK to Release
+      - name: Create Release
         if: steps.check_main.outputs.result == 'true'
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app-release-${{ env.TODAYS_DATE }}.apk
-          asset_name: app-release-${{ env.TODAYS_DATE }}.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload ZIP to Release
-        if: steps.check_main.outputs.result == 'true'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app-release-${{ env.TODAYS_DATE }}.zip
-          asset_name: app-release-${{ env.TODAYS_DATE }}.zip
-          asset_content_type: application/zip
+        run: |
+          gh release create nightly-${{ env.TODAYS_DATE }} \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Nightly Build ${{ env.TODAYS_DATE }}" \
+              --notes "Automated release for ${{ env.TODAYS_DATE }}" \
+              --generate-notes \
+              "./app-release-${{ env.TODAYS_DATE }}.apk" \
+              "./build/app-release-${{ env.TODAYS_DATE }}.zip"
