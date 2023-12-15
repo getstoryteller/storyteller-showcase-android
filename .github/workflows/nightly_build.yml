@@ -69,7 +69,7 @@ jobs:
           echo "CHANGELOG=$(git log ${{ steps.latest_tag.outputs.LATEST_TAG }}..HEAD --pretty=format:'%h %s')" >> $GITHUB_ENV
       - name: Create compare link
         if: steps.check_main.outputs.result == 'true'
-        run: echo "COMPARE_LINK=https://github.com/${{ github.repository }}/compare/${{ steps.latest_tag.outputs.LATEST_TAG }}...main" >> $GITHUB_ENV
+        run: echo "COMPARE_LINK=https://github.com/${{ github.repository }}/compare/${{ steps.latest_tag.outputs.LATEST_TAG }}...nightly-${{ github.run_id }}" >> $GITHUB_ENV
       - name: Create Release
         if: steps.check_main.outputs.result == 'true'
         id: create_release
