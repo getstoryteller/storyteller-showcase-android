@@ -8,6 +8,7 @@ import com.getstoryteller.storytellersampleapp.data.entities.TabDto
 import com.getstoryteller.storytellersampleapp.domain.ports.TenantRepository
 import com.storyteller.domain.entities.theme.builders.UiTheme
 import com.storyteller.domain.entities.theme.builders.buildTheme
+import com.storyteller.domain.entities.theme.builders.from
 import com.storyteller.domain.entities.theme.builders.ofHexCode
 import java.util.UUID
 
@@ -86,11 +87,10 @@ class GetConfigurationUseCaseImpl(
 
         light.instructions.button.textColor = ofHexCode("#ffffff")
 
-        dark to light
+        dark from light
 
         dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
         dark.lists.backgroundColor = ofHexCode("#000000")
-
         dark.instructions.button.textColor = ofHexCode("#000000")
       }
     }
