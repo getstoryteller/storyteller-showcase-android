@@ -5,6 +5,7 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
@@ -258,7 +259,7 @@ fun MainScreen(
           )
         }
         composable("home/account", enterTransition = {
-          if (targetState.destination.route?.startsWith("home/account") == true) {
+          if (initialState.destination.route?.startsWith("account") == true) {
             EnterTransition.None
           } else {
             slideIntoContainer(
@@ -266,7 +267,7 @@ fun MainScreen(
             )
           }
         }, exitTransition = {
-          if (initialState.destination.route?.startsWith("home/account") == true) {
+          if (targetState.destination.route?.startsWith("account") == true) {
             ExitTransition.None
           } else {
             slideOutOfContainer(
