@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
@@ -52,13 +56,14 @@ fun OptionSelectScreen(
 
   val uiState by viewModel.uiState.collectAsState()
 
-  Column(
+  LazyColumn(
     modifier = Modifier
       .fillMaxSize()
       .padding(top = 20.dp)
       .background(color = MaterialTheme.colors.surface)
+      .navigationBarsPadding()
   ) {
-    uiState.options.forEach { model ->
+    items(uiState.options, key = { it.key ?: uiState.options.indexOf(it) }) { model ->
       Row(
         modifier = Modifier
           .fillMaxWidth()

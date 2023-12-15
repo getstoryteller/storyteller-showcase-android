@@ -189,7 +189,7 @@ fun MainScreen(
     )
   }) { innerPadding ->
     Box(
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier.fillMaxSize().padding(innerPadding)
     ) {
       NavHost(
         navController = navController, startDestination = "home"
@@ -249,7 +249,7 @@ fun MainScreen(
             navigationInterceptor = NavigationInterceptor.None
           }
           MomentsScreen(
-            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
+            modifier = Modifier,
             config = mainPageUiState.config,
             tag = "watch",
             onCommit = onCommit,
