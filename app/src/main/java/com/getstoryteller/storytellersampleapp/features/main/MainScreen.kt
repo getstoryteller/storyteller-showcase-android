@@ -5,7 +5,6 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
@@ -260,7 +259,9 @@ fun MainScreen(
         }
         composable("home/account", enterTransition = {
           if (initialState.destination.route?.startsWith("account") == true) {
-            EnterTransition.None
+            slideIntoContainer(
+              towards = Right, animationSpec = tween(700)
+            )
           } else {
             slideIntoContainer(
               towards = Left, animationSpec = tween(700)
@@ -268,7 +269,9 @@ fun MainScreen(
           }
         }, exitTransition = {
           if (targetState.destination.route?.startsWith("account") == true) {
-            ExitTransition.None
+            slideOutOfContainer(
+              towards = Left, animationSpec = tween(700)
+            )
           } else {
             slideOutOfContainer(
               towards = Right, animationSpec = tween(700)
@@ -286,8 +289,8 @@ fun MainScreen(
             })
         }
         composable("account/{option}",
-          enterTransition = { EnterTransition.None },
-          exitTransition = { ExitTransition.None }) {
+          enterTransition = { slideIntoContainer(towards = Left, animationSpec = tween(700)) },
+          exitTransition = { slideOutOfContainer(towards = Right, animationSpec = tween(700)) }) {
           navigationState = PageState.ACCOUNT
           val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
           title = option.title
@@ -345,9 +348,9 @@ fun MainScreen(
       if (mainPageUiState.isMainScreenLoading && navController.isCurrentDestination("home")) {
         CircularProgressIndicator(
           modifier = Modifier
-            .padding(16.dp)
-            .background(color = Color.Transparent)
-            .align(Alignment.Center)
+              .padding(16.dp)
+              .background(color = Color.Transparent)
+              .align(Alignment.Center)
         )
       }
     }
