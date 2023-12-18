@@ -2,6 +2,8 @@ package com.getstoryteller.storytellersampleapp.features.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -12,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellersampleapp.data.entities.LayoutType
 import com.getstoryteller.storytellersampleapp.data.entities.TileType
@@ -38,6 +41,8 @@ fun MoreScreen(
     modifier = Modifier
       .fillMaxSize()
       .pullRefresh(refreshState)
+      .navigationBarsPadding()
+      .padding(bottom = 16.dp)
   ) {
     StorytellerItem(
       uiModel = pageItemUiModel.copy(
