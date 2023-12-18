@@ -36,7 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // The Storyteller SDK supports displaying Ads from Google Ad Manager.
-// For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/ios/ads
+// For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/android/ads
 
 class StorytellerAdsDelegate(
   private val nativeAdsManager: NativeAdsManager
