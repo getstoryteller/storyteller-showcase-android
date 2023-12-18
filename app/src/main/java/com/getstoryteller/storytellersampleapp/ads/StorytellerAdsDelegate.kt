@@ -158,6 +158,9 @@ class StorytellerAdsDelegate(
 
   override fun userNavigatedToApp(url: String) = Unit
 
+  // This section of this class ensures that all of the necessary methods which must be called on the NativeCustomFormatAd
+  // class in order to ensure tracking is correctly attributed in GAM
+
   override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
     when (type) {
       UserActivity.EventType.AD_ACTION_BUTTON_TAPPED -> onAdAction(data)
@@ -170,7 +173,8 @@ class StorytellerAdsDelegate(
       clearNativeAds()
     }
   }
-  //endregion
+
+  // This method ensures that clicks are counted correctly in GAM
 
   private fun onAdAction(data: UserActivityData) {
     val nativeAd = nativeAds[data.adId]?.nativeAd
@@ -200,12 +204,18 @@ class StorytellerAdsDelegate(
     }
   }
 
+  // This method ensures that impressions are counted correctly in GAM
+
   private fun trackAdImpression(adId: String) {
     val nativeAd = nativeAds[adId]?.nativeAd
     storytellerScope.launch(Dispatchers.Main) {
       nativeAd?.recordImpression()
     }
   }
+
+  // This method ensures that the ad has been marked as viewable when the user interacts with it
+  // which is important for the impressions and clicks tracked above to count as valid traffic
+  // in GAM.
 
   private fun trackAdEnteredView(adId: String, adView: View?) {
     val nativeAd = nativeAds[adId]?.nativeAd
