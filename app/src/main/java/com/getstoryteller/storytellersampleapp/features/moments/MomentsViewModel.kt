@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellersampleapp.features.watch
+package com.getstoryteller.storytellersampleapp.features.moments
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

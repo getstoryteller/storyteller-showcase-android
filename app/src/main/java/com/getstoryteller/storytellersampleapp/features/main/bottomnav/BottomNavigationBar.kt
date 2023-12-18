@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellersampleapp.R
@@ -63,15 +65,9 @@ fun BottomNavigationBar(
             }
             return@BottomNavigationItem
           }
-          navController.navigate("home") {
-            onSetNavigationState(PageState.HOME)
-            popUpTo(navController.graph.startDestinationId) {
-              saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-          }
+          onSetNavigationState(PageState.HOME)
           onSetTopBarVisible(true)
+          navController.popUpTo("home")
         }
       )
       BottomNavigationItem(
@@ -106,15 +102,17 @@ fun BottomNavigationBar(
           }
           onSetNavigationState(PageState.HOME)
           onSetTopBarVisible(false)
-          navController.navigate("home/moments") {
-            popUpTo(navController.graph.startDestinationId) {
-              saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-          }
+          navController.popUpTo("home/moments")
         }
       )
     }
   }
 }
+
+fun NavController.popUpTo(destination: String) = navigate(destination) {
+  popUpTo(graph.findStartDestination().id) {
+    saveState = true
+  }
+  restoreState = true
+}
+
