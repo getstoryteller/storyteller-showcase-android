@@ -16,6 +16,10 @@ import com.getstoryteller.storytellersampleapp.features.main.MainViewModel
 import com.getstoryteller.storytellersampleapp.ui.StorytellerEmbeddedClips
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
+// This view embeds the StorytellerClipsViewController in a tab of its own.
+// There is more information available about this in our public documentation
+// https://www.getstoryteller.com/documentation/ios/embedded-clips
+
 @Composable
 fun MomentsScreen(
   modifier: Modifier,

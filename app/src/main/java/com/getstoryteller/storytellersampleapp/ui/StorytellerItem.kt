@@ -30,6 +30,22 @@ import com.storyteller.ui.compose.components.lists.row.StorytellerStoriesRow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+// These methods take the FeedItem response from our sample API and uses
+// it to construct the relevant Storyteller Row or Grid views.
+
+// The StorytellerStoriesRow and StorytellerStoriesGrid views accept a dataModel
+// to determine how they look and behave.
+// For more information on the various properties which can be passed here, please see our public
+// documentation which is available here https://www.getstoryteller.com/documentation/ios/storyteller-list-views
+
+// The delegate parameter which is passed to the StorytellerStoriesRow and StorytellerStoriesGrid
+// allows your code to receive notifications about how data loading is progressing.
+// In this case, we show a common pattern which is hiding the relevant
+// row or grid (and it's corresponding title) when there are no items to
+// render in the Storyteller row/grid.
+// For more information on this pattern, please see our public documentation here
+// https://www.getstoryteller.com/documentation/ios/storyteller-list-views
+
 @Composable
 fun StorytellerItem(
   uiModel: PageItemUiModel,

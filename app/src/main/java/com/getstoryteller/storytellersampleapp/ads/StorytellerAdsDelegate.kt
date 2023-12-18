@@ -35,6 +35,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+// The Storyteller SDK supports displaying Ads from Google Ad Manager.
+// For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/ios/ads
+
 class StorytellerAdsDelegate(
   private val nativeAdsManager: NativeAdsManager
 ) : StorytellerDelegate {
@@ -45,6 +48,10 @@ class StorytellerAdsDelegate(
     const val clipsAdUnit = "/33813572/clips-native-ad-unit"
     const val clipTemplateId = "12269089"
   }
+
+  // This MutableMap is necessary to keep track of which ads have been
+  // requested so that later the relevant methods can be called on them
+  // to ensure correct attribution and tracking in GAM.
 
   private val nativeAds: MutableMap<String, StorytellerNativeAd> = mutableMapOf()
   private val storytellerScope = CoroutineScope(Dispatchers.IO + Job())

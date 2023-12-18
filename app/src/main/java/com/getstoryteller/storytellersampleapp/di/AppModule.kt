@@ -26,6 +26,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
+// This is a standard Hilt Module that configures the application layer
+
 @Module
 @InstallIn(ViewModelComponent::class)
 object AppModule {

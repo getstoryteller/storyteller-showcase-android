@@ -123,6 +123,11 @@ fun MainScreen(
         },
         actions = {
           if (navigationState == PageState.HOME) {
+            // The Storyteller SDK supports opening it's search experience using the
+            // Storyteller.openSearch method. This can be triggered from wherever you
+            // would like in your application. In this case, we show an example of doing
+            // it from a main nav bar button
+
             IconButton(
               onClick = {
                 Storyteller.openSearch(activity)
