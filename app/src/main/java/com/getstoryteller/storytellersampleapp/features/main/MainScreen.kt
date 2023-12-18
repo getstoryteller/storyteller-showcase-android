@@ -317,7 +317,6 @@ fun MainScreen(
             title = it.title
             MoreScreen(
               pageItemUiModel = it,
-              viewModel = hiltViewModel(),
               navController = navController,
               config = mainPageUiState.config
             )
@@ -338,7 +337,6 @@ fun MainScreen(
             title = it.title
             MoreScreen(
               pageItemUiModel = it,
-              viewModel = hiltViewModel(),
               navController = navController,
               config = mainPageUiState.config
             )
