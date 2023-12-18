@@ -15,6 +15,11 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
+// This class communicates with a separate API to fetch information about which Stories and
+// Clips content to display.
+// None of the code here is required to use the Storyteller SDK - rather it illustrates
+// how to communicate with an external API.
+
 class ApiService(
   private val client: HttpClient,
   private val sessionService: SessionService

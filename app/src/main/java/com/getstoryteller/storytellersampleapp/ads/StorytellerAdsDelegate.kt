@@ -35,6 +35,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+// The Storyteller SDK supports displaying Ads from Google Ad Manager.
+// For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/android/ads
+
 class StorytellerAdsDelegate(
   private val nativeAdsManager: NativeAdsManager
 ) : StorytellerDelegate {
@@ -45,6 +48,10 @@ class StorytellerAdsDelegate(
     const val clipsAdUnit = "/33813572/clips-native-ad-unit"
     const val clipTemplateId = "12269089"
   }
+
+  // This MutableMap is necessary to keep track of which ads have been
+  // requested so that later the relevant methods can be called on them
+  // to ensure correct attribution and tracking in GAM.
 
   private val nativeAds: MutableMap<String, StorytellerNativeAd> = mutableMapOf()
   private val storytellerScope = CoroutineScope(Dispatchers.IO + Job())
@@ -158,6 +165,9 @@ class StorytellerAdsDelegate(
 
   override fun userNavigatedToApp(url: String) = Unit
 
+  // This section of this class ensures that all of the necessary methods which must be called on the NativeCustomFormatAd
+  // class in order to ensure tracking is correctly attributed in GAM
+
   override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
     when (type) {
       UserActivity.EventType.AD_ACTION_BUTTON_TAPPED -> onAdAction(data)
@@ -170,7 +180,8 @@ class StorytellerAdsDelegate(
       clearNativeAds()
     }
   }
-  //endregion
+
+  // This method ensures that clicks are counted correctly in GAM
 
   private fun onAdAction(data: UserActivityData) {
     val nativeAd = nativeAds[data.adId]?.nativeAd
@@ -200,12 +211,18 @@ class StorytellerAdsDelegate(
     }
   }
 
+  // This method ensures that impressions are counted correctly in GAM
+
   private fun trackAdImpression(adId: String) {
     val nativeAd = nativeAds[adId]?.nativeAd
     storytellerScope.launch(Dispatchers.Main) {
       nativeAd?.recordImpression()
     }
   }
+
+  // This method ensures that the ad has been marked as viewable when the user interacts with it
+  // which is important for the impressions and clicks tracked above to count as valid traffic
+  // in GAM.
 
   private fun trackAdEnteredView(adId: String, adView: View?) {
     val nativeAd = nativeAds[adId]?.nativeAd

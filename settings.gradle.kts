@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Storyteller Sample App"
 include(":app")
- 

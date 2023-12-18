@@ -7,6 +7,9 @@ import com.getstoryteller.storytellersampleapp.data.entities.TabDto
 import com.getstoryteller.storytellersampleapp.data.entities.TenantSettingsDto
 import com.getstoryteller.storytellersampleapp.domain.ports.TenantRepository
 
+// This repository class wraps the API Service (following the principles of
+// clean architecture)
+
 class TenantRepositoryImpl(
   private val apiService: ApiService
 ) : TenantRepository {

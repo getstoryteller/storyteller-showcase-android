@@ -30,6 +30,10 @@ import com.getstoryteller.storytellersampleapp.ui.StorytellerEmbeddedClips
 import com.storyteller.domain.entities.Error
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
+// This view embeds the StorytellerClipsFragment in a tab of its own.
+// There is more information available about this in our public documentation
+// https://www.getstoryteller.com/documentation/android/storyteller-clips-fragment
+
 @Composable
 fun MomentsScreen(
   modifier: Modifier,

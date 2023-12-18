@@ -9,6 +9,11 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+// These model classes are used for communication with the sample external API
+// The communication with this API is implemented in the ApiService.kt class
+// None of this code is required to use the Storyteller SDK.
+// However, it may be useful as you plan an integration with your own CMS.
+
 @kotlinx.serialization.Serializable
 data class ResponseApiDto<T>(@SerialName("data") val data: T)
 

@@ -10,6 +10,11 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 
+// This class manages the communication with the Google Ad Manager SDK.
+// Essentially, it receives a request to load a particular ad and then sets up an AdLoader to load the ad.
+// Once the GAM SDK returns an ad, it returns the NativeCustomFormatAd to the StorytellerAdsDelegate for converstion to the StorytellerAd
+// class which the Storyteller SDK needs to render the ad
+
 class NativeAdsManager(private val context: Context) {
 
   fun requestAd(

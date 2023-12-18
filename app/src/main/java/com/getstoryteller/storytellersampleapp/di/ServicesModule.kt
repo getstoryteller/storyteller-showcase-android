@@ -15,6 +15,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+// This is a standard Hilt Module that configures the service layer
+
 @Module
 @InstallIn(SingletonComponent::class)
 object ServicesModule {
