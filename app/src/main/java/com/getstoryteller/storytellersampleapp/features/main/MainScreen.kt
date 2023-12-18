@@ -61,7 +61,7 @@ import com.getstoryteller.storytellersampleapp.features.home.PageItemUiModel
 import com.getstoryteller.storytellersampleapp.features.login.LoginScreen
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.BottomNavigationBar
 import com.getstoryteller.storytellersampleapp.features.main.bottomnav.NavigationInterceptor
-import com.getstoryteller.storytellersampleapp.features.watch.MomentsScreen
+import com.getstoryteller.storytellersampleapp.features.moments.MomentsScreen
 import com.getstoryteller.storytellersampleapp.ui.utils.isCurrentDestination
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
@@ -256,7 +256,7 @@ fun MainScreen(
           MomentsScreen(
             modifier = Modifier,
             config = mainPageUiState.config,
-            tag = "watch",
+            tag = "moments",
             onCommit = onCommit,
             getClipsFragment = getClipsFragment,
             sharedViewModel = viewModel
@@ -322,7 +322,6 @@ fun MainScreen(
             title = it.title
             MoreScreen(
               pageItemUiModel = it,
-              viewModel = hiltViewModel(),
               navController = navController,
               config = mainPageUiState.config
             )
@@ -343,7 +342,6 @@ fun MainScreen(
             title = it.title
             MoreScreen(
               pageItemUiModel = it,
-              viewModel = hiltViewModel(),
               navController = navController,
               config = mainPageUiState.config
             )

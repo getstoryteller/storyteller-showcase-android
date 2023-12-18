@@ -23,3 +23,6 @@
 ##---------------Begin: proguard configuration for Pusher Java Client  ----------
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 ##---------------End: proguard configuration for Pusher Java Client  ----------
+##---------------Begin: proguard configuration for Missing Classes  ----------
+-dontwarn com.storyteller.ui.pager.StorytellerClipsFragment$Listener$DefaultImpls
+##---------------End: proguard configuration for Missing Classes  ----------

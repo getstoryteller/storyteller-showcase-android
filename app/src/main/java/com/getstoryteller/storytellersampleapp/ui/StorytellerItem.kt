@@ -55,6 +55,7 @@ fun StorytellerItem(
   squareTheme: UiTheme?,
   disableHeader: Boolean = false,
   isScrollable: Boolean = false,
+  onComplete : (String) -> Unit = {}
 ) {
   Column(
     modifier = Modifier
@@ -109,7 +110,7 @@ fun StorytellerItem(
                   TileType.ROUND -> StorytellerListViewCellType.ROUND
                 }
               ),
-              delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
+              delegate = PageItemStorytellerDelegate(uiModel.itemId),
               isRefreshing = isRefreshing
             )
           }
@@ -132,7 +133,7 @@ fun StorytellerItem(
                   TileType.ROUND -> StorytellerListViewCellType.ROUND
                 }
               ),
-              delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
+              delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
               isScrollable = isScrollable,
               isRefreshing = isRefreshing
             )
@@ -189,7 +190,7 @@ fun StorytellerItem(
                   TileType.ROUND -> StorytellerListViewCellType.ROUND
                 }
               ),
-              delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
+              delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
               isScrollable = false,
               isRefreshing = isRefreshing
             )
@@ -218,7 +219,7 @@ fun StorytellerItem(
                   TileType.ROUND -> StorytellerListViewCellType.ROUND
                 }
               ),
-              delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
+              delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
               isRefreshing = isRefreshing
             )
           }
@@ -275,7 +276,7 @@ fun StorytellerItem(
                 }
               ),
               isScrollable = false,
-              delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
+              delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
               isRefreshing = isRefreshing
             )
           }
@@ -299,7 +300,7 @@ fun StorytellerItem(
                 }
               ),
               isScrollable = isScrollable,
-              delegate = PageItemStorytellerDelegate(uiModel.itemId) {},
+              delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
               isRefreshing = isRefreshing
             )
           }

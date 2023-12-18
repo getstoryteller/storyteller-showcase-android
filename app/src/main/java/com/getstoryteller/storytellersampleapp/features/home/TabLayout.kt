@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellersampleapp.features.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +17,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +51,7 @@ fun TabLayout(
   val pagerState = rememberPagerState(pageCount = { tabs.size })
   val scope = rememberCoroutineScope()
   val currentPage = remember(tabs) { derivedStateOf { pagerState.currentPage } }
+  val coroutineScope = rememberCoroutineScope()
 
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
@@ -57,6 +61,10 @@ fun TabLayout(
     }
   }
 
+  var topBarNavigationInterceptor: NavigationInterceptor by remember {
+    mutableStateOf(NavigationInterceptor.None)
+  }
+
   Column(modifier = Modifier.fillMaxSize()) {
     StorytellerScrollableTabRow(selectedTabIndex = currentPage.value,
       backgroundColor = MaterialTheme.colors.background,
@@ -64,20 +72,30 @@ fun TabLayout(
       edgePadding = 0.dp,
       divider = {}) {
       tabs.forEachIndexed { index, tab ->
+        val isSelected by remember(currentPage.value) {
+          mutableStateOf(index == currentPage.value)
+        }
+
         Tab(text = {
           Text(
             modifier = Modifier.wrapContentWidth(),
             text = tab.name,
             fontSize = 16.sp,
             fontWeight = FontWeight.W600,
-            color = if (currentPage.value == index) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+            color = if (isSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
           )
-        }, selected = currentPage.value == index,
-          onClick = {
-            scope.launch {
-              pagerState.animateScrollToPage(index)
+        }, selected = isSelected, onClick = {
+          val interceptor = topBarNavigationInterceptor
+          if (interceptor is NavigationInterceptor.TargetRoute && isSelected && interceptor.shouldIntercept()) {
+            coroutineScope.launch {
+              interceptor.onIntercepted()
             }
-          })
+            return@Tab
+          }
+          scope.launch {
+            pagerState.animateScrollToPage(index)
+          }
+        })
       }
     }
     HorizontalPager(state = pagerState,
@@ -85,7 +103,6 @@ fun TabLayout(
       key = { tabs[it].name }) { pageIndex ->
       val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }
       val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $pageIndex")
-      val coroutineScope = rememberCoroutineScope()
 
       LaunchedEffect(tabs.hashCode(), pageIndex) {
         viewModel.loadTab(tabValue)
@@ -97,8 +114,12 @@ fun TabLayout(
         rootNavController = rootNavController,
         isRefreshing = parentState.isRefreshing,
         config = parentState.config,
-        onSetNavigationInterceptor = onSetNavigationInterceptor,
-        setParentInterceptor = {
+        onShouldInterceptTopNavigation = { pagerState.currentPage == pageIndex },
+        onSetTopNavigationInterceptor = {
+          topBarNavigationInterceptor = it
+        },
+        onSetBottomNavigationInterceptor = onSetNavigationInterceptor,
+        setParentBottomNavigationInterceptor = {
           if (pagerState.currentPage == pageIndex) {
             onSetNavigationInterceptor(
               NavigationInterceptor.TargetRoute(
