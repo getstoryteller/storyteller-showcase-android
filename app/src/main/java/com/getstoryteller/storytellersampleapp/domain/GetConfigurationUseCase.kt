@@ -43,10 +43,10 @@ class GetConfigurationUseCaseImpl(
 
   // The look and feel of the Storyteller SDK can be customized by using the Storyteller.theme property
   // on the Storyteller object or by passing a theme to an individual StorytellerListView.
-  // There are examples of this in the StorytellerService.swift class, as well as in the
-  // FeedItemsView.swift class.
+  // There are examples of this in the StorytellerService.kt class, as well as in the
+  // StorytellerItem.kt class.
   // For a full list of all the possible customizations possible, please see our public documentation
-  // here https://www.getstoryteller.com/documentation/ios/themes
+  // here https://www.getstoryteller.com/documentation/android/themes
 
   private val squareTheme: UiTheme
     get() {

@@ -18,7 +18,7 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 
 // This view embeds the StorytellerClipsViewController in a tab of its own.
 // There is more information available about this in our public documentation
-// https://www.getstoryteller.com/documentation/ios/embedded-clips
+// https://www.getstoryteller.com/documentation/android/storyteller-clips-fragment
 
 @Composable
 fun MomentsScreen(

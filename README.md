@@ -27,4 +27,4 @@ Storyteller is also available for [iOS](https://github.com/getstoryteller/storyt
 
 ## Need Help?
 
-We're always available at [support@getstoryteller.com](mailto:support@getstoryteller.com?Subject=iOS%20Sample%20App) to provide help and assistance with integrating the Storyteller SDK into your Android app.
+We're always available at [support@getstoryteller.com](mailto:support@getstoryteller.com?Subject=Android%20Sample%20App) to provide help and assistance with integrating the Storyteller SDK into your Android app.

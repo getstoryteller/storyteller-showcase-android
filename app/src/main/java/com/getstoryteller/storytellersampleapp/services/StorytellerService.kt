@@ -53,9 +53,9 @@ class StorytellerServiceImpl @Inject constructor(
     // This functions below show how to pass User Attributes to the Storyteller SDK
     // for the purposes of personalization and targeting of stories.
     // The corresponding code which calls these functions is available in the
-    // AccountView.swift
+    // AccountScreen.kt
     // There is more information available about this feature in our
-    // documentation here https://www.getstoryteller.com/documentation/ios/custom-attributes
+    // documentation here https://www.getstoryteller.com/documentation/android/custom-attributes
 
     override fun updateCustomAttributes() {
         sessionService.language?.let {
@@ -70,7 +70,7 @@ class StorytellerServiceImpl @Inject constructor(
 
         // The code here shows to enable and disable event tracking for
         // the Storyteller SDK. The corresponding code which calls these
-        // functions is visible in the AccountView.swift class
+        // functions is visible in the AccountScreen.kt class
 
         if (sessionService.trackEvents) {
             Storyteller.enableEventTracking()
