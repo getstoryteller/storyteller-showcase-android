@@ -1,6 +1,5 @@
 package com.getstoryteller.storytellersampleapp.features.moments
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,7 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.getstoryteller.storytellersampleapp.domain.Config
@@ -40,7 +42,6 @@ fun MomentsScreen(
 
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.observeAsState()
   LaunchedEffect(reloadDataTrigger) {
-    Log.d("MomentsScreen", "reloadDataTrigger: $reloadDataTrigger")
     reloadDataTrigger?.let {
       getClipsFragment()?.reloadData()
     }
@@ -57,7 +58,7 @@ fun MomentsScreen(
     }
 
     var isVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
-
+    val view = LocalView.current
     LaunchedEffect(clipsFragment) {
       clipsFragment.listener = object : StorytellerClipsFragment.Listener {
         override fun onDataLoadStarted() {
@@ -72,12 +73,19 @@ fun MomentsScreen(
           isVisible = false
         }
       }
+
+      ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+        val outInsets =
+          insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        clipsFragment.topInset = outInsets.top
+        WindowInsetsCompat.CONSUMED
+      }
     }
 
     StorytellerEmbeddedClips(
       modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(),
+          .fillMaxWidth()
+          .fillMaxHeight(),
       onCommit = onCommit(
         clipsFragment,
         tag,
@@ -87,9 +95,9 @@ fun MomentsScreen(
     if (isVisible) {
       CircularProgressIndicator(
         modifier = Modifier
-          .padding(16.dp)
-          .background(color = Color.Transparent)
-          .align(Alignment.Center)
+            .padding(16.dp)
+            .background(color = Color.Transparent)
+            .align(Alignment.Center)
       )
     }
   }
