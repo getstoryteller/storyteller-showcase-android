@@ -43,8 +43,10 @@ fun TabScreen(
   rootNavController: NavController,
   isRefreshing: Boolean,
   config: Config?,
-  onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
-  setParentInterceptor: () -> Unit = {}
+  onSetTopNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
+  onShouldInterceptTopNavigation: () -> Boolean = { false },
+  onSetBottomNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
+  setParentBottomNavigationInterceptor: () -> Unit = {}
 ) {
   LaunchedEffect(key1 = tabId, block = {
     viewModel.loadTab(tabId)
@@ -53,10 +55,8 @@ fun TabScreen(
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
   val pageUiState by viewModel.uiState.collectAsState()
-  val refreshState = rememberPullRefreshState(
-    refreshing = pageUiState.isRefreshing,
-    onRefresh = { viewModel.onRefresh() }
-  )
+  val refreshState =
+    rememberPullRefreshState(refreshing = pageUiState.isRefreshing, onRefresh = { viewModel.onRefresh() })
   val listState = rememberLazyListState()
   val scope = rememberCoroutineScope()
   val listItems = pageUiState.tabItems
@@ -75,7 +75,7 @@ fun TabScreen(
 
   LaunchedEffect(listState.canScrollBackward, listState.canScrollForward) {
     if (listState.canScrollBackward) {
-      onSetNavigationInterceptor(
+      onSetBottomNavigationInterceptor(
         NavigationInterceptor.TargetRoute(
           targetRoute = "home",
           shouldIntercept = {
@@ -88,20 +88,41 @@ fun TabScreen(
         ),
       )
     } else {
-      setParentInterceptor()
+      setParentBottomNavigationInterceptor()
     }
   }
-  Box(
-    modifier = Modifier
+
+  LaunchedEffect(onShouldInterceptTopNavigation(), listState.canScrollBackward, listState.canScrollForward) {
+    if (!onShouldInterceptTopNavigation()) return@LaunchedEffect
+
+    if (listState.canScrollBackward) {
+      onSetTopNavigationInterceptor(
+        NavigationInterceptor.TargetRoute(
+          targetRoute = tabId,
+          shouldIntercept = {
+            listState.canScrollBackward && onShouldInterceptTopNavigation()
+          },
+          onIntercepted = {
+            listState.animateScrollToItem(0)
+            viewModel.onRefresh()
+          },
+        ),
+      )
+    } else {
+      onSetTopNavigationInterceptor(NavigationInterceptor.None)
+    }
+
+  }
+
+  Box(modifier = Modifier
       .fillMaxSize()
       .background(color = MaterialTheme.colors.background)
       .pullRefresh(
-        state = refreshState
+          state = refreshState
       )
       .onGloballyPositioned {
-        columnHeightPx = it.size.height
-      }
-  ) {
+          columnHeightPx = it.size.height
+      }) {
     LazyColumn(
       modifier = Modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -121,8 +142,7 @@ fun TabScreen(
     }
 
     PullToRefresh(
-      modifier = Modifier
-        .align(Alignment.TopCenter),
+      modifier = Modifier.align(Alignment.TopCenter),
       state = refreshState,
       refreshing = pageUiState.isRefreshing || isRefreshing
     )
