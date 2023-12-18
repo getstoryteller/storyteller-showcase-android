@@ -17,6 +17,10 @@ All of the documentation for our Android SDK is [available on our website](https
 
 ## Sample Apps
 
+This repo contains the following sample applications:
+
+- [Main Sample](https://github.com/getstoryteller/storyteller-sample-android/tree/main/main)
+
 ## Other Platforms
 
 Storyteller is also available for [iOS](https://github.com/getstoryteller/storyteller-sample-ios), [React Native](https://github.com/getstoryteller/storyteller-sdk-react-native) and [Web](https://github.com/getstoryteller/storyteller-sample-web).
