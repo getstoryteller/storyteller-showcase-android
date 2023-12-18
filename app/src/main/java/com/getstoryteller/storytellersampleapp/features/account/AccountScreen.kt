@@ -124,7 +124,7 @@ fun AccountScreen(
         onClick = {
           // remove the moments fragment to avoid glitches when logging out and in with a new code
           val fmgr = (context as? FragmentActivity)?.supportFragmentManager
-          val existingFragment = fmgr?.findFragmentByTag("watch") as? StorytellerClipsFragment
+          val existingFragment = fmgr?.findFragmentByTag("moments") as? StorytellerClipsFragment
           if (existingFragment != null) {
             fmgr.beginTransaction().remove(existingFragment).commit()
           }
