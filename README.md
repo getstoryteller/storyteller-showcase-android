@@ -1,4 +1,4 @@
-# Storyteller Android Sample App
+# Storyteller Showcase App
 
 <a href="https://getstoryteller.com" target="_blank">
   <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png">
