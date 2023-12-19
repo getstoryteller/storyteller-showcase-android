@@ -63,10 +63,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create nightly-${{ env.TODAYS_DATE }} \
+
+          RELEASE_COUNT=$(gh release list --repo "$GITHUB_REPOSITORY" | grep "${{ env.TODAYS_DATE }}" | wc -l)
+          NEW_VERSION=$((RELEASE_COUNT + 1))
+          gh release create "nightly-${{ env.TODAYS_DATE }}-v${NEW_VERSION}" \
               --repo "$GITHUB_REPOSITORY" \
-              --title "Nightly Build ${{ env.TODAYS_DATE }}" \
-              --notes "Automated release for ${{ env.TODAYS_DATE }}" \
+              --title "Nightly Build ${{ env.TODAYS_DATE }} v${NEW_VERSION}" \
+              --notes "Automated release for ${{ env.TODAYS_DATE }} version ${NEW_VERSION}" \
               --generate-notes \
               "./app-release-${{ env.TODAYS_DATE }}.apk" \
               "./build/app-release-${{ env.TODAYS_DATE }}.zip"
