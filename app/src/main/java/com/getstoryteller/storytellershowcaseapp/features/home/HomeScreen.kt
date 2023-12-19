@@ -99,7 +99,9 @@ fun HomeScreen(
             navController = navController,
             roundTheme = config?.roundTheme,
             squareTheme = config?.squareTheme,
-          )
+          ){
+            viewModel.hideStorytellerItem(uiModel.itemId)
+          }
         }
       }
     } else {
