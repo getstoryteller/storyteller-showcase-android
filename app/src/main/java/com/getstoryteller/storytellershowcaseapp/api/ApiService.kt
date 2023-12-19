@@ -14,44 +14,47 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import javax.inject.Inject
+import javax.inject.Singleton
 
 // This class communicates with a separate API to fetch information about which Stories and
 // Clips content to display.
 // None of the code here is required to use the Storyteller SDK - rather it illustrates
 // how to communicate with an external API.
 
-class ApiService(
+@Singleton
+class ApiService @Inject constructor(
   private val client: HttpClient,
   private val sessionService: SessionService
 ) {
 
   suspend fun verifyCode(code: String): ResponseApiDto<TenantSettingsApiDto> =
-    client.post("https://sampleappcontent.usestoryteller.com/api/validateCode") {
+    client.post("validateCode") {
       setBody(mapOf("code" to code))
       contentType(ContentType.Application.Json)
     }.body()
 
   suspend fun getTenantSettings(): ResponseApiDto<TenantSettingsApiDto> =
-    client.get("https://sampleappcontent.usestoryteller.com/api/settings?apiKey=${sessionService.apiKey}")
+    client.get("settings?apiKey=${sessionService.apiKey}")
       .body()
 
   suspend fun getLanguages(): ResponseApiListDto<KeyValueDto> =
-    client.get("https://sampleappcontent.usestoryteller.com/api/languages?apiKey=${sessionService.apiKey}")
+    client.get("languages?apiKey=${sessionService.apiKey}")
       .body()
 
   suspend fun getTeams(): ResponseApiListDto<KeyValueDto> =
-    client.get("https://sampleappcontent.usestoryteller.com/api/teams?apiKey=${sessionService.apiKey}")
+    client.get("teams?apiKey=${sessionService.apiKey}")
       .body()
 
   suspend fun getTabs(): ResponseApiListDto<TabDto> =
-    client.get("https://sampleappcontent.usestoryteller.com/api/tabs?apiKey=${sessionService.apiKey}")
+    client.get("tabs?apiKey=${sessionService.apiKey}")
       .body()
 
   suspend fun getTabById(tabId: String): ResponseApiListDto<StorytellerItemApiDto> =
-    client.get("https://sampleappcontent.usestoryteller.com/api/tabs/${tabId}?apiKey=${sessionService.apiKey}")
+    client.get("tabs/${tabId}?apiKey=${sessionService.apiKey}")
       .body()
 
   suspend fun getHomeItems(): ResponseApiListDto<StorytellerItemApiDto> =
-    client.get("https://sampleappcontent.usestoryteller.com/api/home?apiKey=${sessionService.apiKey}")
+    client.get("home?apiKey=${sessionService.apiKey}")
       .body()
 }
