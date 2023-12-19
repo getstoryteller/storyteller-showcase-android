@@ -1,6 +1,5 @@
 package com.getstoryteller.storytellersampleapp.features.main.bottomnav
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
@@ -73,7 +72,7 @@ fun BottomNavigationBar(
       BottomNavigationItem(
         icon = {
           Icon(
-            painter = painterResource(id = R.drawable.ic_watch),
+            painter = painterResource(id = R.drawable.ic_moments),
             contentDescription = null,
             tint = if (!homeSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
           )
