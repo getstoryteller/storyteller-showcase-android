@@ -30,7 +30,7 @@ import com.getstoryteller.storytellersampleapp.R
 @Composable
 fun ListHeader(
   text: String,
-  moreButtonTitle: String = "More",
+  moreButtonTitle: String,
   collectionId: String? = null,
   categories: List<String> = emptyList(),
   onMoreClicked: (String?, List<String>) -> Unit = { _, _ -> }
