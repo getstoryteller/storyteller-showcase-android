@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.di
 
+import com.getstoryteller.storytellershowcaseapp.BuildConfig
 import com.getstoryteller.storytellershowcaseapp.api.ApiService
 import com.getstoryteller.storytellershowcaseapp.services.SessionService
 import dagger.Module
@@ -8,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -23,6 +25,9 @@ object NetworkModule {
   @Singleton
   @Provides
   fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
+    install(DefaultRequest) {
+      url(BuildConfig.API_BASE_URL)
+    }
     install(ContentNegotiation) {
       json(json = Json {
         prettyPrint = true
@@ -32,10 +37,4 @@ object NetworkModule {
       })
     }
   }
-
-  @Provides
-  fun provideApiService(
-    client: HttpClient,
-    sessionService: SessionService
-  ): ApiService = ApiService(client, sessionService)
 }
