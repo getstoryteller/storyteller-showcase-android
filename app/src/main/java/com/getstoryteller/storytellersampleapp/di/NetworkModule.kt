@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -22,10 +22,7 @@ object NetworkModule {
   @OptIn(ExperimentalSerializationApi::class)
   @Singleton
   @Provides
-  fun provideHttpClient(): HttpClient = HttpClient(CIO) {
-    engine {
-      requestTimeout = 0
-    }
+  fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
     install(ContentNegotiation) {
       json(json = Json {
         prettyPrint = true
