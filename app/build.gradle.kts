@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-  namespace = "com.getstoryteller.storytellersampleapp"
+  namespace = "com.getstoryteller.storytellershowcaseapp"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.getstoryteller.storytellersampleapp"
+    applicationId = "com.getstoryteller.storytellershowcaseapp"
     minSdk = 24
     targetSdk = 34
     versionCode = 1
