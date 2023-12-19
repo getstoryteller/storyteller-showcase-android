@@ -72,7 +72,7 @@ fun MoreScreen(
       },
       disableHeader = true,
       isScrollable = true,
-      onComplete = {
+      onShouldHide = {
         isRefreshing = false
       }
     )

@@ -47,6 +47,16 @@ class HomeViewModel @Inject constructor(
         )
     }
   }
+
+  fun hideStorytellerItem(itemId: String) {
+    viewModelScope.launch {
+      _uiState.update {
+        it.copy(
+          homeItems = it.homeItems.filter { item -> item.itemId != itemId }
+        )
+      }
+    }
+  }
 }
 
 data class HomePageUiState(

@@ -6,20 +6,24 @@ import timber.log.Timber
 
 class PageItemStorytellerDelegate(
   private val itemId: String,
-  private val onDataLoadComplete: (itemId: String) -> Unit = { _ -> },
+  private val onShouldHide: () -> Unit ={}
 ) : StorytellerListViewDelegate {
   override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
     Timber.i(
-      "onDataLoadComplete callback for item $itemId: success $success, error $error, dataCount $dataCount"
+      "[$itemId] onDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
     )
-    onDataLoadComplete(itemId)
+    if (!success || dataCount == 0) {
+      val becauseMessage = if (!success) "of error" else "dataCount is 0"
+      Timber.i("[$itemId] onDataLoadComplete: calling onShouldHide because $becauseMessage")
+      onShouldHide()
+    }
   }
 
   override fun onDataLoadStarted() {
-    Timber.i("onDataLoadStarted callback")
+    Timber.i("[$itemId] onDataLoadStarted callback")
   }
 
   override fun onPlayerDismissed() {
-    Timber.i("onPlayerDismissed callback")
+    Timber.i("[$itemId] onPlayerDismissed callback")
   }
 }

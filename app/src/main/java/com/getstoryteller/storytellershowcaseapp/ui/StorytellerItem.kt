@@ -59,7 +59,7 @@ fun StorytellerItem(
   squareTheme: UiTheme?,
   disableHeader: Boolean = false,
   isScrollable: Boolean = false,
-  onComplete: (String) -> Unit = {}
+  onShouldHide: () -> Unit = {}
 ) {
   Column(
     modifier = Modifier
@@ -89,7 +89,7 @@ fun StorytellerItem(
     CompositionLocalProvider(
       LocalOverscrollConfiguration provides null
     ) {
-      StorytellerComposable(uiModel, squareTheme, roundTheme, uiStyle, isRefreshing, isScrollable, onComplete)
+      StorytellerComposable(uiModel, squareTheme, roundTheme, uiStyle, isRefreshing, isScrollable, onShouldHide)
     }
   }
 }
@@ -102,7 +102,7 @@ private fun StorytellerComposable(
   uiStyle: StorytellerListViewStyle,
   isRefreshing: Boolean,
   isScrollable: Boolean,
-  onComplete: (String) -> Unit
+  onShouldHide: () -> Unit
 ) {
   when (uiModel.type) {
     VideoType.STORY -> {
@@ -117,9 +117,9 @@ private fun StorytellerComposable(
           }
           StorytellerStoriesRow(
             modifier = Modifier
-              .fillMaxWidth()
-              .height(uiModel.getRowHeight())
-              .padding(top = 8.dp, bottom = bottomPadding),
+                .fillMaxWidth()
+                .height(uiModel.getRowHeight())
+                .padding(top = 8.dp, bottom = bottomPadding),
             dataModel = StorytellerStoriesDataModel(
               theme = when (uiModel.tileType) {
                 TileType.RECTANGULAR -> squareTheme
@@ -133,7 +133,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               }
             ),
-            delegate = PageItemStorytellerDelegate(uiModel.itemId),
+            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing
           )
         }
@@ -141,8 +141,8 @@ private fun StorytellerComposable(
         LayoutType.GRID -> {
           StorytellerStoriesGrid(
             modifier = Modifier
-              .fillMaxWidth()
-              .padding(start = 12.dp, end = 12.dp),
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp),
             dataModel = StorytellerStoriesDataModel(
               theme = when (uiModel.tileType) {
                 TileType.RECTANGULAR -> squareTheme
@@ -156,7 +156,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               }
             ),
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
+            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = isScrollable,
             isRefreshing = isRefreshing
           )
@@ -165,8 +165,8 @@ private fun StorytellerComposable(
         LayoutType.SINGLETON -> {
           StorytellerStoriesGrid(
             modifier = Modifier
-              .fillMaxWidth()
-              .padding(start = 12.dp, end = 12.dp),
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp),
             dataModel = StorytellerStoriesDataModel(
               theme = when (uiModel.tileType) {
                 TileType.RECTANGULAR -> squareTheme
@@ -213,7 +213,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               }
             ),
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
+            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = false,
             isRefreshing = isRefreshing
           )
@@ -226,9 +226,9 @@ private fun StorytellerComposable(
         LayoutType.ROW -> {
           StorytellerClipsRow(
             modifier = Modifier
-              .fillMaxWidth()
-              .height(uiModel.getRowHeight())
-              .padding(bottom = 15.dp),
+                .fillMaxWidth()
+                .height(uiModel.getRowHeight())
+                .padding(bottom = 15.dp),
             dataModel = StorytellerClipsDataModel(
               theme = when (uiModel.tileType) {
                 TileType.RECTANGULAR -> squareTheme
@@ -242,7 +242,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               }
             ),
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
+            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing
           )
         }
@@ -250,8 +250,8 @@ private fun StorytellerComposable(
         LayoutType.SINGLETON -> {
           StorytellerClipsGrid(
             modifier = Modifier
-              .fillMaxWidth()
-              .padding(start = 12.dp, end = 12.dp),
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp),
             dataModel = StorytellerClipsDataModel(
               theme = when (uiModel.tileType) {
                 TileType.RECTANGULAR -> squareTheme
@@ -299,7 +299,7 @@ private fun StorytellerComposable(
               }
             ),
             isScrollable = false,
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
+            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing
           )
         }
@@ -307,8 +307,8 @@ private fun StorytellerComposable(
         LayoutType.GRID -> {
           StorytellerClipsGrid(
             modifier = Modifier
-              .fillMaxWidth()
-              .padding(start = 12.dp, end = 12.dp),
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp),
             dataModel = StorytellerClipsDataModel(
               theme = when (uiModel.tileType) {
                 TileType.RECTANGULAR -> squareTheme
@@ -323,7 +323,7 @@ private fun StorytellerComposable(
               }
             ),
             isScrollable = isScrollable,
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onComplete),
+            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing
           )
         }

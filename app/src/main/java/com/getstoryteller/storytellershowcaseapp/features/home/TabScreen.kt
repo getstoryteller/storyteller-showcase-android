@@ -137,7 +137,9 @@ fun TabScreen(
           navController = rootNavController,
           roundTheme = config?.roundTheme,
           squareTheme = config?.squareTheme
-        )
+        ) {
+          viewModel.hideStorytellerItem(uiModel.itemId)
+        }
       }
     }
 

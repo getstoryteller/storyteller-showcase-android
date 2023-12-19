@@ -49,6 +49,16 @@ class TabViewModel @Inject constructor(
     }
   }
 
+  fun hideStorytellerItem(itemId: String) {
+    viewModelScope.launch {
+      _uiState.update {
+        it.copy(
+          tabItems = it.tabItems.filter { item -> item.itemId != itemId }
+        )
+      }
+    }
+  }
+
 }
 
 data class TabPageUiState(
