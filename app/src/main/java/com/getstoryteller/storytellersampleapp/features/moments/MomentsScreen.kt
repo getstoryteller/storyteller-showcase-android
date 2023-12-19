@@ -57,7 +57,7 @@ fun MomentsScreen(
 
     val clipsFragment by remember(config) {
       mutableStateOf(
-        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: "", topLevelBackEnabled = true)
+        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: "")
       )
     }
 
