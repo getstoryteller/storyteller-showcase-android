@@ -51,6 +51,7 @@ data class StorytellerItemApiDto(
     @SerialName("categories") val categories: List<String>,
     @SerialName("collection") val collection: String?,
     @SerialName("title") val title: String?,
+    @SerialName("moreButtonTitle") val moreButtonTitle: String?,
     @SerialName("layout") val layout: LayoutType,
     @SerialName("size") val size: ItemSize,
     @SerialName("sortOrder") val sortOrder: Int,

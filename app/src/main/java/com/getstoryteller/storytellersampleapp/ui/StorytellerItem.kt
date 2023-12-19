@@ -69,6 +69,7 @@ fun StorytellerItem(
     if (uiModel.title.isNotEmpty() && !disableHeader) {
       ListHeader(
         text = uiModel.title,
+        moreButtonTitle = uiModel.moreButtonTitle,
         collectionId = uiModel.collectionId,
         categories = uiModel.categories,
         onMoreClicked = { collectionId, categories ->

@@ -63,6 +63,7 @@ data class PageItemUiModel(
   val layout: LayoutType,
   val tileType: TileType,
   val title: String,
+  val moreButtonTitle: String,
   val categories: List<String>,
   val displayLimit: Int,
   val collectionId: String?,

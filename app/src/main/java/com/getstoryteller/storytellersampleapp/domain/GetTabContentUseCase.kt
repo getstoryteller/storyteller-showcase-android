@@ -15,6 +15,7 @@ class GetTabContentUseCaseImpl(private val tenantRepository: TenantRepository) :
         PageItemUiModel(
           itemId = it.id,
           title = it.title ?: "",
+          moreButtonTitle = it.moreButtonTitle ?: "More",
           categories = it.categories,
           collectionId = it.collection ?: "",
           displayLimit = it.displayLimit ?: Int.MAX_VALUE,

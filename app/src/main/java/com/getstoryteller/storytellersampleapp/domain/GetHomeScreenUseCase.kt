@@ -17,7 +17,8 @@ class GetHomeScreenUseCaseImpl(
         PageItemUiModel(
           itemId = it.id,
           title = it.title ?: "",
-          categories = it.categories ?: emptyList(),
+          moreButtonTitle = it.moreButtonTitle ?: "More",
+          categories = it.categories,
           collectionId = it.collection ?: "",
           displayLimit = it.displayLimit ?: Int.MAX_VALUE,
           type = it.videoType,
