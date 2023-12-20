@@ -1,27 +1,27 @@
-package com.getstoryteller.storytellershowcaseapp.ads
+package com.getstoryteller.storytellershowcaseapp.ads.provider.google
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
+import timber.log.Timber
 
 // This class manages the communication with the Google Ad Manager SDK.
 // Essentially, it receives a request to load a particular ad and then sets up an AdLoader to load the ad.
 // Once the GAM SDK returns an ad, it returns the NativeCustomFormatAd to the StorytellerAdsDelegate for converstion to the StorytellerAd
 // class which the Storyteller SDK needs to render the ad
 
-class NativeAdsManager(private val context: Context) {
+class GoogleNativeAdsManager(private val context: Context) {
 
   fun requestAd(
     adUnit: String,
     formatId: String,
     customMap: Map<String, String>,
-    onAdDataLoaded: (ad: NativeCustomFormatAd?) -> Unit,
+    onAdDataLoaded: (ad: NativeCustomFormatAd) -> Unit,
     onAdDataFailed: (error: String) -> Unit
   ) {
     val adLoader = AdLoader.Builder(context, adUnit)
@@ -31,7 +31,7 @@ class NativeAdsManager(private val context: Context) {
           onAdDataLoaded(nativeCustomFormatAd)
         })
       { nativeCustomFormatAd, s ->
-        Log.d("StorytellerAds", "Click events are handled natively $nativeCustomFormatAd $s")
+        Timber.tag("StorytellerAds").d("Click events are handled natively $nativeCustomFormatAd $s")
       }
       .withAdListener(object : AdListener() {
         override fun onAdFailedToLoad(loadAdError: LoadAdError) {
