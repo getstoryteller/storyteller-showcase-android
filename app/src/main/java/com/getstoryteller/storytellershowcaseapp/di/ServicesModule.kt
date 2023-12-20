@@ -2,7 +2,7 @@ package com.getstoryteller.storytellershowcaseapp.di
 
 import android.content.Context
 import com.getstoryteller.storytellershowcaseapp.ShowcaseApp
-import com.getstoryteller.storytellershowcaseapp.ads.NativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.ads.provider.google.GoogleNativeAdsManager
 import com.getstoryteller.storytellershowcaseapp.ads.StorytellerAdsDelegate
 import com.getstoryteller.storytellershowcaseapp.services.SessionService
 import com.getstoryteller.storytellershowcaseapp.services.SessionServiceImpl
@@ -33,7 +33,7 @@ object ServicesModule {
     @Singleton
     fun provideNativeAdsManager(
       @ApplicationContext context: Context
-    ): NativeAdsManager = NativeAdsManager(context)
+    ): GoogleNativeAdsManager = GoogleNativeAdsManager(context)
 
     @Singleton
     @Provides
