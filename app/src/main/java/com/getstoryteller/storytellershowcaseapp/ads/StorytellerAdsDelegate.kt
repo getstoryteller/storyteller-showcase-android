@@ -1,23 +1,9 @@
 package com.getstoryteller.storytellershowcaseapp.ads
 
 import android.graphics.Bitmap
-import android.util.Log
-import android.view.View
 import android.webkit.WebView
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.ADVERTISER_NAME
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.CLICK_CTA
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.CLICK_TYPE
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.CLICK_URL
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.CREATIVE_TYPE
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.DISPLAY
 import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.IMAGE
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.IN_APP
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.PLAY_STORE_ID
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.STORE
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.TRACKING_URL
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.VIDEO
 import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.VIDEO_URL
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants.Companion.WEB
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
@@ -26,27 +12,31 @@ import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo.StoriesAdReq
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
 import com.storyteller.domain.entities.ads.StorytellerAd
-import com.storyteller.domain.entities.ads.StorytellerAdAction
-import com.storyteller.remote.ads.StorytellerAdTrackingPixel
 import com.storyteller.ui.list.StorytellerDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
 // The Storyteller SDK supports displaying Ads from Google Ad Manager.
 // For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/android/ads
 
-class StorytellerAdsDelegate(
-  private val nativeAdsManager: NativeAdsManager
+@Singleton
+class StorytellerAdsDelegate @Inject constructor(
+  private val nativeAdsManager: NativeAdsManager,
+  private val storytellerAdsTracker: StorytellerAdsTracker,
+  private val storytellerAdsMapper: StorytellerAdsMapper
 ) : StorytellerDelegate {
 
   companion object {
-    const val storiesAdUnitId = "/33813572/stories-native-ad-unit"
-    const val storiesTemplateId = "12102683"
-    const val clipsAdUnit = "/33813572/clips-native-ad-unit"
-    const val clipTemplateId = "12269089"
+    const val STORY_ADS_UNIT_ID = "/33813572/stories-native-ad-unit"
+    const val STORIES_TEMPLATE_ID = "12102683"
+    const val CLIP_ADS_UNIT_ID = "/33813572/clips-native-ad-unit"
+    const val CLIPS_TEMPLATE_ID = "12269089"
   }
 
   // This MutableMap is necessary to keep track of which ads have been
@@ -63,7 +53,6 @@ class StorytellerAdsDelegate(
   ) {
     when (adRequestInfo) {
       is ClipsAdRequestInfo -> {
-
         handleClipAds(adRequestInfo, onComplete, onError)
       }
 
@@ -89,8 +78,8 @@ class StorytellerAdsDelegate(
       )
 
       nativeAdsManager.requestAd(
-        adUnit = clipsAdUnit,
-        formatId = clipTemplateId,
+        adUnit = CLIP_ADS_UNIT_ID,
+        formatId = CLIPS_TEMPLATE_ID,
         customMap = customMap, // custom targeting params
         onAdDataLoaded = { ad ->
           if (ad != null) {
@@ -98,7 +87,8 @@ class StorytellerAdsDelegate(
             if (creativeId != null) {
               val clipsNativeAd = StorytellerNativeAd(adRequestInfo.itemInfo, ad)
               nativeAds[creativeId] = clipsNativeAd
-              val storytellerAd = ad.toClientAd(creativeId)
+
+              val storytellerAd = storytellerAdsMapper.map(ad, creativeId)
 
               try {
                 if (storytellerAd != null && !storytellerAd.video.isNullOrEmpty()) {
@@ -106,13 +96,13 @@ class StorytellerAdsDelegate(
                 }
               } catch (ex: Exception) {
                 onError()
-                Log.w("GamAds", "Failed to send ads to storyteller", ex)
+                Timber.tag("GamAds").w(ex, "Failed to send ads to storyteller")
               }
             }
           }
         },
         onAdDataFailed = {
-          Log.w("GamAds", "Error when fetching GAM Ad: $it")
+          Timber.tag("GamAds").w("Error when fetching GAM Ad: %s", it)
         }
       )
     }
@@ -132,8 +122,8 @@ class StorytellerAdsDelegate(
         "stApiKey" to Storyteller.currentApiKey
       )
       nativeAdsManager.requestAd(
-        adUnit = storiesAdUnitId,
-        formatId = storiesTemplateId,
+        adUnit = STORY_ADS_UNIT_ID,
+        formatId = STORIES_TEMPLATE_ID,
         customMap = customMap, // custom targeting params
         onAdDataLoaded = { ad ->
           if (ad != null) {
@@ -141,7 +131,7 @@ class StorytellerAdsDelegate(
             if (creativeId != null) {
               val storyNativeAd = StorytellerNativeAd(adRequestInfo.itemInfo, ad)
               nativeAds[creativeId] = storyNativeAd
-              val storytellerAd = ad.toClientAd(creativeId)
+              val storytellerAd = storytellerAdsMapper.map(ad, creativeId)
 
               try {
                 if (storytellerAd != null) {
@@ -149,13 +139,13 @@ class StorytellerAdsDelegate(
                 }
               } catch (ex: Exception) {
                 onError()
-                Log.w("GamAds", "Failed to send ads to storyteller", ex)
+                Timber.tag("GamAds").w(ex, "Failed to send ads to storyteller")
               }
             }
           }
         },
         onAdDataFailed = {
-          Log.w("GamAds", "Error when fetching GAM Ad: $it")
+          Timber.tag("GamAds").w("Error when fetching GAM Ad: %s", it)
         }
       )
     }
@@ -197,125 +187,21 @@ class StorytellerAdsDelegate(
   }
 
   private fun onAdStart(data: UserActivityData) {
-    trackAdImpression(data.adId.toString())
-    trackAdEnteredView(data.adId.toString(), data.adView)
+    val nativeAd = nativeAds[data.adId]?.nativeAd
+    storytellerAdsTracker.trackAdImpression(nativeAd)
+    storytellerAdsTracker.trackAdEnteredView(nativeAd, data.adView)
   }
 
   private fun onAdEnd(data: UserActivityData) {
     val nativeAd = nativeAds[data.adId]?.nativeAd
-    val adView = data.adView
-    storytellerScope.launch(Dispatchers.Main) {
-      if (nativeAd != null && adView != null) {
-        nativeAd.displayOpenMeasurement?.setView(adView)
-      }
-    }
+    storytellerAdsTracker.trackAdExitedView(nativeAd, data.adView)
   }
 
   // This method ensures that impressions are counted correctly in GAM
 
-  private fun trackAdImpression(adId: String) {
-    val nativeAd = nativeAds[adId]?.nativeAd
-    storytellerScope.launch(Dispatchers.Main) {
-      nativeAd?.recordImpression()
-    }
-  }
-
   // This method ensures that the ad has been marked as viewable when the user interacts with it
   // which is important for the impressions and clicks tracked above to count as valid traffic
   // in GAM.
-
-  private fun trackAdEnteredView(adId: String, adView: View?) {
-    val nativeAd = nativeAds[adId]?.nativeAd
-    storytellerScope.launch(Dispatchers.Main) {
-      if (nativeAd != null && adView != null) {
-        nativeAd.displayOpenMeasurement?.apply {
-          setView(adView)
-          start()
-        }
-      }
-    }
-  }
-
-  //region mapping
-  private fun createAdAction(
-    clickType: String,
-    clickThroughUrl: String?,
-    clickCTA: String?,
-    playStoreId: String?
-  ): StorytellerAdAction? = when {
-    clickType.equals(
-      WEB,
-      ignoreCase = true
-    ) && clickThroughUrl != null -> StorytellerAdAction.createWebAction(clickThroughUrl, clickCTA)
-
-    clickType.equals(
-      IN_APP,
-      ignoreCase = true
-    ) && clickThroughUrl != null -> StorytellerAdAction.createInAppAction(clickThroughUrl, clickCTA)
-
-    clickType.equals(
-      STORE,
-      ignoreCase = true
-    ) && playStoreId != null -> StorytellerAdAction.createStoreAction(playStoreId, clickCTA)
-
-    else -> null
-  }
-
-  private fun NativeCustomFormatAd?.toClientAd(adKey: String) = this?.run {
-    val advertiserName = getText(ADVERTISER_NAME)?.toString()
-    val creativeType = getText(CREATIVE_TYPE)?.toString()
-    val image = getImage(IMAGE)?.uri?.toString()
-    val video = getText(VIDEO_URL)?.toString()
-    val clickType = getText(CLICK_TYPE)?.toString()
-    val clickThroughUrl = getText(CLICK_URL)?.toString()
-    val playStoreId = getText(PLAY_STORE_ID)?.toString()
-    val clickThroughCTA = getText(CLICK_CTA)?.toString()
-
-    val trackingUrl = getText(TRACKING_URL)?.toString()
-    val trackingPixels = mutableListOf<StorytellerAdTrackingPixel>()
-    if (trackingUrl != null) {
-      trackingPixels.add(
-        StorytellerAdTrackingPixel(
-          eventType = UserActivity.EventType.OPENED_AD,
-          url = trackingUrl
-        )
-      )
-    }
-
-    if (creativeType == DISPLAY && image != null) {
-      StorytellerAd.createImageAd(
-        id = adKey,
-        advertiserName = advertiserName,
-        image = image,
-        storytellerAdAction = if (!clickType.isNullOrEmpty()) createAdAction(
-          clickType = clickType,
-          clickThroughUrl = clickThroughUrl,
-          clickCTA = clickThroughCTA,
-          playStoreId = playStoreId
-        ) else {
-          null
-        },
-        trackingPixels = trackingPixels
-      )
-    } else if (creativeType == VIDEO && video != null) {
-      StorytellerAd.createVideoAd(
-        id = adKey,
-        advertiserName = advertiserName,
-        video = video,
-        storytellerAdAction = if (!clickType.isNullOrEmpty()) createAdAction(
-          clickType = clickType,
-          clickThroughUrl = clickThroughUrl,
-          clickCTA = clickThroughCTA,
-          playStoreId = playStoreId
-        ) else {
-          null
-        },
-        trackingPixels = trackingPixels
-      )
-    } else {
-      null
-    }
-  }
 
   private fun clearNativeAds() {
     storytellerScope.launch {
@@ -328,8 +214,8 @@ class StorytellerAdsDelegate(
 
   private val UserActivity.EventType.isPlayerDismissed
     get() = this == UserActivity.EventType.DISMISSED_AD ||
-            this == UserActivity.EventType.DISMISSED_STORY ||
-            this == UserActivity.EventType.DISMISSED_CLIP
+      this == UserActivity.EventType.DISMISSED_STORY ||
+      this == UserActivity.EventType.DISMISSED_CLIP
 
   /**
    * Data class to help binds native ad to the story it was requested for.
