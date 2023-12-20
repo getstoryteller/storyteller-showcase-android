@@ -17,34 +17,34 @@ import javax.inject.Singleton
 
 // This is a standard Hilt Module that configures the service layer
 
-@Module
-@InstallIn(SingletonComponent::class)
 object ServicesModule {
+
+  @Module
+  @InstallIn(SingletonComponent::class)
+  object ServicesProviderModule {
     @Singleton
     @Provides
     fun provideSessionService(@ApplicationContext context: Context): SessionService =
-        SessionServiceImpl(
-            context.getSharedPreferences(ShowcaseApp.PREFS_NAME, Context.MODE_PRIVATE)
-        )
+      SessionServiceImpl(
+        context.getSharedPreferences(ShowcaseApp.PREFS_NAME, Context.MODE_PRIVATE)
+      )
 
     @Provides
     @Singleton
     fun provideNativeAdsManager(
-        @ApplicationContext context: Context
+      @ApplicationContext context: Context
     ): NativeAdsManager = NativeAdsManager(context)
 
-    @Provides
-    @Singleton
-    fun provideStorytellerAdsDelegate(
-        nativeAdsManager : NativeAdsManager
-    ): StorytellerAdsDelegate = StorytellerAdsDelegate(nativeAdsManager)
-
     @Singleton
     @Provides
-    fun provideStorytellerService(sessionService: SessionService, storytellerAdsDelegate: StorytellerAdsDelegate): StorytellerService =
-        StorytellerServiceImpl(
-            sessionService,
-            storytellerAdsDelegate
-        )
+    fun provideStorytellerService(
+      sessionService: SessionService,
+      storytellerAdsDelegate: StorytellerAdsDelegate
+    ): StorytellerService =
+      StorytellerServiceImpl(
+        sessionService,
+        storytellerAdsDelegate
+      )
 
+  }
 }
