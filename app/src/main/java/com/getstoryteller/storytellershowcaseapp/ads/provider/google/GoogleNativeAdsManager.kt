@@ -10,11 +10,12 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import timber.log.Timber
 
-// This class manages the communication with the Google Ad Manager SDK.
-// Essentially, it receives a request to load a particular ad and then sets up an AdLoader to load the ad.
-// Once the GAM SDK returns an ad, it returns the NativeCustomFormatAd to the StorytellerAdsDelegate for converstion to the StorytellerAd
-// class which the Storyteller SDK needs to render the ad
-
+/**
+ *  This class manages the communication with the Google Ad Manager SDK.
+ *  Essentially, it receives a request to load a particular ad and then sets up an AdLoader to load the ad.
+ *  Once the GAM SDK returns an ad, it returns the NativeCustomFormatAd to the StorytellerAdsDelegate for converstion to the StorytellerAd
+ *  class which the Storyteller SDK needs to render the ad
+ */
 class GoogleNativeAdsManager(private val context: Context) {
 
   fun requestAd(

@@ -18,8 +18,6 @@ import com.storyteller.ui.list.StorytellerDelegate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// The Storyteller SDK supports displaying Ads from Google Ad Manager.
-// For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/android/ads
 
 /**
  * Data class to help binds native ad to the story it was requested for.
@@ -28,6 +26,10 @@ data class StorytellerNativeAd(
   val entity: StorytellerAdRequestInfo.ItemInfo, val nativeAd: NativeCustomFormatAd?
 )
 
+/**
+ * The Storyteller SDK supports displaying Ads from Google Ad Manager.
+ * For more information on this please see our public documentation here https://www.getstoryteller.com/documentation/android/ads
+ */
 @Singleton
 class StorytellerAdsDelegate @Inject constructor(
   private val storytellerStoryAdsManager: StorytellerStoryAdsManager,
@@ -53,9 +55,10 @@ class StorytellerAdsDelegate @Inject constructor(
 
   override fun userNavigatedToApp(url: String) = Unit
 
-  // This section of this class ensures that all of the necessary methods which must be called on the NativeCustomFormatAd
-  // class in order to ensure tracking is correctly attributed in GAM
-
+  /**
+   * This section of this class ensures that all of the necessary methods which must be called on the NativeCustomFormatAd
+   * class in order to ensure tracking is correctly attributed in GAM
+   */
   override fun onUserActivityOccurred(type: UserActivity.EventType, data: UserActivityData) {
     val adId = data.adId
     if (adId != null) {
@@ -84,14 +87,6 @@ class StorytellerAdsDelegate @Inject constructor(
       storytellerStoryAdsManager.cleanNativeAds()
       storytellerClipsAdsManager.cleanNativeAds() }
   }
-
-  // This method ensures that clicks are counted correctly in GAM
-
-  // This method ensures that impressions are counted correctly in GAM
-
-  // This method ensures that the ad has been marked as viewable when the user interacts with it
-  // which is important for the impressions and clicks tracked above to count as valid traffic
-  // in GAM.
 
   //endregion
 

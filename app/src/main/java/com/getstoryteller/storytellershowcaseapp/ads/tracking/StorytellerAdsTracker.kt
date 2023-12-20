@@ -13,12 +13,20 @@ import javax.inject.Singleton
 @Singleton
 class StorytellerAdsTracker @Inject constructor() {
   private val storytellerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+  /**
+   * This method ensures that impressions are counted correctly in GAM
+   */
   fun trackAdImpression(nativeAd: NativeCustomFormatAd?) {
     storytellerScope.launch(Dispatchers.Main) {
       nativeAd?.recordImpression()
     }
   }
 
+  /**
+   * This method ensures that the ad has been marked as viewable when the user interacts with it
+   * which is important for the impressions and clicks tracked above to count as valid traffic
+   * in GAM.
+   */
   fun trackAdEnteredView(nativeAd: NativeCustomFormatAd, adView: View) {
     storytellerScope.launch(Dispatchers.Main) {
       nativeAd.displayOpenMeasurement.apply {
@@ -34,6 +42,9 @@ class StorytellerAdsTracker @Inject constructor() {
     }
   }
 
+  /**
+   * This method ensures that clicks are counted correctly in GAM
+   */
   fun trackAdClicked(nativeAd: NativeCustomFormatAd) {
     storytellerScope.launch(Dispatchers.Main) {
       if (nativeAd.getImage(AdConstants.IMAGE)?.uri != null) {

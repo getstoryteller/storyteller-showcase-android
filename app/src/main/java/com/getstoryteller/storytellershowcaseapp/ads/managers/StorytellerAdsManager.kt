@@ -2,12 +2,12 @@ package com.getstoryteller.storytellershowcaseapp.ads.managers
 
 import android.view.View
 import com.getstoryteller.storytellershowcaseapp.ads.AdConstants
-import com.getstoryteller.storytellershowcaseapp.ads.provider.google.GoogleNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.ads.mapper.StorytellerAdsMapper
-import com.getstoryteller.storytellershowcaseapp.ads.tracking.StorytellerAdsTracker
-import com.getstoryteller.storytellershowcaseapp.ads.provider.google.StorytellerGoogleAdInfo
-import com.getstoryteller.storytellershowcaseapp.ads.kvps.StorytellerKVPProvider
 import com.getstoryteller.storytellershowcaseapp.ads.StorytellerNativeAd
+import com.getstoryteller.storytellershowcaseapp.ads.kvps.StorytellerKVPProvider
+import com.getstoryteller.storytellershowcaseapp.ads.mapper.StorytellerAdsMapper
+import com.getstoryteller.storytellershowcaseapp.ads.provider.google.GoogleNativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.ads.provider.google.StorytellerGoogleAdInfo
+import com.getstoryteller.storytellershowcaseapp.ads.tracking.StorytellerAdsTracker
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.ads.StorytellerAd
 import kotlinx.coroutines.CoroutineScope
@@ -17,30 +17,28 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class StorytellerAdsManager <KVP : StorytellerAdRequestInfo>(
+abstract class StorytellerAdsManager<KVP : StorytellerAdRequestInfo>(
   private val storytellerKVPProvider: StorytellerKVPProvider<KVP>,
   private val googleNativeAdsManager: GoogleNativeAdsManager,
   private val googleAdInfo: StorytellerGoogleAdInfo,
   private val storytellerAdsMapper: StorytellerAdsMapper,
   private val storytellerAdsTracker: StorytellerAdsTracker,
-  ) {
+) {
 
-  // This MutableMap is necessary to keep track of which ads have been
-  // requested so that later the relevant methods can be called on them
-  // to ensure correct attribution and tracking in GAM.
-
+  /**
+   * This MutableMap is necessary to keep track of which ads have been
+   * requested so that later the relevant methods can be called on them
+   * to ensure correct attribution and tracking in GAM.
+   */
   private val nativeAds: MutableMap<String, StorytellerNativeAd> = mutableMapOf()
   private val storytellerScope = CoroutineScope(Dispatchers.IO + Job())
 
   fun handleAds(
-      adRequestInfo: KVP,
-      onComplete: (StorytellerAd) -> Unit,
-      onError: () -> Unit
+    adRequestInfo: KVP, onComplete: (StorytellerAd) -> Unit, onError: () -> Unit
   ) {
     val customMap = storytellerKVPProvider.getKVPs(adRequestInfo)
 
-    googleNativeAdsManager.requestAd(
-      adUnit = googleAdInfo.adUnitId,
+    googleNativeAdsManager.requestAd(adUnit = googleAdInfo.adUnitId,
       formatId = googleAdInfo.templateId,
       customMap = customMap,
       onAdDataLoaded = { ad ->
@@ -61,8 +59,7 @@ abstract class StorytellerAdsManager <KVP : StorytellerAdRequestInfo>(
       },
       onAdDataFailed = {
         Timber.tag("GamAds").w("Error when fetching GAM Ad: %s", it)
-      }
-    )
+      })
   }
 
   fun cleanNativeAds() {
@@ -81,7 +78,7 @@ abstract class StorytellerAdsManager <KVP : StorytellerAdRequestInfo>(
 
   fun trackAdClicked(adId: String) {
     val nativeAd = nativeAds[adId]?.nativeAd ?: return
-    storytellerAdsTracker.trackAdClicked( nativeAd)
+    storytellerAdsTracker.trackAdClicked(nativeAd)
   }
 
   fun trackAdFinished(adId: String, adView: View?) {
