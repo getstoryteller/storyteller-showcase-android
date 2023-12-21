@@ -18,6 +18,7 @@ android {
     versionCode = 1
     versionName = "1.0.0"
     buildConfigField("String", "API_BASE_URL", "\"${property("API_BASE_URL")}\"")
+    buildConfigField("String", "AMPLITUDE_API_KEY", "\"${property("AMPLITUDE_API_KEY")}\"")
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -98,6 +99,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
 
   implementation("com.jakewharton.timber:timber:5.0.1")
+  implementation ("com.amplitude:android-sdk:2.37.0")
 
   // DI Hilt
   implementation("com.google.dagger:hilt-android:2.48")
