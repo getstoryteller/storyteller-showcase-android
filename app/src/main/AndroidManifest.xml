@@ -19,25 +19,39 @@
       android:name=".features.main.MainActivity"
       android:exported="true"
       android:theme="@style/Theme.StorytellerShowcaseApp">
-      <intent-filter android:autoVerify="true">
+      <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <intent-filter android:autoVerify="true"
+        android:label="Storyteller Links">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
           android:host="storyteller.ope.nstori.es"
           android:pathPattern="/open/.*/.*"
           android:scheme="https" />
+      </intent-filter>
+      <intent-filter android:autoVerify="true"
+        android:label="Storyteller Links">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
         <data
           android:host="storyteller.shar.estori.es"
           android:pathPattern="/go/.*/.*"
-          android:scheme="https" />
+          android:scheme="http" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-
         <data
           android:host="open"
           android:scheme="storytellerstories" />
