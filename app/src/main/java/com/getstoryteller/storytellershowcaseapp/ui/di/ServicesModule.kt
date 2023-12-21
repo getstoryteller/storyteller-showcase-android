@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.di
+package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import android.content.Context
 import com.getstoryteller.storytellershowcaseapp.ShowcaseApp

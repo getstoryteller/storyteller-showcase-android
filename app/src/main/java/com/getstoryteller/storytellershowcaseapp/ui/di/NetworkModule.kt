@@ -1,8 +1,6 @@
-package com.getstoryteller.storytellershowcaseapp.di
+package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import com.getstoryteller.storytellershowcaseapp.BuildConfig
-import com.getstoryteller.storytellershowcaseapp.api.ApiService
-import com.getstoryteller.storytellershowcaseapp.services.SessionService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
