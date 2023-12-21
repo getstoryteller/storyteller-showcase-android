@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import android.content.Context
+import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.api.ApiService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
 import com.getstoryteller.storytellershowcaseapp.data.repo.AuthRepositoryImpl
@@ -44,9 +45,10 @@ object AppModule {
     fun provideVerifyCodeUseCase(
       authRepository: AuthRepository,
       sessionService: SessionService,
-      storytellerService: StorytellerService
+      storytellerService: StorytellerService,
+      amplitudeService: AmplitudeService
     ): VerifyCodeUseCase =
-        VerifyCodeUseCaseImpl(authRepository, sessionService, storytellerService)
+        VerifyCodeUseCaseImpl(authRepository, sessionService, storytellerService, amplitudeService)
 
     @Provides
     fun provideGetTenantSettings(
@@ -63,8 +65,9 @@ object AppModule {
 
     @Provides
     fun provideLogoutUseCase(
-        sessionService: SessionService
-    ): LogoutUseCase = LogoutUseCaseImpl(sessionService)
+        sessionService: SessionService,
+        amplitudeService: AmplitudeService
+    ): LogoutUseCase = LogoutUseCaseImpl(sessionService, amplitudeService)
 
     @Provides
     fun provideGetConfigUseCase(

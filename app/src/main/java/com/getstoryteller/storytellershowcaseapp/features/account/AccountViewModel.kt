@@ -2,6 +2,7 @@ package com.getstoryteller.storytellershowcaseapp.features.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.services.SessionService
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
   private val logoutUseCase: LogoutUseCase,
   private val sessionService: SessionService,
-  private val storytellerService: StorytellerService
+  private val storytellerService: StorytellerService,
+  private val amplitudeService: AmplitudeService
 ) : ViewModel() {
   val isLoggedOut = MutableStateFlow(false)
 
@@ -28,5 +30,6 @@ class AccountViewModel @Inject constructor(
   fun reset() {
     sessionService.reset()
     storytellerService.initStoryteller()
+    amplitudeService.init()
   }
 }

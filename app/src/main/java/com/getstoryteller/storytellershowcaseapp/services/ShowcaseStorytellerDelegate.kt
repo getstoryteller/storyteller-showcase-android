@@ -3,6 +3,7 @@ package com.getstoryteller.storytellershowcaseapp.services
 import android.graphics.Bitmap
 import android.webkit.WebView
 import com.getstoryteller.storytellershowcaseapp.ads.StorytellerAdsManager
+import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeAnalyticsManager
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.UserActivity.EventType
 import com.storyteller.domain.entities.UserActivityData
@@ -14,7 +15,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ShowcaseStorytellerDelegate @Inject constructor(
-  private val storytellerAdsManager: StorytellerAdsManager
+  private val storytellerAdsManager: StorytellerAdsManager,
+  private val amplitudeAnalyticsManager: AmplitudeAnalyticsManager
 ) : StorytellerDelegate {
 
   override fun getAd(
@@ -26,11 +28,8 @@ class ShowcaseStorytellerDelegate @Inject constructor(
   override fun userNavigatedToApp(url: String) = Unit
 
   override fun onUserActivityOccurred(type: EventType, data: UserActivityData) {
-    val adId = data.adId
-    if (adId != null) {
-      storytellerAdsManager.handleAdEvents(type, data)
-    }
-
+    storytellerAdsManager.handleAdEvents(type, data)
+    amplitudeAnalyticsManager.handleAnalyticsEvents(type, data)
   }
 }
 

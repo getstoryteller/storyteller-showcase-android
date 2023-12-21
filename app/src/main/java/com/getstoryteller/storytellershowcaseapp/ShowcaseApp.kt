@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp
 
 import android.app.Application
+import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
 import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
@@ -20,6 +21,9 @@ class ShowcaseApp : Application() {
   @Inject
   lateinit var storytellerService: StorytellerService
 
+  @Inject
+  lateinit var amplitudeService: AmplitudeService
+
   companion object {
     internal const val PREFS_NAME = "ShowcaseAppPrefs"
   }
@@ -27,6 +31,7 @@ class ShowcaseApp : Application() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
     storytellerService.initStoryteller()
+    amplitudeService.init()
     MobileAds.initialize(this)
   }
 }

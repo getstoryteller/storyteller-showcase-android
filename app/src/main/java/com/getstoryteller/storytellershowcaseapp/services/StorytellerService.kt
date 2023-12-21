@@ -10,6 +10,7 @@ interface StorytellerService {
     fun updateCustomAttributes()
 }
 
+
 // This class is responsible for interacting with the Storyteller SDK's main instance methods
 // In particular, it is responsible for initializing the SDK when required.
 

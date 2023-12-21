@@ -1,13 +1,15 @@
 package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.getstoryteller.storytellershowcaseapp.ShowcaseApp
-import com.getstoryteller.storytellershowcaseapp.ads.managers.provider.google.GoogleNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.services.ShowcaseStorytellerDelegate
+import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
+import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeServiceImpl
 import com.getstoryteller.storytellershowcaseapp.services.SessionService
 import com.getstoryteller.storytellershowcaseapp.services.SessionServiceImpl
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerServiceImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,30 +23,29 @@ object ServicesModule {
 
   @Module
   @InstallIn(SingletonComponent::class)
-  object ServicesProviderModule {
+  object ServicesProvidingModule {
     @Singleton
     @Provides
-    fun provideSessionService(@ApplicationContext context: Context): SessionService =
-      SessionServiceImpl(
-        context.getSharedPreferences(ShowcaseApp.PREFS_NAME, Context.MODE_PRIVATE)
-      )
-
-    @Provides
-    @Singleton
-    fun provideNativeAdsManager(
+    fun provideSharedPreferences(
       @ApplicationContext context: Context
-    ): GoogleNativeAdsManager = GoogleNativeAdsManager(context)
+    ): SharedPreferences = context.getSharedPreferences(ShowcaseApp.PREFS_NAME, Context.MODE_PRIVATE)
+
+  }
+
+  @Module
+  @InstallIn(SingletonComponent::class)
+  abstract class ServicesBindingModule {
+    @Singleton
+    @Binds
+    abstract fun bindSessionService(impl: SessionServiceImpl): SessionService
+
 
     @Singleton
-    @Provides
-    fun provideStorytellerService(
-      sessionService: SessionService,
-      showcaseStorytellerDelegate: ShowcaseStorytellerDelegate
-    ): StorytellerService =
-      StorytellerServiceImpl(
-        sessionService,
-        showcaseStorytellerDelegate
-      )
+    @Binds
+    abstract fun bindStorytellerService(impl: StorytellerServiceImpl): StorytellerService
 
+    @Singleton
+    @Binds
+    abstract fun bindAmplitudeService(impl: AmplitudeServiceImpl): AmplitudeService
   }
 }
