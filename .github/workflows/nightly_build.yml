@@ -14,27 +14,49 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for changes since the latest release
+      - name: Check for changes since the latest tag
         id: check_changes
         uses: actions/github-script@v7
         with:
           script: |
-            const latestRelease = await github.rest.repos.getLatestRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            const lastReleaseDate = new Date(latestRelease.data.created_at);
-            const response = await github.rest.repos.compareCommits({
+            // Retrieve all tags
+            const tags = await github.paginate(github.rest.repos.listTags, {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              base: lastReleaseDate.toISOString(),
+              per_page: 100
+            });
+
+            if (tags.length === 0) {
+              core.info('No tags found in the repository. Proceeding with build.');
+              core.setOutput('changes', true);
+              return;
+            }
+
+            // Fetch commit dates for each tag and sort by date
+            let tagCommits = await Promise.all(tags.map(async (tag) => {
+              const commit = await github.rest.git.getCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: tag.commit.sha
+              });
+              return { tag: tag.name, date: new Date(commit.data.committer.date) };
+            }));
+
+            tagCommits.sort((a, b) => b.date - a.date);
+
+            const latestTag = tagCommits[0].tag;
+            core.info(`Latest tag based on commit date: ${latestTag}`);
+
+            // Compare the latest tag with the main branch
+            const comparison = await github.rest.repos.compareCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              base: latestTag,
               head: 'main'
             });
-            if (response.data.status !== 'identical') {
-              core.setOutput('changes', true);
-            } else {
-              core.setOutput('changes', false);
-            }
+
+            core.info(`Comparing ${latestTag} with main. Total commits: ${comparison.data.total_commits}`);
+            core.setOutput('changes', comparison.data.total_commits > 0);
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up JDK 17
@@ -74,3 +96,44 @@ jobs:
               --generate-notes \
               "./app-release-${{ env.TODAYS_DATE }}.apk" \
               "./build/app-release-${{ env.TODAYS_DATE }}.zip"
+
+      - name: Append Commits with GitHub Usernames and Messages to Release Notes and Update Release
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          # Fetch the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+
+          # Generate release notes for non-merge commits including author's email and commit message
+          COMMIT_LOGS=$(git log $LATEST_TAG..HEAD --no-merges --pretty=format:"%H|%ae|%s")
+
+          IFS=$'\n'
+          COMMIT_NOTES="### Additional Commits:\n"
+          for line in $COMMIT_LOGS; do
+            IFS='|' read -ra COMMIT <<< "$line"
+            HASH=${COMMIT[0]}
+            AUTHOR_EMAIL=${COMMIT[1]}
+            MESSAGE=${COMMIT[2]}
+
+            # Search for the first commit on GitHub by this email to get the username
+            USERNAME=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/search/commits?q=author-email:$AUTHOR_EMAIL" \
+              | jq -r '.items[0].author.login')
+
+            # If no username found, use the email
+            USERNAME=${USERNAME:-$AUTHOR_EMAIL}
+
+            # Append to commit notes
+            COMMIT_NOTES+="- Commit #$HASH by @$USERNAME: $MESSAGE\n"
+          done
+
+          # Retrieve the auto-generated release notes
+          RELEASE_URL=$(echo $RELEASE_OUTPUT | jq -r '.url')
+          AUTO_GENERATED_NOTES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$RELEASE_URL" | jq -r '.body')
+
+          # Combine auto-generated notes with commit notes
+          UPDATED_NOTES="$AUTO_GENERATED_NOTES\n\n$COMMIT_NOTES"
+
+          # Update the release with the combined notes
+          gh release edit "nightly-${{ env.TODAYS_DATE }}" \
+              --repo "$GITHUB_REPOSITORY" \
+              --notes "$UPDATED_NOTES"
