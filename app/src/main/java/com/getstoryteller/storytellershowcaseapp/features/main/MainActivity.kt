@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.features.main
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.compose.setContent
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellershowcaseapp.ui.ShowcaseAppTheme
+import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,8 +38,16 @@ class MainActivity : AppCompatActivity() {
       ) ?: savedStateSparseArray
       currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
     }
+
     WindowCompat.setDecorFitsSystemWindows(window, false)
+
     viewModel.setup()
+
+    val intentData = intent?.data?.toString()
+    if (intentData != null && Storyteller.isStorytellerDeepLink(intentData)) {
+      Storyteller.openDeepLink(this, intentData)
+    }
+
     setContent {
       val navController = rememberNavController()
       ShowcaseAppTheme {
