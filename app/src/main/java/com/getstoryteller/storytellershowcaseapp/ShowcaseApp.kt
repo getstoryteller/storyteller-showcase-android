@@ -2,6 +2,7 @@ package com.getstoryteller.storytellershowcaseapp
 
 import android.app.Application
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,5 +27,6 @@ class ShowcaseApp : Application() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
     storytellerService.initStoryteller()
+    MobileAds.initialize(this)
   }
 }
