@@ -6,8 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  create_release:
     runs-on: ubuntu-latest
+    outputs:
+      todays_date: ${{ steps.get_date.outputs.date }}
+      release_tag: ${{ steps.create_release.outputs.release_tag }}
+      changes: ${{ steps.check_changes.outputs.changes }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -17,6 +21,8 @@ jobs:
       - name: Check for changes since the latest tag
         id: check_changes
         uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             // Retrieve all tags
@@ -57,83 +63,98 @@ jobs:
 
             core.info(`Comparing ${latestTag} with main. Total commits: ${comparison.data.total_commits}`);
             core.setOutput('changes', comparison.data.total_commits > 0);
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up JDK 17
-        if: steps.check_changes.outputs.changes == 'true'
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
 
       - name: Get today's date
         if: steps.check_changes.outputs.changes == 'true'
-        run: echo "TODAYS_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-
-      - name: Build APK
-        if: steps.check_changes.outputs.changes == 'true'
-        run: |
-          ./gradlew assembleRelease
-          cp app/build/outputs/apk/release/app-release.apk app-release-${{ env.TODAYS_DATE }}.apk
-
-      - name: Zip APK
-        if: steps.check_changes.outputs.changes == 'true'
-        run: |
-          mkdir build
-          zip -r build/app-release-${{ env.TODAYS_DATE }}.zip app-release-${{ env.TODAYS_DATE }}.apk
+        id: get_date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
       - name: Create Release
+        if: steps.check_changes.outputs.changes == 'true'
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAYS_DATE=${{ steps.get_date.outputs.date }}
+          RELEASE_COUNT=$(gh release list --repo "$GITHUB_REPOSITORY" | grep "$TODAYS_DATE" | wc -l)
+          NEW_VERSION=$((RELEASE_COUNT + 1))
+          RELEASE_TAG="nightly-$TODAYS_DATE-v$NEW_VERSION"
+          echo "::set-output name=release_tag::$RELEASE_TAG"
+          gh release create "$RELEASE_TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Nightly Build $TODAYS_DATE v$NEW_VERSION" \
+              --generate-notes \
+              --latest
+
+      - name: Update Release with Commit Details
         if: steps.check_changes.outputs.changes == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_COUNT=$(gh release list --repo "$GITHUB_REPOSITORY" | grep "${{ env.TODAYS_DATE }}" | wc -l)
-          NEW_VERSION=$((RELEASE_COUNT + 1))
-          gh release create "nightly-${{ env.TODAYS_DATE }}-v${NEW_VERSION}" \
-              --repo "$GITHUB_REPOSITORY" \
-              --title "Nightly Build ${{ env.TODAYS_DATE }} v${NEW_VERSION}" \
-              --notes "Automated release for ${{ env.TODAYS_DATE }} version ${NEW_VERSION}" \
-              --generate-notes \
-              "./app-release-${{ env.TODAYS_DATE }}.apk" \
-              "./build/app-release-${{ env.TODAYS_DATE }}.zip"
-
-      - name: Append Commits with GitHub Usernames and Messages to Release Notes and Update Release
-        if: steps.check_changes.outputs.changes == 'true'
-        run: |
-          # Fetch the latest tag
           LATEST_TAG=$(git describe --tags --abbrev=0)
-
-          # Generate release notes for non-merge commits including author's email and commit message
           COMMIT_LOGS=$(git log $LATEST_TAG..HEAD --no-merges --pretty=format:"%H|%ae|%s")
 
+          NL=$'\n'
           IFS=$'\n'
-          COMMIT_NOTES="### Additional Commits:\n"
+          ADDITIONAL_COMMIT_NOTES="${NL}## Additional Commits:${NL}"
           for line in $COMMIT_LOGS; do
             IFS='|' read -ra COMMIT <<< "$line"
             HASH=${COMMIT[0]}
             AUTHOR_EMAIL=${COMMIT[1]}
             MESSAGE=${COMMIT[2]}
-
-            # Search for the first commit on GitHub by this email to get the username
             USERNAME=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
               "https://api.github.com/search/commits?q=author-email:$AUTHOR_EMAIL" \
               | jq -r '.items[0].author.login')
 
-            # If no username found, use the email
             USERNAME=${USERNAME:-$AUTHOR_EMAIL}
 
-            # Append to commit notes
-            COMMIT_NOTES+="- Commit #$HASH by @$USERNAME: $MESSAGE\n"
+            ADDITIONAL_COMMIT_NOTES+="* $MESSAGE by @$USERNAME in $HASH${NL}"
           done
 
-          # Retrieve the auto-generated release notes
-          RELEASE_URL=$(echo $RELEASE_OUTPUT | jq -r '.url')
-          AUTO_GENERATED_NOTES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$RELEASE_URL" | jq -r '.body')
-
-          # Insert the additional commit notes before the "Full Changelog" section
-          UPDATED_NOTES=$(echo "$AUTO_GENERATED_NOTES" | sed "/**Full Changelog**:/i $ADDITIONAL_COMMIT_NOTES")
-
-          # Update the release with the combined notes
-          gh release edit "nightly-${{ env.TODAYS_DATE }}" \
+          RELEASE_TAG=${{ steps.create_release.outputs.release_tag }}
+          RELEASE_URL=$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json url -q .url)
+          AUTO_GENERATED_NOTES=$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json body -q .body)
+          PART_ONE=$(echo "$AUTO_GENERATED_NOTES" | awk '/\*\*Full Changelog\*\*:/ {exit} {print}')
+          PART_TWO=$(echo "$AUTO_GENERATED_NOTES" | awk '/\*\*Full Changelog\*\*:/,0')
+          UPDATED_NOTES="$PART_ONE$ADDITIONAL_COMMIT_NOTES${NL}$PART_TWO"
+          gh release edit "$RELEASE_TAG" \
               --repo "$GITHUB_REPOSITORY" \
               --notes "$UPDATED_NOTES"
+
+  build_and_upload_apk:
+    runs-on: ubuntu-latest
+    needs: create_release
+    if: needs.create_release.outputs.changes == 'true'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Build APK
+        run: |
+          ./gradlew assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk app-release-${{ needs.create_release.outputs.todays_date }}.apk
+
+      - name: Zip APK
+        run: |
+          mkdir build
+          zip -r build/app-release-${{ needs.create_release.outputs.todays_date }}.zip app-release-${{ needs.create_release.outputs.todays_date }}.apk
+
+      - name: Upload APK and ZIP to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_TAG=${{ needs.create_release.outputs.release_tag }}
+          apk_file="app-release-${{ needs.create_release.outputs.todays_date }}.apk"
+          zip_file="build/app-release-${{ needs.create_release.outputs.todays_date }}.zip"
+          gh release upload "$RELEASE_TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              "$apk_file" \
+              "$zip_file"
