@@ -2,8 +2,8 @@ package com.getstoryteller.storytellershowcaseapp.di
 
 import android.content.Context
 import com.getstoryteller.storytellershowcaseapp.ShowcaseApp
-import com.getstoryteller.storytellershowcaseapp.ads.provider.google.GoogleNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.ads.StorytellerAdsDelegate
+import com.getstoryteller.storytellershowcaseapp.ads.managers.provider.google.GoogleNativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.services.ShowcaseStorytellerDelegate
 import com.getstoryteller.storytellershowcaseapp.services.SessionService
 import com.getstoryteller.storytellershowcaseapp.services.SessionServiceImpl
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
@@ -39,11 +39,11 @@ object ServicesModule {
     @Provides
     fun provideStorytellerService(
       sessionService: SessionService,
-      storytellerAdsDelegate: StorytellerAdsDelegate
+      showcaseStorytellerDelegate: ShowcaseStorytellerDelegate
     ): StorytellerService =
       StorytellerServiceImpl(
         sessionService,
-        storytellerAdsDelegate
+        showcaseStorytellerDelegate
       )
 
   }

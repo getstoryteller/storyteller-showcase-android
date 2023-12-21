@@ -1,12 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.ads.managers
 
 import android.view.View
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants
-import com.getstoryteller.storytellershowcaseapp.ads.StorytellerNativeAd
+import com.getstoryteller.storytellershowcaseapp.ads.entity.AdConstants
+import com.getstoryteller.storytellershowcaseapp.ads.entity.StorytellerNativeAd
 import com.getstoryteller.storytellershowcaseapp.ads.kvps.StorytellerKVPProvider
 import com.getstoryteller.storytellershowcaseapp.ads.mapper.StorytellerAdsMapper
-import com.getstoryteller.storytellershowcaseapp.ads.provider.google.GoogleNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.ads.provider.google.StorytellerGoogleAdInfo
+import com.getstoryteller.storytellershowcaseapp.ads.managers.provider.google.GoogleNativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.ads.entity.StorytellerGoogleAdInfo
 import com.getstoryteller.storytellershowcaseapp.ads.tracking.StorytellerAdsTracker
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.ads.StorytellerAd
@@ -17,7 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class StorytellerAdsManager<KVP : StorytellerAdRequestInfo>(
+abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
   private val storytellerKVPProvider: StorytellerKVPProvider<KVP>,
   private val googleNativeAdsManager: GoogleNativeAdsManager,
   private val googleAdInfo: StorytellerGoogleAdInfo,

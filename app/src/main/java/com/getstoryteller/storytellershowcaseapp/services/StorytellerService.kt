@@ -1,6 +1,5 @@
 package com.getstoryteller.storytellershowcaseapp.services
 
-import com.getstoryteller.storytellershowcaseapp.ads.StorytellerAdsDelegate
 import com.storyteller.Storyteller
 import com.storyteller.domain.entities.UserInput
 import timber.log.Timber
@@ -16,7 +15,7 @@ interface StorytellerService {
 
 class StorytellerServiceImpl @Inject constructor(
     private val sessionService: SessionService,
-    private val storytellerAdsDelegate: StorytellerAdsDelegate
+    private val showcaseStorytellerDelegate: ShowcaseStorytellerDelegate
 ) : StorytellerService {
 
     companion object {
@@ -27,8 +26,8 @@ class StorytellerServiceImpl @Inject constructor(
 
     override fun initStoryteller() {
         Storyteller.apply {
-            this.storytellerDelegate = storytellerAdsDelegate
-            this.initialize(
+            storytellerDelegate = showcaseStorytellerDelegate
+            initialize(
                 apiKey = sessionService.apiKey ?: "",
                 userInput = sessionService.userId?.let { UserInput(it) },
                 onSuccess = {

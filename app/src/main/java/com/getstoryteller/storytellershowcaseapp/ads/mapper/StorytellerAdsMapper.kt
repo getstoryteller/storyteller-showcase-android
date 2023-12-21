@@ -1,6 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.ads.mapper
 
-import com.getstoryteller.storytellershowcaseapp.ads.AdConstants
+import com.getstoryteller.storytellershowcaseapp.ads.entity.AdConstants
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.ads.StorytellerAd
