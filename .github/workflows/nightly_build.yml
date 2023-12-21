@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -130,8 +130,8 @@ jobs:
           RELEASE_URL=$(echo $RELEASE_OUTPUT | jq -r '.url')
           AUTO_GENERATED_NOTES=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$RELEASE_URL" | jq -r '.body')
 
-          # Combine auto-generated notes with commit notes
-          UPDATED_NOTES="$AUTO_GENERATED_NOTES\n\n$COMMIT_NOTES"
+          # Insert the additional commit notes before the "Full Changelog" section
+          UPDATED_NOTES=$(echo "$AUTO_GENERATED_NOTES" | sed "/**Full Changelog**:/i $ADDITIONAL_COMMIT_NOTES")
 
           # Update the release with the combined notes
           gh release edit "nightly-${{ env.TODAYS_DATE }}" \
