@@ -134,7 +134,7 @@ fun MainScreen(
               }, enabled = !mainPageUiState.isMainScreenLoading
             ) {
               Icon(
-                imageVector = Icons.Filled.Search, contentDescription = "", tint = MaterialTheme.colors.onBackground
+                imageVector = Icons.Filled.Search, contentDescription = "Open Search", tint = MaterialTheme.colors.onBackground
               )
             }
             IconButton(
@@ -151,7 +151,7 @@ fun MainScreen(
             ) {
               Icon(
                 imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "",
+                contentDescription = "Open Account",
                 tint = MaterialTheme.colors.onBackground
               )
             }
