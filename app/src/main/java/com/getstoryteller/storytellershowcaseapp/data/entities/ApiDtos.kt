@@ -66,12 +66,11 @@ enum class LayoutType(val serializedName: String) {
     ROW("row"), GRID("grid"), SINGLETON("singleton");
 
     companion object {
-        fun deserialize(serialisedName: String): LayoutType = values()
+        fun deserialize(serialisedName: String): LayoutType = entries
             .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
     }
 }
 
-@Serializer(forClass = LayoutType::class)
 object LayoutTypeSerializer : KSerializer<LayoutType> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("LayoutType", PrimitiveKind.STRING)
@@ -91,12 +90,11 @@ enum class TileType(val serializedName: String) {
     RECTANGULAR("rectangular"), ROUND("round");
 
     companion object {
-        fun deserialize(serialisedName: String): TileType = values()
+        fun deserialize(serialisedName: String): TileType = entries
             .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
     }
 }
 
-@Serializer(forClass = LayoutType::class)
 object TileTypeSerializer : KSerializer<TileType> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("TileType", PrimitiveKind.STRING)
@@ -116,12 +114,11 @@ enum class VideoType(val serializedName: String) {
     STORY("stories"), CLIP("clips");
 
     companion object {
-        fun deserialize(serialisedName: String): VideoType = values()
+        fun deserialize(serialisedName: String): VideoType = entries
             .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
     }
 }
 
-@Serializer(forClass = VideoType::class)
 object VideoTypeSerializer : KSerializer<VideoType> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("VideoType", PrimitiveKind.STRING)
@@ -141,12 +138,11 @@ enum class ItemSize(val serializedName: String) {
     MEDIUM("medium"), REGULAR("regular"), LARGE("large"), SMALL("small");
 
     companion object {
-        fun deserialize(serialisedName: String): ItemSize = values()
+        fun deserialize(serialisedName: String): ItemSize = entries
             .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
     }
 }
 
-@Serializer(forClass = ItemSize::class)
 object ItemSizeSerializer : KSerializer<ItemSize> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("ItemSize", PrimitiveKind.STRING)

@@ -1,7 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.domain
 
 import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
-import com.getstoryteller.storytellershowcaseapp.features.home.PageItemUiModel
+import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
 
 interface GetTabContentUseCase {
   suspend fun getTabContent(tabId: String): List<PageItemUiModel>

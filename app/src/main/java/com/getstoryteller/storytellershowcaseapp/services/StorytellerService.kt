@@ -15,8 +15,8 @@ interface StorytellerService {
 // In particular, it is responsible for initializing the SDK when required.
 
 class StorytellerServiceImpl @Inject constructor(
-    private val sessionService: SessionService,
-    private val showcaseStorytellerDelegate: ShowcaseStorytellerDelegate
+  private val sessionRepository: SessionRepository,
+  private val showcaseStorytellerDelegate: ShowcaseStorytellerDelegate
 ) : StorytellerService {
 
     companion object {
@@ -29,8 +29,8 @@ class StorytellerServiceImpl @Inject constructor(
         Storyteller.apply {
             storytellerDelegate = showcaseStorytellerDelegate
             initialize(
-                apiKey = sessionService.apiKey ?: "",
-                userInput = sessionService.userId?.let { UserInput(it) },
+                apiKey = sessionRepository.apiKey ?: "",
+                userInput = sessionRepository.userId?.let { UserInput(it) },
                 onSuccess = {
                     Timber.i("Storyteller initialized")
                 },
@@ -49,13 +49,13 @@ class StorytellerServiceImpl @Inject constructor(
     // documentation here https://www.getstoryteller.com/documentation/android/custom-attributes
 
     override fun updateCustomAttributes() {
-        sessionService.language?.let {
+        sessionRepository.language?.let {
             Storyteller.user.setCustomAttribute(LANGUAGE_ATTRIBUTE_KEY, it)
         } ?: Storyteller.user.removeCustomAttribute(LANGUAGE_ATTRIBUTE_KEY)
-        sessionService.team?.let {
+        sessionRepository.team?.let {
             Storyteller.user.setCustomAttribute(FAV_TEAM_ATTRIBUTE_KEY, it)
         } ?: Storyteller.user.removeCustomAttribute(FAV_TEAM_ATTRIBUTE_KEY)
-        sessionService.hasAccount.let {
+        sessionRepository.hasAccount.let {
             Storyteller.user.setCustomAttribute(HAS_ACCOUNT_ATTRIBUTE_KEY, if (it) "yes" else "no")
         }
 
@@ -63,7 +63,7 @@ class StorytellerServiceImpl @Inject constructor(
         // the Storyteller SDK. The corresponding code which calls these
         // functions is visible in the AccountScreen.kt class
 
-        if (sessionService.trackEvents) {
+        if (sessionRepository.trackEvents) {
             Storyteller.enableEventTracking()
         } else {
             Storyteller.disableEventTracking()

@@ -2,11 +2,11 @@ package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import android.content.Context
 import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
-import com.getstoryteller.storytellershowcaseapp.api.ApiService
+import com.getstoryteller.storytellershowcaseapp.remote.api.ApiService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
-import com.getstoryteller.storytellershowcaseapp.data.repo.AuthRepositoryImpl
+import com.getstoryteller.storytellershowcaseapp.data.AuthRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
-import com.getstoryteller.storytellershowcaseapp.data.repo.TenantRepositoryImpl
+import com.getstoryteller.storytellershowcaseapp.data.TenantRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
@@ -19,7 +19,7 @@ import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCaseImpl
-import com.getstoryteller.storytellershowcaseapp.services.SessionService
+import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
 import dagger.Module
 import dagger.Provides
@@ -44,11 +44,11 @@ object AppModule {
     @Provides
     fun provideVerifyCodeUseCase(
       authRepository: AuthRepository,
-      sessionService: SessionService,
+      sessionRepository: SessionRepository,
       storytellerService: StorytellerService,
       amplitudeService: AmplitudeService
     ): VerifyCodeUseCase =
-        VerifyCodeUseCaseImpl(authRepository, sessionService, storytellerService, amplitudeService)
+        VerifyCodeUseCaseImpl(authRepository, sessionRepository, storytellerService, amplitudeService)
 
     @Provides
     fun provideGetTenantSettings(
@@ -65,9 +65,9 @@ object AppModule {
 
     @Provides
     fun provideLogoutUseCase(
-        sessionService: SessionService,
-        amplitudeService: AmplitudeService
-    ): LogoutUseCase = LogoutUseCaseImpl(sessionService, amplitudeService)
+      sessionRepository: SessionRepository,
+      amplitudeService: AmplitudeService
+    ): LogoutUseCase = LogoutUseCaseImpl(sessionRepository, amplitudeService)
 
     @Provides
     fun provideGetConfigUseCase(

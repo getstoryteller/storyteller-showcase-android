@@ -17,7 +17,6 @@ import javax.inject.Singleton
 class StorytellerAdsManager @Inject constructor(
   private val storytellerStoryAdsManager: StorytellerStoryNativeAdsManager,
   private val storytellerClipsAdsManager: StorytellerClipsNativeAdsManager
-
 ) {
     fun handleAds(adRequestInfo: StorytellerAdRequestInfo, onComplete: (StorytellerAd) -> Unit, onError: () -> Unit) {
     when (adRequestInfo) {

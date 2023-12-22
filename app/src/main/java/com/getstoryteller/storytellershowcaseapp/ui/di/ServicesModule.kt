@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import com.getstoryteller.storytellershowcaseapp.ShowcaseApp
 import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeServiceImpl
-import com.getstoryteller.storytellershowcaseapp.services.SessionService
-import com.getstoryteller.storytellershowcaseapp.services.SessionServiceImpl
+import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.data.SessionRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerServiceImpl
 import dagger.Binds
@@ -37,7 +37,7 @@ object ServicesModule {
   abstract class ServicesBindingModule {
     @Singleton
     @Binds
-    abstract fun bindSessionService(impl: SessionServiceImpl): SessionService
+    abstract fun bindSessionService(impl: SessionRepositoryImpl): SessionRepository
 
 
     @Singleton

@@ -1,19 +1,19 @@
 package com.getstoryteller.storytellershowcaseapp.domain
 
 import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
-import com.getstoryteller.storytellershowcaseapp.services.SessionService
+import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
 
 interface LogoutUseCase {
   fun logout()
 }
 
 class LogoutUseCaseImpl(
-  private val sessionService: SessionService,
-  private val amplitudeService: AmplitudeService
+    private val sessionRepository: SessionRepository,
+    private val amplitudeService: AmplitudeService
 ) : LogoutUseCase {
   override fun logout() {
-    sessionService.apiKey = null
-    sessionService.userId = null
+    sessionRepository.apiKey = null
+    sessionRepository.userId = null
     amplitudeService.logout()
   }
 }

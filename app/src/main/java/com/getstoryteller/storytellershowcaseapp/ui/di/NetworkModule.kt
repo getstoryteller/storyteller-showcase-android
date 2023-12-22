@@ -14,7 +14,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
-// This is a standard Hilt Module that configures the API layer
+// This is a standard Hilt Module that configures the API (remote) layer
 
 @Module
 @InstallIn(SingletonComponent::class)

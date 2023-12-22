@@ -3,7 +3,7 @@ package com.getstoryteller.storytellershowcaseapp.domain
 import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.data.entities.TenantSettingsDto
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
-import com.getstoryteller.storytellershowcaseapp.services.SessionService
+import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
 import java.util.UUID
 
@@ -12,15 +12,15 @@ interface VerifyCodeUseCase {
 }
 
 class VerifyCodeUseCaseImpl(
-  private val authRepository: AuthRepository,
-  private val sessionService: SessionService,
-  private val storytellerService: StorytellerService,
-  private val amplitudeService: AmplitudeService
+    private val authRepository: AuthRepository,
+    private val sessionRepository: SessionRepository,
+    private val storytellerService: StorytellerService,
+    private val amplitudeService: AmplitudeService
 ) : VerifyCodeUseCase {
   override suspend fun verifyCode(code: String): TenantSettingsDto {
     val settings = authRepository.verifyCode(code)
-    sessionService.apiKey = settings.androidApiKey
-    sessionService.userId = UUID.randomUUID().toString()
+    sessionRepository.apiKey = settings.androidApiKey
+    sessionRepository.userId = UUID.randomUUID().toString()
     storytellerService.initStoryteller()
     amplitudeService.init()
     storytellerService.updateCustomAttributes()
