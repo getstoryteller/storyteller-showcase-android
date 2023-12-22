@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ads.managers.provider.google
+package com.getstoryteller.storytellershowcaseapp.data.ads.managers.provider.google
 
 import android.content.Context
 import android.os.Bundle

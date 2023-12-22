@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ads.entity
+package com.getstoryteller.storytellershowcaseapp.data.ads.entity
 
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo

@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.services
+package com.getstoryteller.storytellershowcaseapp.domain.ports
 
 interface SessionRepository {
   var apiKey: String?

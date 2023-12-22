@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ads.entity
+package com.getstoryteller.storytellershowcaseapp.data.ads.entity
 
 data class StorytellerGoogleAdInfo(
   val adUnitId: String,

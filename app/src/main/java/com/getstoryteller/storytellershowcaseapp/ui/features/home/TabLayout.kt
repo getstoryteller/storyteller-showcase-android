@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.getstoryteller.storytellershowcaseapp.data.entities.TabDto
 import com.getstoryteller.storytellershowcaseapp.domain.Config
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
 import com.getstoryteller.storytellershowcaseapp.ui.components.StorytellerScrollableTabRow

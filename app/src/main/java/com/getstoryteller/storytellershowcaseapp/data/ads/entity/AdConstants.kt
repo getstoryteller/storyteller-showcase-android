@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ads.entity
+package com.getstoryteller.storytellershowcaseapp.data.ads.entity
 
 class AdConstants {
 

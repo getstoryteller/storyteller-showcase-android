@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

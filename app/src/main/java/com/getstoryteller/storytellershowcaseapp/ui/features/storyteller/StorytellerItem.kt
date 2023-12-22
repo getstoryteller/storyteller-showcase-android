@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.getstoryteller.storytellershowcaseapp.data.entities.ItemSize
-import com.getstoryteller.storytellershowcaseapp.data.entities.LayoutType
-import com.getstoryteller.storytellershowcaseapp.data.entities.TileType
-import com.getstoryteller.storytellershowcaseapp.data.entities.VideoType
+import com.getstoryteller.storytellershowcaseapp.remote.entities.ItemSize
+import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TileType
+import com.getstoryteller.storytellershowcaseapp.remote.entities.VideoType
 import com.getstoryteller.storytellershowcaseapp.ui.components.ListHeader
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
 import com.storyteller.data.StorytellerClipsDataModel

@@ -3,12 +3,12 @@ package com.getstoryteller.storytellershowcaseapp.ui.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.getstoryteller.storytellershowcaseapp.ShowcaseApp
-import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
-import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeServiceImpl
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
+import com.getstoryteller.storytellershowcaseapp.data.AmplitudeServiceImpl
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.data.SessionRepositoryImpl
-import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
-import com.getstoryteller.storytellershowcaseapp.services.StorytellerServiceImpl
+import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.data.StorytellerServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

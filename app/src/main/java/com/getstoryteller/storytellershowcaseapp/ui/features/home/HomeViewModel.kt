@@ -2,13 +2,13 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.getstoryteller.storytellershowcaseapp.data.entities.ItemSize
-import com.getstoryteller.storytellershowcaseapp.data.entities.LayoutType
-import com.getstoryteller.storytellershowcaseapp.data.entities.TabDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.TileType
-import com.getstoryteller.storytellershowcaseapp.data.entities.VideoType
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
+import com.getstoryteller.storytellershowcaseapp.remote.entities.ItemSize
+import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TileType
+import com.getstoryteller.storytellershowcaseapp.remote.entities.VideoType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

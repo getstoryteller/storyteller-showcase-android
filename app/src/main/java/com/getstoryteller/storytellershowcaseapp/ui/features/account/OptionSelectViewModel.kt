@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.getstoryteller.storytellershowcaseapp.domain.Config
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
-import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OptionSelectViewModel @Inject constructor(
-    private val sessionRepository: SessionRepository,
-    private val storytellerService: StorytellerService
+  private val sessionRepository: SessionRepository,
+  private val storytellerService: StorytellerService
 ) : ViewModel() {
 
   private val _uiState = MutableStateFlow(OptionSelectUIModel())

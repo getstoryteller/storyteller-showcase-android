@@ -1,12 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.remote.api
 
-import com.getstoryteller.storytellershowcaseapp.data.entities.KeyValueDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.ResponseApiDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.ResponseApiListDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.StorytellerItemApiDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.TabDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.TenantSettingsApiDto
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.ResponseApiDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.ResponseApiListDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.StorytellerItemApiDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsApiDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

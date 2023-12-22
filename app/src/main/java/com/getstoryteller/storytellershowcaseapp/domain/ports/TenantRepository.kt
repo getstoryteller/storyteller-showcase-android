@@ -1,9 +1,9 @@
 package com.getstoryteller.storytellershowcaseapp.domain.ports
 
-import com.getstoryteller.storytellershowcaseapp.data.entities.KeyValueDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.StorytellerItemApiDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.TabDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.TenantSettingsDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.StorytellerItemApiDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsDto
 
 interface TenantRepository {
   suspend fun getTenantSettings(): TenantSettingsDto

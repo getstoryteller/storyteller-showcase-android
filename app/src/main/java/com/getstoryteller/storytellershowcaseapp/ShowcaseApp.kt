@@ -1,8 +1,8 @@
 package com.getstoryteller.storytellershowcaseapp
 
 import android.app.Application
-import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
-import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber

@@ -1,9 +1,9 @@
-package com.getstoryteller.storytellershowcaseapp.services
+package com.getstoryteller.storytellershowcaseapp.data
 
 import android.graphics.Bitmap
 import android.webkit.WebView
-import com.getstoryteller.storytellershowcaseapp.ads.StorytellerAdsManager
-import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeAnalyticsManager
+import com.getstoryteller.storytellershowcaseapp.data.ads.StorytellerAdsManager
+import com.getstoryteller.storytellershowcaseapp.data.amplitude.AmplitudeAnalyticsManager
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.UserActivity.EventType
 import com.storyteller.domain.entities.UserActivityData
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class ShowcaseStorytellerDelegate @Inject constructor(
+class ShowcaseStorytellerDelegateImpl @Inject constructor(
   private val storytellerAdsManager: StorytellerAdsManager,
   private val amplitudeAnalyticsManager: AmplitudeAnalyticsManager
 ) : StorytellerDelegate {

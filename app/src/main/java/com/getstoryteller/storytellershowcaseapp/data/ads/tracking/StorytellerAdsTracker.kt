@@ -1,7 +1,7 @@
-package com.getstoryteller.storytellershowcaseapp.ads.tracking
+package com.getstoryteller.storytellershowcaseapp.data.ads.tracking
 
 import android.view.View
-import com.getstoryteller.storytellershowcaseapp.ads.entity.AdConstants
+import com.getstoryteller.storytellershowcaseapp.data.ads.entity.AdConstants
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

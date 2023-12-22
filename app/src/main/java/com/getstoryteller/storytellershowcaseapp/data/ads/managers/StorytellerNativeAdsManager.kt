@@ -1,13 +1,13 @@
-package com.getstoryteller.storytellershowcaseapp.ads.managers
+package com.getstoryteller.storytellershowcaseapp.data.ads.managers
 
 import android.view.View
-import com.getstoryteller.storytellershowcaseapp.ads.entity.AdConstants
-import com.getstoryteller.storytellershowcaseapp.ads.entity.StorytellerNativeAd
-import com.getstoryteller.storytellershowcaseapp.ads.kvps.StorytellerKVPProvider
-import com.getstoryteller.storytellershowcaseapp.ads.mapper.StorytellerAdsMapper
-import com.getstoryteller.storytellershowcaseapp.ads.managers.provider.google.GoogleNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.ads.entity.StorytellerGoogleAdInfo
-import com.getstoryteller.storytellershowcaseapp.ads.tracking.StorytellerAdsTracker
+import com.getstoryteller.storytellershowcaseapp.data.ads.entity.AdConstants
+import com.getstoryteller.storytellershowcaseapp.data.ads.entity.StorytellerNativeAd
+import com.getstoryteller.storytellershowcaseapp.data.ads.kvps.StorytellerKVPProvider
+import com.getstoryteller.storytellershowcaseapp.data.ads.mapper.StorytellerAdsMapper
+import com.getstoryteller.storytellershowcaseapp.data.ads.managers.provider.google.GoogleNativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.data.ads.entity.StorytellerGoogleAdInfo
+import com.getstoryteller.storytellershowcaseapp.data.ads.tracking.StorytellerAdsTracker
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.ads.StorytellerAd
 import kotlinx.coroutines.CoroutineScope

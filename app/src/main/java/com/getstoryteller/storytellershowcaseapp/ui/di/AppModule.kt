@@ -1,7 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import android.content.Context
-import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.remote.api.ApiService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
 import com.getstoryteller.storytellershowcaseapp.data.AuthRepositoryImpl
@@ -19,8 +19,8 @@ import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCaseImpl
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
-import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,8 +65,8 @@ object AppModule {
 
     @Provides
     fun provideLogoutUseCase(
-      sessionRepository: SessionRepository,
-      amplitudeService: AmplitudeService
+        sessionRepository: SessionRepository,
+        amplitudeService: AmplitudeService
     ): LogoutUseCase = LogoutUseCaseImpl(sessionRepository, amplitudeService)
 
     @Provides

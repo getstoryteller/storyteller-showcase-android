@@ -1,8 +1,8 @@
 package com.getstoryteller.storytellershowcaseapp.data
 
 import com.getstoryteller.storytellershowcaseapp.remote.api.ApiService
-import com.getstoryteller.storytellershowcaseapp.data.entities.TenantSettingsApiDto
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsApiDto
 
 // This repository class wraps the API Service (following the principles of
 // clean architecture)

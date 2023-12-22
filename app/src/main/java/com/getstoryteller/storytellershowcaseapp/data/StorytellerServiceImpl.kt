@@ -1,22 +1,19 @@
-package com.getstoryteller.storytellershowcaseapp.services
+package com.getstoryteller.storytellershowcaseapp.data
 
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import com.storyteller.Storyteller
 import com.storyteller.domain.entities.UserInput
 import timber.log.Timber
 import javax.inject.Inject
 
-interface StorytellerService {
-    fun initStoryteller()
-    fun updateCustomAttributes()
-}
-
-
-// This class is responsible for interacting with the Storyteller SDK's main instance methods
-// In particular, it is responsible for initializing the SDK when required.
-
+/**
+ * This class is responsible for interacting with the Storyteller SDK's main instance methods
+ * In particular, it is responsible for initializing the SDK when required.
+ */
 class StorytellerServiceImpl @Inject constructor(
-  private val sessionRepository: SessionRepository,
-  private val showcaseStorytellerDelegate: ShowcaseStorytellerDelegate
+    private val sessionRepository: SessionRepository,
+    private val showcaseStorytellerDelegateImpl: ShowcaseStorytellerDelegateImpl
 ) : StorytellerService {
 
     companion object {
@@ -27,7 +24,7 @@ class StorytellerServiceImpl @Inject constructor(
 
     override fun initStoryteller() {
         Storyteller.apply {
-            storytellerDelegate = showcaseStorytellerDelegate
+            storytellerDelegate = showcaseStorytellerDelegateImpl
             initialize(
                 apiKey = sessionRepository.apiKey ?: "",
                 userInput = sessionRepository.userId?.let { UserInput(it) },

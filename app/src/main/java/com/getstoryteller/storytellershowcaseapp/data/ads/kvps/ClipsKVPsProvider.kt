@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ads.kvps
+package com.getstoryteller.storytellershowcaseapp.data.ads.kvps
 
 import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo

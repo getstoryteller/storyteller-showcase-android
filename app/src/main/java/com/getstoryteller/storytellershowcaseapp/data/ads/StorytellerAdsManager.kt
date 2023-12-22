@@ -1,7 +1,7 @@
-package com.getstoryteller.storytellershowcaseapp.ads
+package com.getstoryteller.storytellershowcaseapp.data.ads
 
-import com.getstoryteller.storytellershowcaseapp.ads.managers.StorytellerClipsNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.ads.managers.StorytellerStoryNativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.data.ads.managers.StorytellerClipsNativeAdsManager
+import com.getstoryteller.storytellershowcaseapp.data.ads.managers.StorytellerStoryNativeAdsManager
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData

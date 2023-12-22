@@ -1,8 +1,7 @@
-package com.getstoryteller.storytellershowcaseapp.data.entities
+package com.getstoryteller.storytellershowcaseapp.remote.entities
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -48,17 +47,17 @@ data class TenantSettingsDto(
 
 @kotlinx.serialization.Serializable
 data class StorytellerItemApiDto(
-    @SerialName("categories") val categories: List<String>,
-    @SerialName("collection") val collection: String?,
-    @SerialName("title") val title: String?,
-    @SerialName("moreButtonTitle") val moreButtonTitle: String?,
-    @SerialName("layout") val layout: LayoutType,
-    @SerialName("size") val size: ItemSize,
-    @SerialName("sortOrder") val sortOrder: Int,
-    @SerialName("tileType") val tileType: TileType,
-    @SerialName("videoType") val videoType: VideoType,
-    @SerialName("id") val id: String,
-    @SerialName("count") val displayLimit: Int?,
+  @SerialName("categories") val categories: List<String>,
+  @SerialName("collection") val collection: String?,
+  @SerialName("title") val title: String?,
+  @SerialName("moreButtonTitle") val moreButtonTitle: String?,
+  @SerialName("layout") val layout: LayoutType,
+  @SerialName("size") val size: ItemSize,
+  @SerialName("sortOrder") val sortOrder: Int,
+  @SerialName("tileType") val tileType: TileType,
+  @SerialName("videoType") val videoType: VideoType,
+  @SerialName("id") val id: String,
+  @SerialName("count") val displayLimit: Int?,
 )
 
 @kotlinx.serialization.Serializable(with = LayoutTypeSerializer::class)

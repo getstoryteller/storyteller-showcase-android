@@ -3,9 +3,9 @@ package com.getstoryteller.storytellershowcaseapp.domain
 import android.content.Context
 import android.view.Gravity
 import androidx.compose.runtime.Stable
-import com.getstoryteller.storytellershowcaseapp.data.entities.KeyValueDto
-import com.getstoryteller.storytellershowcaseapp.data.entities.TabDto
 import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
+import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
 import com.storyteller.domain.entities.theme.builders.UiTheme
 import com.storyteller.domain.entities.theme.builders.buildTheme
 import com.storyteller.domain.entities.theme.builders.from

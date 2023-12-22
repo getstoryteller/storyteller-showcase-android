@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.amplitude
+package com.getstoryteller.storytellershowcaseapp.data.amplitude
 
 import com.amplitude.analytics.connector.util.toJSONObject
 import com.amplitude.api.Amplitude

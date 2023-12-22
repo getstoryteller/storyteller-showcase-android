@@ -1,10 +1,10 @@
 package com.getstoryteller.storytellershowcaseapp.domain
 
-import com.getstoryteller.storytellershowcaseapp.amplitude.AmplitudeService
-import com.getstoryteller.storytellershowcaseapp.data.entities.TenantSettingsDto
+import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
-import com.getstoryteller.storytellershowcaseapp.services.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsDto
 import java.util.UUID
 
 interface VerifyCodeUseCase {
@@ -12,10 +12,10 @@ interface VerifyCodeUseCase {
 }
 
 class VerifyCodeUseCaseImpl(
-    private val authRepository: AuthRepository,
-    private val sessionRepository: SessionRepository,
-    private val storytellerService: StorytellerService,
-    private val amplitudeService: AmplitudeService
+  private val authRepository: AuthRepository,
+  private val sessionRepository: SessionRepository,
+  private val storytellerService: StorytellerService,
+  private val amplitudeService: AmplitudeService
 ) : VerifyCodeUseCase {
   override suspend fun verifyCode(code: String): TenantSettingsDto {
     val settings = authRepository.verifyCode(code)

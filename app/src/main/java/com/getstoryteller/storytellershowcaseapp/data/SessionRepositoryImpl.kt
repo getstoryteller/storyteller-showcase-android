@@ -1,12 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.data
 
 import android.content.SharedPreferences
-import com.getstoryteller.storytellershowcaseapp.services.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import java.util.UUID
 import javax.inject.Inject
 
 class SessionRepositoryImpl @Inject constructor(private val prefs: SharedPreferences) :
-  SessionRepository {
+    SessionRepository {
 
   companion object {
     private const val KEY_APIKEY = "KEY_APIKEY"
