@@ -108,9 +108,7 @@ fun MainScreen(
     if (navigationState == PageState.LOGIN) return@Scaffold
 
     if (topBarVisible) {
-      TopAppBar(modifier = Modifier.padding(
-        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-      ), title = {
+      TopAppBar(title = {
         if (navigationState != PageState.HOME) {
           Text(text = title)
         }
