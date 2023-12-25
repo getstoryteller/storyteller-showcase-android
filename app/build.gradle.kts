@@ -1,10 +1,10 @@
 plugins {
-  id("com.android.application")
-  id("org.jetbrains.kotlin.android")
-  id("kotlin-kapt")
-  id("kotlinx-serialization")
-  id("kotlin-parcelize")
-  id("com.google.dagger.hilt.android")
+  alias(libs.plugins.androidApplication)
+  alias(libs.plugins.jetbrainsKotlinAndroid)
+  alias(libs.plugins.jetbrainsKotlinKapt)
+  alias(libs.plugins.jetbrainsKotlinParcelize)
+  alias(libs.plugins.jetbrainsKotlinSerialization)
+  alias(libs.plugins.hilt)
 }
 
 android {
@@ -55,7 +55,7 @@ android {
     buildConfig = true
   }
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.2"
+    kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -67,46 +67,41 @@ android {
 }
 
 dependencies {
-  val storytellerVersion = "9.8.3"
-
-  implementation(group = "Storyteller", name = "sdk", version = storytellerVersion)
-
-  implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-
-  implementation ("androidx.fragment:fragment-ktx:1.6.2")
-  implementation("androidx.activity:activity-compose:1.8.2")
-  implementation("androidx.compose.ui:ui")
-  implementation("androidx.compose.material:material")
-  implementation("androidx.compose.material3:material3")
-  implementation("androidx.compose.ui:ui-tooling-preview")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-  implementation("androidx.navigation:navigation-compose:2.7.6")
-  implementation("androidx.compose.runtime:runtime:1.5.4")
-  implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
-  implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
-  implementation("androidx.core:core-ktx:1.12.0")
-  implementation("androidx.appcompat:appcompat:1.6.1")
-  implementation("com.google.android.material:material:1.11.0")
+  implementation(platform(libs.androidx.compose.bom))
+  implementation (libs.androidx.fragment.ktx)
+  implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.navigation.compose)
+  implementation(libs.androidx.runtime)
+  implementation(libs.androidx.runtime.livedata)
+  implementation(libs.androidx.hilt.navigation.compose)
+  implementation(libs.androidx.ui)
+  implementation(libs.androidx.ui.tooling.preview)
+  implementation(libs.androidx.material3)
+  debugImplementation(libs.androidx.ui.tooling)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.appcompat)
+  implementation(libs.material)
 
   // Network, Serialization and Logging
-  val ktorVersion = "2.3.6"
-  implementation("io.ktor:ktor-client-core:$ktorVersion")
-  implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-  implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+  implementation(libs.ktor.client.core)
+  implementation(libs.ktor.client.okhttp)
+  implementation(libs.ktor.serialization.kotlinx.json)
+  implementation(libs.ktor.client.content.negotiation)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
+  implementation(libs.kotlinx.serialization.json)
 
-  implementation("com.jakewharton.timber:timber:5.0.1")
-  implementation ("com.amplitude:android-sdk:2.37.0")
+  implementation(libs.timber)
+  implementation (libs.android.sdk)
 
   // DI Hilt
-  implementation("com.google.dagger:hilt-android:2.48")
-  kapt("com.google.dagger:hilt-android-compiler:2.48")
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.android.compiler)
 
   /**
    * GAM for Storyteller Ads
    */
-  implementation("com.google.android.gms:play-services-ads:22.6.0")
+  implementation(libs.play.services.ads)
+
+  implementation(libs.storyteller) // we need Storyteller SDK :upside_down_face: 🙃
 }

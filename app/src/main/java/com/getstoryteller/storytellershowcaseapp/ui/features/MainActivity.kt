@@ -1,6 +1,5 @@
-package com.getstoryteller.storytellershowcaseapp.ui.features.main
+package com.getstoryteller.storytellershowcaseapp.ui.features
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.compose.setContent
@@ -18,6 +17,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellershowcaseapp.ui.ShowcaseAppTheme
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainScreen
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import dagger.hilt.android.AndroidEntryPoint

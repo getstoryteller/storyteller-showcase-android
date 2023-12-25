@@ -76,12 +76,8 @@ fun MainScreen(
   ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
-  var navigationState by remember {
-    mutableStateOf(PageState.HOME)
-  }
-  var title by remember {
-    mutableStateOf("")
-  }
+  var navigationState by remember { mutableStateOf(PageState.HOME) }
+  var title by remember { mutableStateOf("") }
 
   var topBarVisible by remember {
     mutableStateOf(true)
