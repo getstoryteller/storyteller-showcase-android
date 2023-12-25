@@ -31,11 +31,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.contentColorFor
-import androidx.compose.material.primarySurface
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -159,7 +159,7 @@ fun Modifier.tabIndicatorOffset(
 fun TabRow(
   selectedTabIndex: Int,
   modifier: Modifier = Modifier,
-  backgroundColor: Color = MaterialTheme.colors.primarySurface,
+  backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
   contentColor: Color = contentColorFor(backgroundColor),
   indicator: @Composable @UiComposable
     (tabPositions: List<TabPosition>) -> Unit = @Composable { tabPositions ->
@@ -253,7 +253,7 @@ fun TabRow(
 fun StorytellerScrollableTabRow(
   selectedTabIndex: Int,
   modifier: Modifier = Modifier,
-  backgroundColor: Color = MaterialTheme.colors.primarySurface,
+  backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
   contentColor: Color = contentColorFor(backgroundColor),
   edgePadding: Dp = TabRowDefaults.ScrollableTabRowPadding,
   indicator: @Composable @UiComposable
@@ -396,7 +396,7 @@ object TabRowDefaults {
     thickness: Dp = DividerThickness,
     color: Color = LocalContentColor.current.copy(alpha = DividerOpacity)
   ) {
-    androidx.compose.material.Divider(modifier = modifier, thickness = thickness, color = color)
+    HorizontalDivider(modifier = modifier, thickness = thickness, color = color)
   }
 
   /**

@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,17 +24,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
-import com.getstoryteller.storytellershowcaseapp.ui.components.PullToRefresh
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabScreen(
   tabId: String,
@@ -55,8 +55,23 @@ fun TabScreen(
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
   val pageUiState by viewModel.uiState.collectAsState()
-  val refreshState =
-    rememberPullRefreshState(refreshing = pageUiState.isRefreshing, onRefresh = { viewModel.onRefresh() })
+
+  val refreshState = rememberPullToRefreshState()
+
+  if (refreshState.isRefreshing) {
+    LaunchedEffect(Unit) {
+      viewModel.onRefresh()
+    }
+  }
+
+  LaunchedEffect(pageUiState.isRefreshing) {
+    if (pageUiState.isRefreshing) {
+      refreshState.startRefresh()
+    } else {
+      refreshState.endRefresh()
+    }
+  }
+
   val listState = rememberLazyListState()
   val scope = rememberCoroutineScope()
   val listItems = pageUiState.tabItems
@@ -116,10 +131,8 @@ fun TabScreen(
 
   Box(modifier = Modifier
       .fillMaxSize()
-      .background(color = MaterialTheme.colors.background)
-      .pullRefresh(
-          state = refreshState
-      )
+      .background(color = MaterialTheme.colorScheme.background)
+      .nestedScroll(refreshState.nestedScrollConnection)
       .onGloballyPositioned {
           columnHeightPx = it.size.height
       }) {
@@ -143,10 +156,9 @@ fun TabScreen(
       }
     }
 
-    PullToRefresh(
+    PullToRefreshContainer(
       modifier = Modifier.align(Alignment.TopCenter),
       state = refreshState,
-      refreshing = pageUiState.isRefreshing || isRefreshing
     )
   }
 }

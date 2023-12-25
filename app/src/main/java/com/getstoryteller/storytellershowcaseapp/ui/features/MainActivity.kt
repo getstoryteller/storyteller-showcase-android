@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.os.BundleCompat
 import androidx.core.view.WindowCompat
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
       val navController = rememberNavController()
       ShowcaseAppTheme {
         Surface(
-          modifier = Modifier.background(color = MaterialTheme.colors.surface),
+          modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
         ) {
           MainScreen(
             activity = this,

@@ -20,17 +20,18 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -67,6 +68,7 @@ import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
@@ -89,7 +91,7 @@ fun MainScreen(
     )
   }
 
-  val topBarColor = MaterialTheme.colors.background
+  val topBarColor = MaterialTheme.colorScheme.background
   val isSystemDark = isSystemInDarkTheme()
 
   LaunchedEffect(navController.currentBackStackEntryAsState().value) {
@@ -108,68 +110,66 @@ fun MainScreen(
     if (topBarVisible) {
       TopAppBar(modifier = Modifier.padding(
         top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-      ),
-        backgroundColor = MaterialTheme.colors.background,
-        elevation = 0.dp,
-        contentColor = MaterialTheme.colors.onBackground,
-        title = {
-          if (navigationState != PageState.HOME) {
-            Text(text = title)
-          }
-        },
-        actions = {
-          if (navigationState == PageState.HOME) {
-            // The Storyteller SDK supports opening it's search experience using the
-            // Storyteller.openSearch method. This can be triggered from wherever you
-            // would like in your application. In this case, we show an example of doing
-            // it from a main nav bar button
+      ), title = {
+        if (navigationState != PageState.HOME) {
+          Text(text = title)
+        }
+      }, actions = {
+        if (navigationState == PageState.HOME) {
+          // The Storyteller SDK supports opening it's search experience using the
+          // Storyteller.openSearch method. This can be triggered from wherever you
+          // would like in your application. In this case, we show an example of doing
+          // it from a main nav bar button
 
-            IconButton(
-              onClick = {
-                Storyteller.openSearch(activity)
-              }, enabled = !mainPageUiState.isMainScreenLoading
-            ) {
-              Icon(
-                imageVector = Icons.Filled.Search, contentDescription = "Open Search", tint = MaterialTheme.colors.onBackground
-              )
-            }
-            IconButton(
-              onClick = {
-                navigationState = PageState.ACCOUNT
-                navController.navigate("home/account") {
-                  popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              }, enabled = !mainPageUiState.isMainScreenLoading
-            ) {
-              Icon(
-                imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "Open Account",
-                tint = MaterialTheme.colors.onBackground
-              )
-            }
-          }
-        },
-        navigationIcon = {
-          IconButton(onClick = {
-            navController.navigateUp()
-          }) {
-            if (navigationState != PageState.HOME) Icon(
-              imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = MaterialTheme.colors.onBackground
+          IconButton(
+            onClick = {
+              Storyteller.openSearch(activity)
+            }, enabled = !mainPageUiState.isMainScreenLoading
+          ) {
+            Icon(
+              imageVector = Icons.Filled.Search,
+              contentDescription = "Open Search",
+              tint = MaterialTheme.colorScheme.onBackground
             )
-            else {
-              Icon(
-                painter = painterResource(id = R.drawable.ic_logo_icon),
-                contentDescription = null,
-                tint = Color.Unspecified
-              )
-            }
-
           }
-        })
+          IconButton(
+            onClick = {
+              navigationState = PageState.ACCOUNT
+              navController.navigate("home/account") {
+                popUpTo(navController.graph.startDestinationId) {
+                  saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+              }
+            }, enabled = !mainPageUiState.isMainScreenLoading
+          ) {
+            Icon(
+              imageVector = Icons.Filled.AccountCircle,
+              contentDescription = "Open Account",
+              tint = MaterialTheme.colorScheme.onBackground
+            )
+          }
+        }
+      }, navigationIcon = {
+        IconButton(onClick = {
+          navController.navigateUp()
+        }) {
+          if (navigationState != PageState.HOME) Icon(
+            imageVector = Icons.Filled.ArrowBack,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onBackground
+          )
+          else {
+            Icon(
+              painter = painterResource(id = R.drawable.ic_logo_icon),
+              contentDescription = null,
+              tint = Color.Unspecified
+            )
+          }
+
+        }
+      })
     }
   }, bottomBar = {
     if (navigationState == PageState.LOGIN) return@Scaffold
@@ -190,7 +190,9 @@ fun MainScreen(
     )
   }) { innerPadding ->
     Box(
-      modifier = Modifier.fillMaxSize().padding(innerPadding)
+      modifier = Modifier
+          .fillMaxSize()
+          .padding(innerPadding)
     ) {
       NavHost(
         navController = navController, startDestination = "home"
@@ -317,9 +319,7 @@ fun MainScreen(
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
-              pageItemUiModel = it,
-              navController = navController,
-              config = mainPageUiState.config
+              pageItemUiModel = it, navController = navController, config = mainPageUiState.config
             )
           }
         }
@@ -337,9 +337,7 @@ fun MainScreen(
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
-              pageItemUiModel = it,
-              navController = navController,
-              config = mainPageUiState.config
+              pageItemUiModel = it, navController = navController, config = mainPageUiState.config
             )
           }
         }
@@ -365,6 +363,7 @@ inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
   else -> @Suppress("DEPRECATION") getParcelable(key) as? T
 }
 
+@Suppress("DEPRECATION")
 fun setStatusBarColor(activity: Activity, color: Color, useDarkIcons: Boolean) {
   activity.window.statusBarColor = color.toArgb()
 
@@ -374,7 +373,7 @@ fun setStatusBarColor(activity: Activity, color: Color, useDarkIcons: Boolean) {
       WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
     )
   } else {
-    @Suppress("DEPRECATION") activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
+    activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
       activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     } else {
       activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()

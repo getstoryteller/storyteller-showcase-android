@@ -13,15 +13,14 @@ import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -52,7 +51,6 @@ import com.getstoryteller.storytellershowcaseapp.R
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.LoginState
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.LoginState.Error
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
-import com.getstoryteller.storytellershowcaseapp.ui.LocalStorytellerColorsPalette
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -78,15 +76,15 @@ fun LoginDialog(
     val isDarkTheme = isSystemInDarkTheme()
     Surface(
       modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight()
-        .padding(start = 10.dp, end = 10.dp),
+          .fillMaxWidth()
+          .wrapContentHeight()
+          .padding(start = 10.dp, end = 10.dp),
       shape = RoundedCornerShape(8.dp)
     ) {
       Column(
         modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp)
+            .fillMaxWidth()
+            .padding(16.dp)
       ) {
         var text by rememberSaveable { mutableStateOf("") }
         val focusRequester = remember { FocusRequester() }
@@ -106,15 +104,15 @@ fun LoginDialog(
         )
         Text(
           modifier = Modifier
-            .padding(top = 16.dp)
-            .align(alignment = Alignment.CenterHorizontally),
+              .padding(top = 16.dp)
+              .align(alignment = Alignment.CenterHorizontally),
           text = stringResource(id = R.string.label_login_description)
         )
 
         OutlinedTextField(modifier = Modifier
-          .fillMaxWidth()
-          .padding(top = 16.dp)
-          .focusRequester(focusRequester),
+            .fillMaxWidth()
+            .padding(top = 16.dp)
+            .focusRequester(focusRequester),
           value = text,
           onValueChange = {
             text = it
@@ -134,7 +132,7 @@ fun LoginDialog(
           singleLine = true,
           isError = loginState is Error,
           placeholder = { Text(text = stringResource(id = R.string.label_login_enter_code)) },
-          colors = TextFieldDefaults.outlinedTextFieldColors(backgroundColor = LocalStorytellerColorsPalette.current.background),
+          // colors = OutlinedTextFieldDefaults.colors(LocalStorytellerColorsPalette.current.background),
           leadingIcon = {
             Image(
               painter = painterResource(id = R.drawable.ic_key), contentDescription = ""
@@ -154,13 +152,13 @@ fun LoginDialog(
                 width = 12.sp, height = 12.sp, placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline
               )
             ) {
-              Icon(painterResource(id = R.drawable.ic_error), "", tint = colors.error)
+              Icon(painterResource(id = R.drawable.ic_error), "", tint = MaterialTheme.colorScheme.error)
             })
           )
 
           Text(
             text = annotatedText,
-            color = colors.error,
+            color = MaterialTheme.colorScheme.error,
             fontSize = 12.sp,
             modifier = Modifier.padding(top = 8.dp),
             inlineContent = inlineContent,
@@ -168,12 +166,11 @@ fun LoginDialog(
         }
 
         Button(modifier = Modifier
-          .height(48.dp)
-          .padding(top = 8.dp)
-          .fillMaxWidth(),
+            .height(48.dp)
+            .padding(top = 8.dp)
+            .fillMaxWidth(),
           colors = ButtonDefaults.buttonColors(
-            disabledBackgroundColor = colors.primary,
-            disabledContentColor = colors.onPrimary
+            disabledContentColor = MaterialTheme.colorScheme.onPrimary
           ),
           enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
@@ -183,9 +180,10 @@ fun LoginDialog(
           when (loginState) {
             LoginState.Loading, LoginState.Success -> {
               CircularProgressIndicator(
-                modifier = Modifier.size(24.dp), color = colors.onPrimary
+                modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary
               )
             }
+
             else -> {
               Text(text = stringResource(id = R.string.action_login_verify))
             }

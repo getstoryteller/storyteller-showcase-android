@@ -67,7 +67,7 @@ android {
 }
 
 dependencies {
-  implementation(platform(libs.androidx.compose.bom))
+  implementation(platform(libs.androidx.compose.bom.beta))
   implementation (libs.androidx.fragment.ktx)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -77,7 +77,6 @@ dependencies {
   implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.androidx.ui)
   implementation(libs.androidx.ui.tooling.preview)
-  implementation(libs.androidx.material2)
   implementation(libs.androidx.material3)
   debugImplementation(libs.androidx.ui.tooling)
   implementation(libs.androidx.core.ktx)

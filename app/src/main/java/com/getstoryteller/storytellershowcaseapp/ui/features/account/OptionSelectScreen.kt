@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -53,28 +53,26 @@ fun OptionSelectScreen(
 
   LazyColumn(
     modifier = Modifier
-      .fillMaxSize()
-      .padding(top = 20.dp)
-      .background(color = MaterialTheme.colors.surface)
-      .navigationBarsPadding()
+        .fillMaxSize()
+        .padding(top = 20.dp)
+        .background(color = MaterialTheme.colorScheme.surface)
+        .navigationBarsPadding()
   ) {
     items(uiState.options, key = { it.key ?: uiState.options.indexOf(it) }) { model ->
       Row(
         modifier = Modifier
-          .fillMaxWidth()
-          .height(40.dp)
-          .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
-          .clickable {
-            viewModel.selectOption(model.key)
-          },
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background)
+            .clickable {
+                viewModel.selectOption(model.key)
+            }, verticalAlignment = Alignment.CenterVertically
       ) {
         RadioButton(selected = uiState.selectedOption == model.key, onClick = {
           viewModel.selectOption(model.key)
         })
         Text(
-          color = MaterialTheme.colors.onBackground,
-          text = model.value
+          color = MaterialTheme.colorScheme.onBackground, text = model.value
         )
       }
     }
@@ -82,8 +80,5 @@ fun OptionSelectScreen(
 }
 
 enum class OptionSelectType(val title: String) {
-  HAS_ACCOUNT("Has Account"),
-  LANGUAGE("Language"),
-  TEAM("Favorite Team"),
-  EVENT_TRACKING("Allow Event Tracking"),
+  HAS_ACCOUNT("Has Account"), LANGUAGE("Language"), TEAM("Favorite Team"), EVENT_TRACKING("Allow Event Tracking"),
 }

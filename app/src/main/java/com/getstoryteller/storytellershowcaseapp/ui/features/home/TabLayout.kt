@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -66,7 +66,7 @@ fun TabLayout(
 
   Column(modifier = Modifier.fillMaxSize()) {
     StorytellerScrollableTabRow(selectedTabIndex = currentPage.value,
-      backgroundColor = MaterialTheme.colors.background,
+      backgroundColor = MaterialTheme.colorScheme.background,
       contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
       divider = {}) {
@@ -81,7 +81,7 @@ fun TabLayout(
             text = tab.name,
             fontSize = 16.sp,
             fontWeight = FontWeight.W600,
-            color = if (isSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+            color = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
           )
         }, selected = isSelected, onClick = {
           val interceptor = topBarNavigationInterceptor
