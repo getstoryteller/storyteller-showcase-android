@@ -69,7 +69,7 @@ fun TabLayout(
     StorytellerScrollableTabRow(
       modifier = Modifier.zIndex(1F),
       selectedTabIndex = currentPage.value,
-      backgroundColor = MaterialTheme.colorScheme.background,
+      backgroundColor = MaterialTheme.colorScheme.surface,
       contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
       divider = {},
@@ -103,7 +103,8 @@ fun TabLayout(
     }
     HorizontalPager(
       state = pagerState,
-      beyondBoundsPageCount = 0 /* This needs to be zero or nav interception will not work */,
+      // This needs to be zero or nav interception will not work
+      beyondBoundsPageCount = 0,
       key = { tabs[it].name },
     ) { pageIndex ->
       val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }

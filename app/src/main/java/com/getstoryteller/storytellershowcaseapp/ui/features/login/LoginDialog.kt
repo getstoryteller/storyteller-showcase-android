@@ -195,6 +195,7 @@ fun LoginDialog(
               .fillMaxWidth(),
           colors =
             ButtonDefaults.buttonColors(
+              disabledContainerColor = MaterialTheme.colorScheme.primary,
               disabledContentColor = MaterialTheme.colorScheme.onPrimary,
             ),
           enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,

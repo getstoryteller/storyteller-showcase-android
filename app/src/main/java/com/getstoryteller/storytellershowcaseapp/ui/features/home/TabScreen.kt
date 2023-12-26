@@ -134,7 +134,7 @@ fun TabScreen(
     modifier =
       Modifier
         .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.background)
+        .background(color = MaterialTheme.colorScheme.surface)
         .nestedScroll(refreshState.nestedScrollConnection)
         .onGloballyPositioned {
           columnHeightPx = it.size.height

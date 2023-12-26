@@ -41,6 +41,7 @@ fun BottomNavigationBar(
   NavigationBar(
     modifier = Modifier,
     tonalElevation = 0.dp,
+    containerColor = MaterialTheme.colorScheme.background,
   ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val homeSelected = navBackStackEntry?.destination?.route == "home"

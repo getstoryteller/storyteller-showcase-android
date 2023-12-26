@@ -2,19 +2,17 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,19 +63,15 @@ fun AccountScreen(
       navController.navigate("home")
     }
   }
-  Box(
+  Surface(
     modifier =
       modifier
-        .fillMaxSize()
-        .background(
-          color = MaterialTheme.colorScheme.surface,
-        ),
+        .fillMaxSize(),
   ) {
     Column(
       modifier =
         Modifier
-          .fillMaxWidth()
-          .wrapContentHeight(),
+          .fillMaxWidth(),
     ) {
       config?.let {
         Text(
@@ -150,14 +144,13 @@ fun SettingsRow(
   onClick: () -> Unit = {},
   content: @Composable () -> Unit = {},
 ) {
-  val isDarkTheme = isSystemInDarkTheme()
   Row(
     modifier =
       Modifier
         .fillMaxWidth()
         .height(56.dp)
         .background(
-          if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+          MaterialTheme.colorScheme.tertiaryContainer,
         )
         .clickable {
           onClick()
