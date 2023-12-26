@@ -54,7 +54,7 @@ fun AccountScreen(
   viewModel: AccountViewModel,
   sharedViewModel: MainViewModel,
   config: Config?,
-  onLogout: () -> Unit
+  onLogout: () -> Unit,
 ) {
   val context = LocalContext.current
   val isLoggedOut by viewModel.isLoggedOut.collectAsState()
@@ -65,22 +65,24 @@ fun AccountScreen(
     }
   }
   Box(
-    modifier = Modifier
+    modifier =
+      Modifier
         .fillMaxSize()
         .background(
-            color = MaterialTheme.colorScheme.surface
-        )
+          color = MaterialTheme.colorScheme.surface,
+        ),
   ) {
     Column(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxWidth()
-          .wrapContentHeight()
+          .wrapContentHeight(),
     ) {
       config?.let {
         Text(
           text = "PERSONALISATION",
           modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-          color = MaterialTheme.colorScheme.onSurface
+          color = MaterialTheme.colorScheme.onSurface,
         )
         if (it.teams.isNotEmpty()) {
           SettingsRow(text = "Favorite Team", arrowVisible = true, onClick = {
@@ -99,7 +101,7 @@ fun AccountScreen(
       Text(
         text = "SETTINGS",
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-        color = MaterialTheme.colorScheme.onSurface
+        color = MaterialTheme.colorScheme.onSurface,
       )
       SettingsRow(text = "Allow Event Tracking", arrowVisible = true, onClick = {
         navController.navigate("account/${OptionSelectType.EVENT_TRACKING.name}")
@@ -123,7 +125,7 @@ fun AccountScreen(
       Text(
         text = "APP INFO",
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-        color = MaterialTheme.colorScheme.onSurface
+        color = MaterialTheme.colorScheme.onSurface,
       )
       SettingsRow(text = "Version", onClick = {
         context.copyToClipboard(context.formatterApplicationVersion)
@@ -132,13 +134,12 @@ fun AccountScreen(
         Text(
           text = context.formatterApplicationVersion,
           modifier = Modifier.padding(end = 16.dp),
-          color = LocalStorytellerColorsPalette.current.subtitle
+          color = LocalStorytellerColorsPalette.current.subtitle,
         )
       }
     }
   }
 }
-
 
 @Composable
 fun SettingsRow(
@@ -146,22 +147,27 @@ fun SettingsRow(
   arrowVisible: Boolean = false,
   color: Color = MaterialTheme.colorScheme.onBackground,
   onClick: () -> Unit = {},
-  content: @Composable () -> Unit = {}
+  content: @Composable () -> Unit = {},
 ) {
   val isDarkTheme = isSystemInDarkTheme()
   Row(
-    modifier = Modifier
+    modifier =
+      Modifier
         .fillMaxWidth()
         .height(56.dp)
-        .background(if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background)
+        .background(
+          if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+        )
         .clickable {
-            onClick()
-        }, verticalAlignment = Alignment.CenterVertically
+          onClick()
+        },
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
       text = text,
       color = color,
-      modifier = Modifier
+      modifier =
+        Modifier
           .padding(start = 16.dp)
           .weight(1f),
     )
@@ -170,7 +176,7 @@ fun SettingsRow(
         imageVector = Icons.Default.KeyboardArrowRight,
         contentDescription = "",
         modifier = Modifier.padding(end = 16.dp),
-        tint = MaterialTheme.colorScheme.onBackground
+        tint = MaterialTheme.colorScheme.onBackground,
       )
     }
     content()

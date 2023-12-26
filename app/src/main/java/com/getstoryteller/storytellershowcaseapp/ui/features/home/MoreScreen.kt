@@ -28,9 +28,8 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.Storyte
 fun MoreScreen(
   pageItemUiModel: PageItemUiModel,
   navController: NavController,
-  config: Config?
+  config: Config?,
 ) {
-
   var isRefreshing by remember(pageItemUiModel) { mutableStateOf(false) }
   val refreshState = rememberStorytellerPullToRefreshState()
 
@@ -41,44 +40,53 @@ fun MoreScreen(
   }
 
   Box(
-    modifier = Modifier
+    modifier =
+      Modifier
         .fillMaxSize()
         .nestedScroll(refreshState.nestedScrollConnection)
         .navigationBarsPadding()
-        .padding(bottom = 16.dp)
+        .padding(bottom = 16.dp),
   ) {
     StorytellerItem(
-      uiModel = pageItemUiModel.copy(
-        tileType = TileType.RECTANGULAR,
-        layout = LayoutType.GRID
-      ),
+      uiModel =
+        pageItemUiModel.copy(
+          tileType = TileType.RECTANGULAR,
+          layout = LayoutType.GRID,
+        ),
       isRefreshing = isRefreshing,
       navController = navController,
       roundTheme = config?.roundTheme,
-      squareTheme = config?.squareTheme?.let {
-        it.copy(
-          light = it.light.copy(
-            lists = it.light.lists.copy(
-              grid = it.light.lists.grid.copy(
-                topInset = 12
-              )
-            )
-          ),
-          dark = it.dark.copy(
-            lists = it.dark.lists.copy(
-              grid = it.dark.lists.grid.copy(
-                topInset = 12
-              )
-            )
+      squareTheme =
+        config?.squareTheme?.let {
+          it.copy(
+            light =
+              it.light.copy(
+                lists =
+                  it.light.lists.copy(
+                    grid =
+                      it.light.lists.grid.copy(
+                        topInset = 12,
+                      ),
+                  ),
+              ),
+            dark =
+              it.dark.copy(
+                lists =
+                  it.dark.lists.copy(
+                    grid =
+                      it.dark.lists.grid.copy(
+                        topInset = 12,
+                      ),
+                  ),
+              ),
           )
-        )
-      },
+        },
       disableHeader = true,
       isScrollable = true,
       onShouldHide = {
         refreshState.endRefresh()
         isRefreshing = false
-      }
+      },
     )
 
     PullToRefreshContainer(

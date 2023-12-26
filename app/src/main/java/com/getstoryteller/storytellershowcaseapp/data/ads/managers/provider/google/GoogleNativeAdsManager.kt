@@ -20,38 +20,46 @@ import javax.inject.Singleton
  *  class which the Storyteller SDK needs to render the ad
  */
 @Singleton
-class GoogleNativeAdsManager @Inject constructor(@ApplicationContext private val context: Context) {
-
-  fun requestAd(
-    adUnit: String,
-    formatId: String,
-    customMap: Map<String, String>,
-    onAdDataLoaded: (ad: NativeCustomFormatAd) -> Unit,
-    onAdDataFailed: (error: String) -> Unit
+class GoogleNativeAdsManager
+  @Inject
+  constructor(
+    @ApplicationContext private val context: Context,
   ) {
-    val adLoader = AdLoader.Builder(context, adUnit).forCustomFormatAd(formatId, { nativeCustomFormatAd ->
-        onAdDataLoaded(nativeCustomFormatAd)
-      }) { nativeCustomFormatAd, s ->
-        Timber.tag("StorytellerAds").d("Click events are handled natively $nativeCustomFormatAd $s")
-      }.withAdListener(object : AdListener() {
-        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-          super.onAdFailedToLoad(loadAdError)
-          onAdDataFailed(loadAdError.toString())
+    fun requestAd(
+      adUnit: String,
+      formatId: String,
+      customMap: Map<String, String>,
+      onAdDataLoaded: (ad: NativeCustomFormatAd) -> Unit,
+      onAdDataFailed: (error: String) -> Unit,
+    ) {
+      val adLoader =
+        AdLoader.Builder(context, adUnit).forCustomFormatAd(formatId, { nativeCustomFormatAd ->
+          onAdDataLoaded(nativeCustomFormatAd)
+        }) { nativeCustomFormatAd, s ->
+          Timber.tag("StorytellerAds").d("Click events are handled natively $nativeCustomFormatAd $s")
+        }.withAdListener(
+          object : AdListener() {
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+              super.onAdFailedToLoad(loadAdError)
+              onAdDataFailed(loadAdError.toString())
+            }
+          },
+        ).build()
+
+      val bundle = baseAdParamBundle
+
+      adLoader.loadAd(
+        AdManagerAdRequest.Builder().apply { customMap.forEach { addCustomTargeting(it.key, it.value) } }
+          .addNetworkExtrasBundle(AdMobAdapter::class.java, bundle).build(),
+      )
+    }
+
+    companion object {
+      private const val TAG = "NativeAdsManager"
+
+      private val baseAdParamBundle =
+        Bundle().apply {
+          // add bundle params
         }
-      }).build()
-
-    val bundle = baseAdParamBundle
-
-    adLoader.loadAd(AdManagerAdRequest.Builder().apply { customMap.forEach { addCustomTargeting(it.key, it.value) } }
-      .addNetworkExtrasBundle(AdMobAdapter::class.java, bundle).build())
-  }
-
-  companion object {
-    private const val TAG = "NativeAdsManager"
-
-    private val baseAdParamBundle = Bundle().apply {
-      //add bundle params
     }
   }
-}
-

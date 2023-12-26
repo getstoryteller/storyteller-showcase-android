@@ -22,17 +22,21 @@ object NetworkModule {
   @OptIn(ExperimentalSerializationApi::class)
   @Singleton
   @Provides
-  fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
-    install(DefaultRequest) {
-      url(BuildConfig.API_BASE_URL)
+  fun provideHttpClient(): HttpClient =
+    HttpClient(OkHttp) {
+      install(DefaultRequest) {
+        url(BuildConfig.API_BASE_URL)
+      }
+      install(ContentNegotiation) {
+        json(
+          json =
+            Json {
+              prettyPrint = true
+              isLenient = true
+              ignoreUnknownKeys = true
+              explicitNulls = false
+            },
+        )
+      }
     }
-    install(ContentNegotiation) {
-      json(json = Json {
-        prettyPrint = true
-        isLenient = true
-        ignoreUnknownKeys = true
-        explicitNulls = false
-      })
-    }
-  }
 }

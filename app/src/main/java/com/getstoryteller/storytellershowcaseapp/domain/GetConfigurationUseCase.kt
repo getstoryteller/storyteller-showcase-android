@@ -18,17 +18,18 @@ interface GetConfigurationUseCase {
 
 class GetConfigurationUseCaseImpl(
   private val tenantRepository: TenantRepository,
-  private val context: Context
+  private val context: Context,
 ) : GetConfigurationUseCase {
   override suspend fun getConfiguration(): Config {
     val settings = tenantRepository.getTenantSettings()
     val languages = tenantRepository.getLanguages()
     val teams = tenantRepository.getTeams()
-    val tabs = if (settings.tabsEnabled) {
-      tenantRepository.getTabs()
-    } else {
-      emptyList()
-    }
+    val tabs =
+      if (settings.tabsEnabled) {
+        tenantRepository.getTabs()
+      } else {
+        emptyList()
+      }
     return Config(
       configId = UUID.randomUUID().toString(),
       topLevelCollectionId = settings.topLevelClipsCollection,
@@ -37,7 +38,7 @@ class GetConfigurationUseCaseImpl(
       teams = teams,
       tabs = tabs,
       roundTheme = roundTheme,
-      squareTheme = squareTheme
+      squareTheme = squareTheme,
     )
   }
 
@@ -105,33 +106,40 @@ class GetConfigurationUseCaseImpl(
   private val roundTheme: UiTheme
     get() {
       return squareTheme.copy(
-        light = squareTheme.light.copy(
-          storyTiles = squareTheme.light.storyTiles.copy(
-            title = squareTheme.light.storyTiles.title.copy(
-              alignment = Gravity.CENTER,
-              titleSize = 10,
-              lineHeight = 13
-            ),
-            circularTile = squareTheme.light.storyTiles.circularTile.copy(
-              unreadIndicatorColor = ofHexCode("#C8102E")
-            )
-          )
-        ),
-        dark = squareTheme.dark.copy(
-          storyTiles = squareTheme.dark.storyTiles.copy(
-            title = squareTheme.dark.storyTiles.title.copy(
-              alignment = Gravity.CENTER,
-              titleSize = 10,
-              lineHeight = 13
-            ),
-            circularTile = squareTheme.dark.storyTiles.circularTile.copy(
-              unreadIndicatorColor = ofHexCode("#C8102E")
-            )
-          )
-        )
+        light =
+          squareTheme.light.copy(
+            storyTiles =
+              squareTheme.light.storyTiles.copy(
+                title =
+                  squareTheme.light.storyTiles.title.copy(
+                    alignment = Gravity.CENTER,
+                    titleSize = 10,
+                    lineHeight = 13,
+                  ),
+                circularTile =
+                  squareTheme.light.storyTiles.circularTile.copy(
+                    unreadIndicatorColor = ofHexCode("#C8102E"),
+                  ),
+              ),
+          ),
+        dark =
+          squareTheme.dark.copy(
+            storyTiles =
+              squareTheme.dark.storyTiles.copy(
+                title =
+                  squareTheme.dark.storyTiles.title.copy(
+                    alignment = Gravity.CENTER,
+                    titleSize = 10,
+                    lineHeight = 13,
+                  ),
+                circularTile =
+                  squareTheme.dark.storyTiles.circularTile.copy(
+                    unreadIndicatorColor = ofHexCode("#C8102E"),
+                  ),
+              ),
+          ),
       )
     }
-
 }
 
 @Stable

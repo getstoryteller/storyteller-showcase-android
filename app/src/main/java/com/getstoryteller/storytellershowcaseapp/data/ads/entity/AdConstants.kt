@@ -1,7 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.data.ads.entity
 
 class AdConstants {
-
   companion object {
     const val CREATIVE_ID = "CreativeID"
     const val ADVERTISER_NAME = "AdvertiserName"

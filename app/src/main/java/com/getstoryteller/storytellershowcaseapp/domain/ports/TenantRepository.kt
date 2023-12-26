@@ -7,9 +7,14 @@ import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsD
 
 interface TenantRepository {
   suspend fun getTenantSettings(): TenantSettingsDto
+
   suspend fun getLanguages(): List<KeyValueDto>
+
   suspend fun getTeams(): List<KeyValueDto>
+
   suspend fun getTabs(): List<TabDto>
+
   suspend fun getTabForId(tabId: String): List<StorytellerItemApiDto>
+
   suspend fun getHomePage(): List<StorytellerItemApiDto>
 }

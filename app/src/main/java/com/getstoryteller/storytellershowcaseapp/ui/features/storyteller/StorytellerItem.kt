@@ -59,35 +59,37 @@ fun StorytellerItem(
   squareTheme: UiTheme?,
   disableHeader: Boolean = false,
   isScrollable: Boolean = false,
-  onShouldHide: () -> Unit = {}
+  onShouldHide: () -> Unit = {},
 ) {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
+    modifier =
+      Modifier
+        .fillMaxWidth(),
   ) {
-    val uiStyle = if (isSystemInDarkTheme()) {
-      StorytellerListViewStyle.DARK
-    } else {
-      StorytellerListViewStyle.LIGHT
-    }
+    val uiStyle =
+      if (isSystemInDarkTheme()) {
+        StorytellerListViewStyle.DARK
+      } else {
+        StorytellerListViewStyle.LIGHT
+      }
     if (uiModel.title.isNotEmpty() && !disableHeader) {
       ListHeader(
         text = uiModel.title,
         moreButtonTitle = uiModel.moreButtonTitle,
         collectionId = uiModel.collectionId,
         categories = uiModel.categories,
-        onMoreClicked = { collectionId, categories ->
+        onMoreClicked = { collectionId, _ ->
           val serializedModel = Json.encodeToString(uiModel)
           if (!collectionId.isNullOrEmpty()) {
-            navController.navigate("moreClips/${serializedModel}")
+            navController.navigate("moreClips/$serializedModel")
           } else {
-            navController.navigate("moreStories/${serializedModel}")
+            navController.navigate("moreStories/$serializedModel")
           }
-        }
+        },
       )
     }
     CompositionLocalProvider(
-      LocalOverscrollConfiguration provides null
+      LocalOverscrollConfiguration provides null,
     ) {
       StorytellerComposable(uiModel, squareTheme, roundTheme, uiStyle, isRefreshing, isScrollable, onShouldHide)
     }
@@ -102,120 +104,143 @@ private fun StorytellerComposable(
   uiStyle: StorytellerListViewStyle,
   isRefreshing: Boolean,
   isScrollable: Boolean,
-  onShouldHide: () -> Unit
+  onShouldHide: () -> Unit,
 ) {
   when (uiModel.type) {
     VideoType.STORY -> {
       when (uiModel.layout) {
         LayoutType.ROW -> {
-          val bottomPadding = remember {
-            if (uiModel.tileType == TileType.ROUND) {
-              36.dp
-            } else {
-              0.dp
+          val bottomPadding =
+            remember {
+              if (uiModel.tileType == TileType.ROUND) {
+                36.dp
+              } else {
+                0.dp
+              }
             }
-          }
           StorytellerStoriesRow(
-            modifier = Modifier
+            modifier =
+              Modifier
                 .fillMaxWidth()
                 .height(uiModel.getRowHeight())
                 .padding(top = 8.dp, bottom = bottomPadding),
-            dataModel = StorytellerStoriesDataModel(
-              theme = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> squareTheme
-                TileType.ROUND -> roundTheme
-              },
-              uiStyle = uiStyle,
-              displayLimit = uiModel.displayLimit,
-              categories = uiModel.categories,
-              cellType = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                TileType.ROUND -> StorytellerListViewCellType.ROUND
-              }
-            ),
+            dataModel =
+              StorytellerStoriesDataModel(
+                theme =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> squareTheme
+                    TileType.ROUND -> roundTheme
+                  },
+                uiStyle = uiStyle,
+                displayLimit = uiModel.displayLimit,
+                categories = uiModel.categories,
+                cellType =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                    TileType.ROUND -> StorytellerListViewCellType.ROUND
+                  },
+              ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
           )
         }
 
         LayoutType.GRID -> {
           StorytellerStoriesGrid(
-            modifier = Modifier
+            modifier =
+              Modifier
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp),
-            dataModel = StorytellerStoriesDataModel(
-              theme = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> squareTheme
-                TileType.ROUND -> roundTheme
-              },
-              uiStyle = uiStyle,
-              displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
-              categories = uiModel.categories,
-              cellType = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                TileType.ROUND -> StorytellerListViewCellType.ROUND
-              }
-            ),
+            dataModel =
+              StorytellerStoriesDataModel(
+                theme =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> squareTheme
+                    TileType.ROUND -> roundTheme
+                  },
+                uiStyle = uiStyle,
+                displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
+                categories = uiModel.categories,
+                cellType =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                    TileType.ROUND -> StorytellerListViewCellType.ROUND
+                  },
+              ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = isScrollable,
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
           )
         }
 
         LayoutType.SINGLETON -> {
           StorytellerStoriesGrid(
-            modifier = Modifier
+            modifier =
+              Modifier
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp),
-            dataModel = StorytellerStoriesDataModel(
-              theme = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> squareTheme
-                TileType.ROUND -> roundTheme
-              }?.let {
-                it.copy(
-                  light = it.light.copy(
-                    lists = it.light.lists.copy(
-                      grid = it.light.lists.grid.copy(
-                        topInset = 0,
-                        columns = 1
-                      )
-                    ),
-                    storyTiles = it.light.storyTiles.copy(
-                      title = it.light.storyTiles.title.copy(
-                        titleSize = 21,
-                        alignment = Gravity.START,
-                        lineHeight = 24
-                      )
+            dataModel =
+              StorytellerStoriesDataModel(
+                theme =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> squareTheme
+                    TileType.ROUND -> roundTheme
+                  }?.let {
+                    it.copy(
+                      light =
+                        it.light.copy(
+                          lists =
+                            it.light.lists.copy(
+                              grid =
+                                it.light.lists.grid.copy(
+                                  topInset = 0,
+                                  columns = 1,
+                                ),
+                            ),
+                          storyTiles =
+                            it.light.storyTiles.copy(
+                              title =
+                                it.light.storyTiles.title.copy(
+                                  titleSize = 21,
+                                  alignment = Gravity.START,
+                                  lineHeight = 24,
+                                ),
+                            ),
+                        ),
+                      dark =
+                        it.dark.copy(
+                          lists =
+                            it.dark.lists.copy(
+                              grid =
+                                it.dark.lists.grid.copy(
+                                  topInset = 0,
+                                  columns = 1,
+                                ),
+                            ),
+                          storyTiles =
+                            it.dark.storyTiles.copy(
+                              title =
+                                it.dark.storyTiles.title.copy(
+                                  titleSize = 21,
+                                  alignment = Gravity.START,
+                                  lineHeight = 24,
+                                ),
+                            ),
+                        ),
                     )
-                  ),
-                  dark = it.dark.copy(
-                    lists = it.dark.lists.copy(
-                      grid = it.dark.lists.grid.copy(
-                        topInset = 0,
-                        columns = 1
-                      )
-                    ),
-                    storyTiles = it.dark.storyTiles.copy(
-                      title = it.dark.storyTiles.title.copy(
-                        titleSize = 21,
-                        alignment = Gravity.START,
-                        lineHeight = 24
-                      )
-                    )
-                  )
-                )
-              },
-              uiStyle = uiStyle,
-              displayLimit = 1,
-              categories = uiModel.categories,
-              cellType = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                TileType.ROUND -> StorytellerListViewCellType.ROUND
-              }
-            ),
+                  },
+                uiStyle = uiStyle,
+                displayLimit = 1,
+                categories = uiModel.categories,
+                cellType =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                    TileType.ROUND -> StorytellerListViewCellType.ROUND
+                  },
+              ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = false,
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
           )
         }
       }
@@ -225,106 +250,128 @@ private fun StorytellerComposable(
       when (uiModel.layout) {
         LayoutType.ROW -> {
           StorytellerClipsRow(
-            modifier = Modifier
+            modifier =
+              Modifier
                 .fillMaxWidth()
                 .height(uiModel.getRowHeight())
                 .padding(bottom = 15.dp),
-            dataModel = StorytellerClipsDataModel(
-              theme = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> squareTheme
-                TileType.ROUND -> roundTheme
-              },
-              uiStyle = uiStyle,
-              displayLimit = uiModel.displayLimit,
-              collection = uiModel.collectionId ?: "",
-              cellType = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                TileType.ROUND -> StorytellerListViewCellType.ROUND
-              }
-            ),
+            dataModel =
+              StorytellerClipsDataModel(
+                theme =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> squareTheme
+                    TileType.ROUND -> roundTheme
+                  },
+                uiStyle = uiStyle,
+                displayLimit = uiModel.displayLimit,
+                collection = uiModel.collectionId ?: "",
+                cellType =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                    TileType.ROUND -> StorytellerListViewCellType.ROUND
+                  },
+              ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
           )
         }
 
         LayoutType.SINGLETON -> {
           StorytellerClipsGrid(
-            modifier = Modifier
+            modifier =
+              Modifier
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp),
-            dataModel = StorytellerClipsDataModel(
-              theme = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> squareTheme
-                TileType.ROUND -> roundTheme
-              }?.let {
-                it.copy(
-                  light = it.light.copy(
-                    lists = it.light.lists.copy(
-                      grid = it.light.lists.grid.copy(
-                        topInset = 0,
-                        columns = 1
-                      )
-                    ),
-                    storyTiles = it.light.storyTiles.copy(
-                      title = it.light.storyTiles.title.copy(
-                        titleSize = 21,
-                        alignment = Gravity.START,
-                        lineHeight = 24
-                      )
+            dataModel =
+              StorytellerClipsDataModel(
+                theme =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> squareTheme
+                    TileType.ROUND -> roundTheme
+                  }?.let {
+                    it.copy(
+                      light =
+                        it.light.copy(
+                          lists =
+                            it.light.lists.copy(
+                              grid =
+                                it.light.lists.grid.copy(
+                                  topInset = 0,
+                                  columns = 1,
+                                ),
+                            ),
+                          storyTiles =
+                            it.light.storyTiles.copy(
+                              title =
+                                it.light.storyTiles.title.copy(
+                                  titleSize = 21,
+                                  alignment = Gravity.START,
+                                  lineHeight = 24,
+                                ),
+                            ),
+                        ),
+                      dark =
+                        it.dark.copy(
+                          lists =
+                            it.dark.lists.copy(
+                              grid =
+                                it.dark.lists.grid.copy(
+                                  topInset = 0,
+                                  columns = 1,
+                                ),
+                            ),
+                          storyTiles =
+                            it.dark.storyTiles.copy(
+                              title =
+                                it.dark.storyTiles.title.copy(
+                                  titleSize = 21,
+                                  alignment = Gravity.START,
+                                  lineHeight = 24,
+                                ),
+                            ),
+                        ),
                     )
-                  ),
-                  dark = it.dark.copy(
-                    lists = it.dark.lists.copy(
-                      grid = it.dark.lists.grid.copy(
-                        topInset = 0,
-                        columns = 1
-                      )
-                    ),
-                    storyTiles = it.dark.storyTiles.copy(
-                      title = it.dark.storyTiles.title.copy(
-                        titleSize = 21,
-                        alignment = Gravity.START,
-                        lineHeight = 24
-                      )
-                    )
-                  )
-                )
-              },
-              uiStyle = uiStyle,
-              displayLimit = 1,
-              collection = uiModel.collectionId ?: "",
-              cellType = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                TileType.ROUND -> StorytellerListViewCellType.ROUND
-              }
-            ),
+                  },
+                uiStyle = uiStyle,
+                displayLimit = 1,
+                collection = uiModel.collectionId ?: "",
+                cellType =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                    TileType.ROUND -> StorytellerListViewCellType.ROUND
+                  },
+              ),
             isScrollable = false,
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
           )
         }
 
         LayoutType.GRID -> {
           StorytellerClipsGrid(
-            modifier = Modifier
+            modifier =
+              Modifier
                 .fillMaxWidth()
                 .padding(start = 12.dp, end = 12.dp),
-            dataModel = StorytellerClipsDataModel(
-              theme = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> squareTheme
-                TileType.ROUND -> roundTheme
-              },
-              uiStyle = uiStyle,
-              displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
-              collection = uiModel.collectionId ?: "",
-              cellType = when (uiModel.tileType) {
-                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                TileType.ROUND -> StorytellerListViewCellType.ROUND
-              }
-            ),
+            dataModel =
+              StorytellerClipsDataModel(
+                theme =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> squareTheme
+                    TileType.ROUND -> roundTheme
+                  },
+                uiStyle = uiStyle,
+                displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
+                collection = uiModel.collectionId ?: "",
+                cellType =
+                  when (uiModel.tileType) {
+                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                    TileType.ROUND -> StorytellerListViewCellType.ROUND
+                  },
+              ),
             isScrollable = isScrollable,
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
           )
         }
       }

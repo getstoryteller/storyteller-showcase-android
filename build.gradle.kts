@@ -6,7 +6,7 @@ plugins {
   alias(libs.plugins.jetbrainsKotlinParcelize) apply false
   alias(libs.plugins.jetbrainsKotlinSerialization) apply false
   alias(libs.plugins.hilt) apply false
-  id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+  alias(libs.plugins.ktlint) apply false
 }
 
 tasks.create<Delete>("clean") {

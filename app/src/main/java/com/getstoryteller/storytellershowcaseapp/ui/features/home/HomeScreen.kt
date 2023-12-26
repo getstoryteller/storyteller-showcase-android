@@ -41,7 +41,6 @@ fun HomeScreen(
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   onNavigateToLogin: () -> Unit = {},
 ) {
-
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
     config?.let {
       viewModel.loadHomePage(it)
@@ -73,12 +72,13 @@ fun HomeScreen(
     }
   }
   Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .nestedScroll(refreshState.nestedScrollConnection)
-      .onGloballyPositioned {
-        columnHeightPx = it.size.height
-      }
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .nestedScroll(refreshState.nestedScrollConnection)
+        .onGloballyPositioned {
+          columnHeightPx = it.size.height
+        },
   ) {
     if (!pageUiState.tabsEnabled) {
       LazyColumn(
@@ -86,7 +86,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(top = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        state = listState
+        state = listState,
       ) {
         itemsIndexed(items = listItems) { _, uiModel ->
           StorytellerItem(
@@ -104,11 +104,12 @@ fun HomeScreen(
       TabLayout(
         rootNavController = navController,
         sharedViewModel = sharedViewModel,
-        parentState = TabLayoutUiState(
-          tabs = pageUiState.tabs,
-          isRefreshing = pageUiState.isRefreshing || isRefreshing,
-          config = config
-        ),
+        parentState =
+          TabLayoutUiState(
+            tabs = pageUiState.tabs,
+            isRefreshing = pageUiState.isRefreshing || isRefreshing,
+            config = config,
+          ),
         onSetNavigationInterceptor = onSetNavigationInterceptor,
       )
     }

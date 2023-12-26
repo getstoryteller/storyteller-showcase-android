@@ -25,17 +25,19 @@ fun ListHeader(
   moreButtonTitle: String,
   collectionId: String? = null,
   categories: List<String> = emptyList(),
-  onMoreClicked: (String?, List<String>) -> Unit = { _, _ -> }
+  onMoreClicked: (String?, List<String>) -> Unit = { _, _ -> },
 ) {
   Row(
-    modifier = Modifier
+    modifier =
+      Modifier
         .fillMaxWidth()
         .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.SpaceBetween
+    horizontalArrangement = Arrangement.SpaceBetween,
   ) {
     Text(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxHeight()
           .weight(1F),
       text = text,
@@ -44,20 +46,21 @@ fun ListHeader(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       fontWeight = FontWeight.W700,
-      color = LocalStorytellerColorsPalette.current.header
+      color = LocalStorytellerColorsPalette.current.header,
     )
     Text(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxHeight()
           .wrapContentWidth()
           .clickable {
-              onMoreClicked(collectionId, categories)
+            onMoreClicked(collectionId, categories)
           }
           .padding(start = 12.dp),
       text = moreButtonTitle,
       fontWeight = FontWeight.W400,
       fontSize = 16.sp,
-      color = MaterialTheme.colorScheme.secondary
+      color = MaterialTheme.colorScheme.secondary,
     )
   }
 }

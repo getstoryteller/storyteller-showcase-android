@@ -1,3 +1,5 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -5,6 +7,7 @@ plugins {
   alias(libs.plugins.jetbrainsKotlinParcelize)
   alias(libs.plugins.jetbrainsKotlinSerialization)
   alias(libs.plugins.hilt)
+  alias(libs.plugins.ktlint)
 }
 
 android {
@@ -38,7 +41,7 @@ android {
       isShrinkResources = true
       proguardFiles(
         getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro"
+        "proguard-rules.pro",
       )
       signingConfig = signingConfigs.getByName("release")
     }
@@ -66,9 +69,23 @@ android {
   }
 }
 
+// ktLintFormat task will need to run before preBuild
+tasks.getByPath("preBuild").dependsOn("ktlintFormat")
+
+ktlint {
+  version.set(libs.versions.ktlint.get())
+  android.set(true)
+  ignoreFailures.set(false)
+  reporters {
+    reporter(ReporterType.PLAIN)
+    reporter(ReporterType.CHECKSTYLE)
+    reporter(ReporterType.SARIF)
+  }
+}
+
 dependencies {
   implementation(platform(libs.androidx.compose.bom.beta))
-  implementation (libs.androidx.fragment.ktx)
+  implementation(libs.androidx.fragment.ktx)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.navigation.compose)
@@ -92,7 +109,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
 
   implementation(libs.timber)
-  implementation (libs.android.sdk)
+  implementation(libs.android.sdk)
 
   // DI Hilt
   implementation(libs.hilt.android)

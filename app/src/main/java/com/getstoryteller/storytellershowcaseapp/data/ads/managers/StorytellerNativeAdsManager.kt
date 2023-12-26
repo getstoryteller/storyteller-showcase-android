@@ -2,11 +2,11 @@ package com.getstoryteller.storytellershowcaseapp.data.ads.managers
 
 import android.view.View
 import com.getstoryteller.storytellershowcaseapp.data.ads.entity.AdConstants
+import com.getstoryteller.storytellershowcaseapp.data.ads.entity.StorytellerGoogleAdInfo
 import com.getstoryteller.storytellershowcaseapp.data.ads.entity.StorytellerNativeAd
 import com.getstoryteller.storytellershowcaseapp.data.ads.kvps.StorytellerKVPProvider
-import com.getstoryteller.storytellershowcaseapp.data.ads.mapper.StorytellerAdsMapper
 import com.getstoryteller.storytellershowcaseapp.data.ads.managers.provider.google.GoogleNativeAdsManager
-import com.getstoryteller.storytellershowcaseapp.data.ads.entity.StorytellerGoogleAdInfo
+import com.getstoryteller.storytellershowcaseapp.data.ads.mapper.StorytellerAdsMapper
 import com.getstoryteller.storytellershowcaseapp.data.ads.tracking.StorytellerAdsTracker
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.ads.StorytellerAd
@@ -24,7 +24,6 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
   private val storytellerAdsMapper: StorytellerAdsMapper,
   private val storytellerAdsTracker: StorytellerAdsTracker,
 ) {
-
   /**
    * This MutableMap is necessary to keep track of which ads have been
    * requested so that later the relevant methods can be called on them
@@ -34,11 +33,14 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
   private val storytellerScope = CoroutineScope(Dispatchers.IO + Job())
 
   fun handleAds(
-    adRequestInfo: KVP, onComplete: (StorytellerAd) -> Unit, onError: () -> Unit
+    adRequestInfo: KVP,
+    onComplete: (StorytellerAd) -> Unit,
+    onError: () -> Unit,
   ) {
     val customMap = storytellerKVPProvider.getKVPs(adRequestInfo)
 
-    googleNativeAdsManager.requestAd(adUnit = googleAdInfo.adUnitId,
+    googleNativeAdsManager.requestAd(
+      adUnit = googleAdInfo.adUnitId,
       formatId = googleAdInfo.templateId,
       customMap = customMap,
       onAdDataLoaded = { ad ->
@@ -59,7 +61,8 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
       },
       onAdDataFailed = {
         Timber.tag("GamAds").w("Error when fetching GAM Ad: %s", it)
-      })
+      },
+    )
   }
 
   fun cleanNativeAds() {
@@ -70,7 +73,10 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
     }
   }
 
-  fun trackAdStarted(adId: String, adView: View?) {
+  fun trackAdStarted(
+    adId: String,
+    adView: View?,
+  ) {
     val nativeAd = nativeAds[adId]?.nativeAd ?: return
     storytellerAdsTracker.trackAdImpression(nativeAd)
     storytellerAdsTracker.trackAdEnteredView(nativeAd, adView ?: return)
@@ -81,7 +87,10 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
     storytellerAdsTracker.trackAdClicked(nativeAd)
   }
 
-  fun trackAdFinished(adId: String, adView: View?) {
+  fun trackAdFinished(
+    adId: String,
+    adView: View?,
+  ) {
     val nativeAd = nativeAds[adId]?.nativeAd ?: return
     storytellerAdsTracker.trackAdFinished(nativeAd, adView ?: return)
   }

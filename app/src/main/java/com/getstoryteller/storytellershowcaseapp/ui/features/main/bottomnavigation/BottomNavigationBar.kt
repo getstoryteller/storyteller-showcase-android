@@ -5,12 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -43,13 +41,13 @@ fun BottomNavigationBar(
           Icon(
             painter = painterResource(id = R.drawable.ic_home),
             contentDescription = null,
-            tint = if (homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            tint = if (homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
           )
         },
         label = {
           Text(
             text = "Home",
-            color = if (homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            color = if (homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
           )
         },
         selected = navBackStackEntry?.destination?.route == "home",
@@ -66,31 +64,32 @@ fun BottomNavigationBar(
           onSetNavigationState(PageState.HOME)
           onSetTopBarVisible(true)
           navController.popUpTo("home")
-        }
+        },
       )
       NavigationBarItem(
         icon = {
           Icon(
             painter = painterResource(id = R.drawable.ic_moments),
             contentDescription = null,
-            tint = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            tint = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
           )
         },
         label = {
           Text(
             text = "Moments",
-            color = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            color = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
           )
         },
         selected = navBackStackEntry?.destination?.route == "home/moments",
         onClick = {
-          val interceptor = NavigationInterceptor.TargetRoute(
-            targetRoute = "home/moments",
-            shouldIntercept = { true },
-            onIntercepted = {
-              onTriggerMomentReload()
-            },
-          )
+          val interceptor =
+            NavigationInterceptor.TargetRoute(
+              targetRoute = "home/moments",
+              shouldIntercept = { true },
+              onIntercepted = {
+                onTriggerMomentReload()
+              },
+            )
 
           if (!homeSelected && interceptor.shouldIntercept()) {
             coroutineScope.launch {
@@ -101,16 +100,16 @@ fun BottomNavigationBar(
           onSetNavigationState(PageState.HOME)
           onSetTopBarVisible(false)
           navController.popUpTo("home/moments")
-        }
+        },
       )
     }
   }
 }
 
-fun NavController.popUpTo(destination: String) = navigate(destination) {
-  popUpTo(graph.findStartDestination().id) {
-    saveState = true
+fun NavController.popUpTo(destination: String) =
+  navigate(destination) {
+    popUpTo(graph.findStartDestination().id) {
+      saveState = true
+    }
+    restoreState = true
   }
-  restoreState = true
-}
-

@@ -35,14 +35,13 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
 fun MomentsScreen(
-  modifier: Modifier,
+  modifier: Modifier = Modifier,
   config: Config?,
   sharedViewModel: MainViewModel,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
   getClipsFragment: () -> StorytellerClipsFragment?,
-  tag: String
+  tag: String,
 ) {
-
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.observeAsState()
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
@@ -51,31 +50,35 @@ fun MomentsScreen(
   }
 
   Box(
-    modifier = modifier.fillMaxSize()
+    modifier = modifier.fillMaxSize(),
   ) {
-
     val clipsFragment by remember(config) {
       mutableStateOf(
-        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: "")
+        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: ""),
       )
     }
 
     var isVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
     val view = LocalView.current
     LaunchedEffect(clipsFragment) {
-      clipsFragment.listener = object : StorytellerClipsFragment.Listener {
-        override fun onDataLoadStarted() {
-          isVisible = true
-        }
+      clipsFragment.listener =
+        object : StorytellerClipsFragment.Listener {
+          override fun onDataLoadStarted() {
+            isVisible = true
+          }
 
-        override fun onTopLevelBackPressed(): Boolean {
-          return super.onTopLevelBackPressed()
-        }
+          override fun onTopLevelBackPressed(): Boolean {
+            return super.onTopLevelBackPressed()
+          }
 
-        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
-          isVisible = false
+          override fun onDataLoadComplete(
+            success: Boolean,
+            error: Error?,
+            dataCount: Int,
+          ) {
+            isVisible = false
+          }
         }
-      }
 
       ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
         val outInsets =
@@ -86,21 +89,24 @@ fun MomentsScreen(
     }
 
     StorytellerEmbeddedClips(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxWidth()
           .fillMaxHeight(),
-      onCommit = onCommit(
-        clipsFragment,
-        tag,
-      )
+      onCommit =
+        onCommit(
+          clipsFragment,
+          tag,
+        ),
     )
 
     if (isVisible) {
       CircularProgressIndicator(
-        modifier = Modifier
+        modifier =
+          Modifier
             .padding(16.dp)
             .background(color = Color.Transparent)
-            .align(Alignment.Center)
+            .align(Alignment.Center),
       )
     }
   }

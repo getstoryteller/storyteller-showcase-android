@@ -15,11 +15,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
@@ -72,10 +69,14 @@ import kotlinx.serialization.json.Json
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-  activity: Activity, navController: NavHostController, viewModel: MainViewModel, onCommit: (
+  activity: Activity,
+  navController: NavHostController,
+  viewModel: MainViewModel,
+  onCommit: (
     fragment: Fragment,
     tag: String,
-  ) -> (FragmentTransaction.(containerId: Int) -> Unit), getClipsFragment: () -> StorytellerClipsFragment?
+  ) -> (FragmentTransaction.(containerId: Int) -> Unit),
+  getClipsFragment: () -> StorytellerClipsFragment?,
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember { mutableStateOf(PageState.HOME) }
@@ -122,12 +123,13 @@ fun MainScreen(
           IconButton(
             onClick = {
               Storyteller.openSearch(activity)
-            }, enabled = !mainPageUiState.isMainScreenLoading
+            },
+            enabled = !mainPageUiState.isMainScreenLoading,
           ) {
             Icon(
               imageVector = Icons.Filled.Search,
               contentDescription = "Open Search",
-              tint = MaterialTheme.colorScheme.onBackground
+              tint = MaterialTheme.colorScheme.onBackground,
             )
           }
           IconButton(
@@ -140,12 +142,13 @@ fun MainScreen(
                 launchSingleTop = true
                 restoreState = true
               }
-            }, enabled = !mainPageUiState.isMainScreenLoading
+            },
+            enabled = !mainPageUiState.isMainScreenLoading,
           ) {
             Icon(
               imageVector = Icons.Filled.AccountCircle,
               contentDescription = "Open Account",
-              tint = MaterialTheme.colorScheme.onBackground
+              tint = MaterialTheme.colorScheme.onBackground,
             )
           }
         }
@@ -153,19 +156,19 @@ fun MainScreen(
         IconButton(onClick = {
           navController.navigateUp()
         }) {
-          if (navigationState != PageState.HOME) Icon(
-            imageVector = Icons.Filled.ArrowBack,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onBackground
-          )
-          else {
+          if (navigationState != PageState.HOME) {
+            Icon(
+              imageVector = Icons.Filled.ArrowBack,
+              contentDescription = null,
+              tint = MaterialTheme.colorScheme.onBackground,
+            )
+          } else {
             Icon(
               painter = painterResource(id = R.drawable.ic_logo_icon),
               contentDescription = null,
-              tint = Color.Unspecified
+              tint = Color.Unspecified,
             )
           }
-
         }
       })
     }
@@ -188,19 +191,22 @@ fun MainScreen(
     )
   }) { innerPadding ->
     Box(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxSize()
-          .padding(innerPadding)
+          .padding(innerPadding),
     ) {
       NavHost(
-        navController = navController, startDestination = "home"
+        navController = navController,
+        startDestination = "home",
       ) {
         composable("home", enterTransition = {
           if (initialState.destination.route == "home/moments") {
             EnterTransition.None
           } else {
             slideIntoContainer(
-              towards = Right, animationSpec = tween(700)
+              towards = Right,
+              animationSpec = tween(700),
             )
           }
         }, exitTransition = {
@@ -208,7 +214,8 @@ fun MainScreen(
             ExitTransition.None
           } else {
             slideOutOfContainer(
-              towards = Left, animationSpec = tween(700)
+              towards = Left,
+              animationSpec = tween(700),
             )
           }
         }) {
@@ -216,7 +223,8 @@ fun MainScreen(
           LaunchedEffect(Unit) {
             topBarVisible = true
           }
-          HomeScreen(viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
+          HomeScreen(
+            viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             navController = navController,
@@ -230,7 +238,8 @@ fun MainScreen(
                   inclusive = true
                 }
               }
-            })
+            },
+          )
         }
         composable("login") {
           navigationState = PageState.LOGIN
@@ -242,9 +251,11 @@ fun MainScreen(
             }
           }
         }
-        composable("home/moments",
+        composable(
+          "home/moments",
           enterTransition = { EnterTransition.None },
-          exitTransition = { ExitTransition.None }) {
+          exitTransition = { ExitTransition.None },
+        ) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
             navigationInterceptor = NavigationInterceptor.None
@@ -255,43 +266,51 @@ fun MainScreen(
             tag = "moments",
             onCommit = onCommit,
             getClipsFragment = getClipsFragment,
-            sharedViewModel = viewModel
+            sharedViewModel = viewModel,
           )
         }
         composable("home/account", enterTransition = {
           if (initialState.destination.route?.startsWith("account") == true) {
             slideIntoContainer(
-              towards = Right, animationSpec = tween(700)
+              towards = Right,
+              animationSpec = tween(700),
             )
           } else {
             slideIntoContainer(
-              towards = Left, animationSpec = tween(700)
+              towards = Left,
+              animationSpec = tween(700),
             )
           }
         }, exitTransition = {
           if (targetState.destination.route?.startsWith("account") == true) {
             slideOutOfContainer(
-              towards = Left, animationSpec = tween(700)
+              towards = Left,
+              animationSpec = tween(700),
             )
           } else {
             slideOutOfContainer(
-              towards = Right, animationSpec = tween(700)
+              towards = Right,
+              animationSpec = tween(700),
             )
           }
         }) {
           navigationState = PageState.ACCOUNT
           title = "Account"
-          AccountScreen(navController = navController,
+          AccountScreen(
+            navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
             onLogout = {
               viewModel.logout()
-            })
+            },
+          )
         }
-        composable("account/{option}",
+        composable(
+          "account/{option}",
           enterTransition = { slideIntoContainer(towards = Left, animationSpec = tween(700)) },
-          exitTransition = { slideOutOfContainer(towards = Right, animationSpec = tween(700)) }) {
+          exitTransition = { slideOutOfContainer(towards = Right, animationSpec = tween(700)) },
+        ) {
           navigationState = PageState.ACCOUNT
           val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
           title = option.title
@@ -300,52 +319,67 @@ fun MainScreen(
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
             optionSelectType = option,
-            config = mainPageUiState.config!!
+            config = mainPageUiState.config!!,
           )
         }
         composable("moreClips/{model}", enterTransition = {
           slideIntoContainer(
-            towards = Left, animationSpec = tween(700)
+            towards = Left,
+            animationSpec = tween(700),
           )
         }, exitTransition = {
           slideOutOfContainer(
-            towards = Right, animationSpec = tween(700)
+            towards = Right,
+            animationSpec = tween(700),
           )
         }) { backStackEntry ->
-          val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
+          val uiModel: PageItemUiModel? =
+            Json.decodeFromString(
+              backStackEntry.arguments?.getString("model")!!,
+            )
           uiModel?.let {
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
-              pageItemUiModel = it, navController = navController, config = mainPageUiState.config
+              pageItemUiModel = it,
+              navController = navController,
+              config = mainPageUiState.config,
             )
           }
         }
         composable("moreStories/{model}", enterTransition = {
           slideIntoContainer(
-            towards = Left, animationSpec = tween(700)
+            towards = Left,
+            animationSpec = tween(700),
           )
         }, exitTransition = {
           slideOutOfContainer(
-            towards = Right, animationSpec = tween(700)
+            towards = Right,
+            animationSpec = tween(700),
           )
         }) { backStackEntry ->
-          val uiModel: PageItemUiModel? = Json.decodeFromString(backStackEntry.arguments?.getString("model")!!)
+          val uiModel: PageItemUiModel? =
+            Json.decodeFromString(
+              backStackEntry.arguments?.getString("model")!!,
+            )
           uiModel?.let {
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
-              pageItemUiModel = it, navController = navController, config = mainPageUiState.config
+              pageItemUiModel = it,
+              navController = navController,
+              config = mainPageUiState.config,
             )
           }
         }
       }
       if (mainPageUiState.isMainScreenLoading && navController.isCurrentDestination("home")) {
         CircularProgressIndicator(
-          modifier = Modifier
+          modifier =
+            Modifier
               .padding(16.dp)
               .background(color = Color.Transparent)
-              .align(Alignment.Center)
+              .align(Alignment.Center),
         )
       }
     }
@@ -353,28 +387,40 @@ fun MainScreen(
 }
 
 enum class PageState {
-  HOME, ACCOUNT, MORE, LOGIN
+  HOME,
+  ACCOUNT,
+  MORE,
+  LOGIN,
 }
 
-inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-  Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
-  else -> @Suppress("DEPRECATION") getParcelable(key) as? T
-}
+inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? =
+  when {
+    Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
+    else ->
+      @Suppress("DEPRECATION")
+      getParcelable(key)
+        as? T
+  }
 
 @Suppress("DEPRECATION")
-fun setStatusBarColor(activity: Activity, color: Color, useDarkIcons: Boolean) {
+fun setStatusBarColor(
+  activity: Activity,
+  color: Color,
+  useDarkIcons: Boolean,
+) {
   activity.window.statusBarColor = color.toArgb()
 
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
     activity.window.insetsController?.setSystemBarsAppearance(
       if (useDarkIcons) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
-      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
     )
   } else {
-    activity.window.decorView.systemUiVisibility = if (useDarkIcons) {
-      activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-    } else {
-      activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-    }
+    activity.window.decorView.systemUiVisibility =
+      if (useDarkIcons) {
+        activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+      } else {
+        activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+      }
   }
 }

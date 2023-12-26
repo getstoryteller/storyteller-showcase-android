@@ -30,9 +30,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
+import com.getstoryteller.storytellershowcaseapp.ui.components.StorytellerScrollableTabRow
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
-import com.getstoryteller.storytellershowcaseapp.ui.components.StorytellerScrollableTabRow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -72,7 +72,8 @@ fun TabLayout(
       backgroundColor = MaterialTheme.colorScheme.background,
       contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
-      divider = {}) {
+      divider = {},
+    ) {
       tabs.forEachIndexed { index, tab ->
         val isSelected by remember(currentPage.value) {
           mutableStateOf(index == currentPage.value)
@@ -84,7 +85,7 @@ fun TabLayout(
             text = tab.name,
             fontSize = 16.sp,
             fontWeight = FontWeight.W600,
-            color = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
+            color = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface,
           )
         }, selected = isSelected, onClick = {
           val interceptor = topBarNavigationInterceptor
@@ -100,9 +101,11 @@ fun TabLayout(
         })
       }
     }
-    HorizontalPager(state = pagerState,
+    HorizontalPager(
+      state = pagerState,
       beyondBoundsPageCount = 0 /* This needs to be zero or nav interception will not work */,
-      key = { tabs[it].name }) { pageIndex ->
+      key = { tabs[it].name },
+    ) { pageIndex ->
       val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }
       val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $pageIndex")
 
@@ -110,7 +113,8 @@ fun TabLayout(
         viewModel.loadTab(tabValue)
       }
 
-      TabScreen(tabId = tabValue,
+      TabScreen(
+        tabId = tabValue,
         viewModel = viewModel,
         sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
@@ -138,14 +142,17 @@ fun TabLayout(
               ),
             )
           }
-        })
+        },
+      )
     }
   }
 }
 
 @Stable
 data class TabLayoutUiState(
-  val tabs: List<TabDto>, val isRefreshing: Boolean, val config: Config?
+  val tabs: List<TabDto>,
+  val isRefreshing: Boolean,
+  val config: Config?,
 )
 
 fun Color.Companion.fromHex(hexString: String) = Color(android.graphics.Color.parseColor(hexString))

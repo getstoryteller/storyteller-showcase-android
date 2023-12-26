@@ -8,7 +8,10 @@ import androidx.compose.ui.Modifier
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 
 @Composable
-fun LoginScreen(viewModel: MainViewModel, onLoggedIn: () -> Unit) {
+fun LoginScreen(
+  viewModel: MainViewModel,
+  onLoggedIn: () -> Unit,
+) {
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
     LoginDialog(viewModel, onLoggedIn)
   }

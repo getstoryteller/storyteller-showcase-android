@@ -55,7 +55,8 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginDialog(
-  viewModel: MainViewModel, onLoggedIn: () -> Unit
+  viewModel: MainViewModel,
+  onLoggedIn: () -> Unit,
 ) {
   val loginUiState by viewModel.loginUiState.collectAsState()
   val loginState = loginUiState.loginState
@@ -67,24 +68,28 @@ fun LoginDialog(
   }
 
   Dialog(
-    onDismissRequest = {}, properties = DialogProperties(
-      dismissOnBackPress = false,
-      dismissOnClickOutside = false,
-      usePlatformDefaultWidth = false,
-    )
+    onDismissRequest = {},
+    properties =
+      DialogProperties(
+        dismissOnBackPress = false,
+        dismissOnClickOutside = false,
+        usePlatformDefaultWidth = false,
+      ),
   ) {
     val isDarkTheme = isSystemInDarkTheme()
     Surface(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxWidth()
           .wrapContentHeight()
           .padding(start = 10.dp, end = 10.dp),
-      shape = RoundedCornerShape(8.dp)
+      shape = RoundedCornerShape(8.dp),
     ) {
       Column(
-        modifier = Modifier
+        modifier =
+          Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
       ) {
         var text by rememberSaveable { mutableStateOf("") }
         val focusRequester = remember { FocusRequester() }
@@ -100,61 +105,78 @@ fun LoginDialog(
         Image(
           modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
           painter = painterResource(id = if (isDarkTheme) R.drawable.ic_logo_dark else R.drawable.ic_logo),
-          contentDescription = "Logo of Storyteller"
+          contentDescription = "Logo of Storyteller",
         )
         Text(
-          modifier = Modifier
+          modifier =
+            Modifier
               .padding(top = 16.dp)
               .align(alignment = Alignment.CenterHorizontally),
-          text = stringResource(id = R.string.label_login_description)
+          text = stringResource(id = R.string.label_login_description),
         )
 
-        OutlinedTextField(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
-            .focusRequester(focusRequester),
+        OutlinedTextField(
+          modifier =
+            Modifier
+              .fillMaxWidth()
+              .padding(top = 16.dp)
+              .focusRequester(focusRequester),
           value = text,
           onValueChange = {
             text = it
             viewModel.clearErrorState()
           },
-          keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Characters,
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done,
-          ),
-          keyboardActions = KeyboardActions(
-            onDone = {
-              viewModel.verifyCode(text)
-              keyboardController?.hide()
-            }
-          ),
+          keyboardOptions =
+            KeyboardOptions(
+              capitalization = KeyboardCapitalization.Characters,
+              keyboardType = KeyboardType.Text,
+              imeAction = ImeAction.Done,
+            ),
+          keyboardActions =
+            KeyboardActions(
+              onDone = {
+                viewModel.verifyCode(text)
+                keyboardController?.hide()
+              },
+            ),
           singleLine = true,
           isError = loginState is Error,
           placeholder = { Text(text = stringResource(id = R.string.label_login_enter_code)) },
           // colors = OutlinedTextFieldDefaults.colors(LocalStorytellerColorsPalette.current.background),
           leadingIcon = {
             Image(
-              painter = painterResource(id = R.drawable.ic_key), contentDescription = ""
+              painter = painterResource(id = R.drawable.ic_key),
+              contentDescription = "",
             )
-          })
-
+          },
+        )
 
         if (loginState is Error) {
-          val annotatedText = buildAnnotatedString {
-            appendInlineContent("leadingIcon", "[icon]")
-            append(" ${loginState.message}")
-          }
+          val annotatedText =
+            buildAnnotatedString {
+              appendInlineContent("leadingIcon", "[icon]")
+              append(" ${loginState.message}")
+            }
 
-          val inlineContent = mapOf(
-            Pair("leadingIcon", InlineTextContent(
-              Placeholder(
-                width = 12.sp, height = 12.sp, placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline
-              )
-            ) {
-              Icon(painterResource(id = R.drawable.ic_error), "", tint = MaterialTheme.colorScheme.error)
-            })
-          )
+          val inlineContent =
+            mapOf(
+              Pair(
+                "leadingIcon",
+                InlineTextContent(
+                  Placeholder(
+                    width = 12.sp,
+                    height = 12.sp,
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.AboveBaseline,
+                  ),
+                ) {
+                  Icon(
+                    painterResource(id = R.drawable.ic_error),
+                    "",
+                    tint = MaterialTheme.colorScheme.error,
+                  )
+                },
+              ),
+            )
 
           Text(
             text = annotatedText,
@@ -165,22 +187,27 @@ fun LoginDialog(
           )
         }
 
-        Button(modifier = Modifier
-            .height(48.dp)
-            .padding(top = 8.dp)
-            .fillMaxWidth(),
-          colors = ButtonDefaults.buttonColors(
-            disabledContentColor = MaterialTheme.colorScheme.onPrimary
-          ),
+        Button(
+          modifier =
+            Modifier
+              .height(48.dp)
+              .padding(top = 8.dp)
+              .fillMaxWidth(),
+          colors =
+            ButtonDefaults.buttonColors(
+              disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
           enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
             viewModel.verifyCode(text)
             keyboardController?.hide()
-          }) {
+          },
+        ) {
           when (loginState) {
             LoginState.Loading, LoginState.Success -> {
               CircularProgressIndicator(
-                modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary
+                modifier = Modifier.size(24.dp),
+                color = MaterialTheme.colorScheme.onPrimary,
               )
             }
 

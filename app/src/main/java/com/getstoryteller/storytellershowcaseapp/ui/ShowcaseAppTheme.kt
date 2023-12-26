@@ -21,62 +21,71 @@ data class StorytellerColors(
 
 val LocalStorytellerColorsPalette = staticCompositionLocalOf { StorytellerColors() }
 
-private val StorytellerLightColorScheme = StorytellerColors(
-  background = Color(0xFFE5E5E5),
-  success = Color(0xFF57F35D),
-  subtitle = Color(0x993C3C43),
-  header = Color(0xFF000000)
-)
+private val StorytellerLightColorScheme =
+  StorytellerColors(
+    background = Color(0xFFE5E5E5),
+    success = Color(0xFF57F35D),
+    subtitle = Color(0x993C3C43),
+    header = Color(0xFF000000),
+  )
 
-private val StorytellerDarkColorScheme = StorytellerColors(
-  background = Color(0xFF1A1A1A),
-  success = Color(0xFF57F35D),
-  subtitle = Color(0x9997979D),
-  header = Color(0xFFFFFFFF)
-)
-
-@SuppressLint("ConflictingOnColor")
-private val DarkColorScheme = darkColorScheme(
-  primary = Color(0xFF1C62EB),
-  onPrimary = Color(0xFFFFFFFF),
-  secondary = Color(0xFF1C62EB),
-  background = Color(0xFF000000),
-  surface = Color(0xFF000000),
-  onSurface = Color(0xB3FFFFFF),
-  onBackground = Color(0xFFFFFFFF),
-  error = Color(0xFFE21219)
-)
+private val StorytellerDarkColorScheme =
+  StorytellerColors(
+    background = Color(0xFF1A1A1A),
+    success = Color(0xFF57F35D),
+    subtitle = Color(0x9997979D),
+    header = Color(0xFFFFFFFF),
+  )
 
 @SuppressLint("ConflictingOnColor")
-private val LightColorScheme = lightColorScheme(
-  primary = Color(0xFF1C62EB),
-  onPrimary = Color(0xFFFFFFFF),
-  secondary = Color(0xFF1C62EB),
-  background = Color(0xFFFFFFFF),
-  surface = Color(0xFFFFFFFF),
-  onSurface = Color(0xB31A1A1A),
-  onBackground = Color(0xFF1A1A1A),
-  error = Color(0xFFE21219)
-)
+private val DarkColorScheme =
+  darkColorScheme(
+    primary = Color(0xFF1C62EB),
+    onPrimary = Color(0xFFFFFFFF),
+    secondary = Color(0xFF1C62EB),
+    background = Color(0xFF000000),
+    surface = Color(0xFF000000),
+    onSurface = Color(0xB3FFFFFF),
+    onBackground = Color(0xFFFFFFFF),
+    error = Color(0xFFE21219),
+  )
+
+@SuppressLint("ConflictingOnColor")
+private val LightColorScheme =
+  lightColorScheme(
+    primary = Color(0xFF1C62EB),
+    onPrimary = Color(0xFFFFFFFF),
+    secondary = Color(0xFF1C62EB),
+    background = Color(0xFFFFFFFF),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xB31A1A1A),
+    onBackground = Color(0xFF1A1A1A),
+    error = Color(0xFFE21219),
+  )
 
 @Composable
-fun ShowcaseAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-  val materialColorScheme = if (darkTheme) {
-    DarkColorScheme
-  } else {
-    LightColorScheme
-  }
+fun ShowcaseAppTheme(
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  content: @Composable () -> Unit,
+) {
+  val materialColorScheme =
+    if (darkTheme) {
+      DarkColorScheme
+    } else {
+      LightColorScheme
+    }
 
-  val storytellerColorsPalette = if (darkTheme) {
-    StorytellerDarkColorScheme
-  } else {
-    StorytellerLightColorScheme
-  }
+  val storytellerColorsPalette =
+    if (darkTheme) {
+      StorytellerDarkColorScheme
+    } else {
+      StorytellerLightColorScheme
+    }
 
   CompositionLocalProvider(LocalStorytellerColorsPalette provides storytellerColorsPalette) {
     MaterialTheme(
       content = content,
-      colorScheme = materialColorScheme
+      colorScheme = materialColorScheme,
     )
   }
 }

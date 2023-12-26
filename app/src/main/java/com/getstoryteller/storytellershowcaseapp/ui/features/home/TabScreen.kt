@@ -47,9 +47,8 @@ fun TabScreen(
   onSetTopNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   onShouldInterceptTopNavigation: () -> Boolean = { false },
   onSetBottomNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
-  setParentBottomNavigationInterceptor: () -> Unit = {}
+  setParentBottomNavigationInterceptor: () -> Unit = {},
 ) {
-
   LaunchedEffect(key1 = tabId, block = {
     viewModel.loadTab(tabId)
   })
@@ -129,22 +128,24 @@ fun TabScreen(
     } else {
       onSetTopNavigationInterceptor(NavigationInterceptor.None)
     }
-
   }
 
-  Box(modifier = Modifier
-    .fillMaxSize()
-    .background(color = MaterialTheme.colorScheme.background)
-    .nestedScroll(refreshState.nestedScrollConnection)
-    .onGloballyPositioned {
-      columnHeightPx = it.size.height
-    }) {
+  Box(
+    modifier =
+      Modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.background)
+        .nestedScroll(refreshState.nestedScrollConnection)
+        .onGloballyPositioned {
+          columnHeightPx = it.size.height
+        },
+  ) {
     LazyColumn(
       modifier = Modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.spacedBy(12.dp),
       contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
-      state = listState
+      state = listState,
     ) {
       itemsIndexed(items = listItems) { _, uiModel ->
         StorytellerItem(
@@ -152,7 +153,7 @@ fun TabScreen(
           isRefreshing = pageUiState.isRefreshing || isRefreshing,
           navController = rootNavController,
           roundTheme = config?.roundTheme,
-          squareTheme = config?.squareTheme
+          squareTheme = config?.squareTheme,
         ) {
           viewModel.hideStorytellerItem(uiModel.itemId)
         }
@@ -161,7 +162,7 @@ fun TabScreen(
 
     PullToRefreshContainer(
       modifier = Modifier.align(Alignment.TopCenter),
-      state = refreshState
+      state = refreshState,
     )
   }
 }

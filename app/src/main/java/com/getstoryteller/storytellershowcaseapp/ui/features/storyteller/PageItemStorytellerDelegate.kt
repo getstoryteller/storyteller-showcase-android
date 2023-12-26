@@ -6,11 +6,15 @@ import timber.log.Timber
 
 class PageItemStorytellerDelegate(
   private val itemId: String,
-  private val onShouldHide: () -> Unit ={}
+  private val onShouldHide: () -> Unit = {},
 ) : StorytellerListViewDelegate {
-  override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
+  override fun onDataLoadComplete(
+    success: Boolean,
+    error: Error?,
+    dataCount: Int,
+  ) {
     Timber.i(
-      "[$itemId] onDataLoadComplete callback: success $success, error $error, dataCount $dataCount"
+      "[$itemId] onDataLoadComplete callback: success $success, error $error, dataCount $dataCount",
     )
     if (!success || dataCount == 0) {
       val becauseMessage = if (!success) "of error" else "dataCount is 0"

@@ -32,7 +32,7 @@ fun OptionSelectScreen(
   viewModel: OptionSelectViewModel,
   sharedViewModel: MainViewModel,
   optionSelectType: OptionSelectType,
-  config: Config
+  config: Config,
 ) {
   val isDarkTheme = isSystemInDarkTheme()
   LaunchedEffect(key1 = optionSelectType.name, block = {
@@ -52,27 +52,33 @@ fun OptionSelectScreen(
   val uiState by viewModel.uiState.collectAsState()
 
   LazyColumn(
-    modifier = Modifier
+    modifier =
+      Modifier
         .fillMaxSize()
         .padding(top = 20.dp)
         .background(color = MaterialTheme.colorScheme.surface)
-        .navigationBarsPadding()
+        .navigationBarsPadding(),
   ) {
     items(uiState.options, key = { it.key ?: uiState.options.indexOf(it) }) { model ->
       Row(
-        modifier = Modifier
+        modifier =
+          Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .background(if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background)
+            .background(
+              if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+            )
             .clickable {
-                viewModel.selectOption(model.key)
-            }, verticalAlignment = Alignment.CenterVertically
+              viewModel.selectOption(model.key)
+            },
+        verticalAlignment = Alignment.CenterVertically,
       ) {
         RadioButton(selected = uiState.selectedOption == model.key, onClick = {
           viewModel.selectOption(model.key)
         })
         Text(
-          color = MaterialTheme.colorScheme.onBackground, text = model.value
+          color = MaterialTheme.colorScheme.onBackground,
+          text = model.value,
         )
       }
     }
@@ -80,5 +86,8 @@ fun OptionSelectScreen(
 }
 
 enum class OptionSelectType(val title: String) {
-  HAS_ACCOUNT("Has Account"), LANGUAGE("Language"), TEAM("Favorite Team"), EVENT_TRACKING("Allow Event Tracking"),
+  HAS_ACCOUNT("Has Account"),
+  LANGUAGE("Language"),
+  TEAM("Favorite Team"),
+  EVENT_TRACKING("Allow Event Tracking"),
 }

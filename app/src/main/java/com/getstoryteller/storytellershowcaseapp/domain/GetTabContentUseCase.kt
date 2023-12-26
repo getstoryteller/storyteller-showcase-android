@@ -22,7 +22,7 @@ class GetTabContentUseCaseImpl(private val tenantRepository: TenantRepository) :
           type = it.videoType,
           layout = it.layout,
           tileType = it.tileType,
-          size = it.size
+          size = it.size,
         )
       }
   }

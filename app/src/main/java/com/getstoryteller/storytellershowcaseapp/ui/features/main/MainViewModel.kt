@@ -24,91 +24,100 @@ data class LoginUiState(
 
 sealed class LoginState {
   data object Idle : LoginState()
+
   data object Loading : LoginState()
 
   data object Success : LoginState()
+
   data class Error(val message: String) : LoginState()
 }
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-  private val verifyCodeUseCase: VerifyCodeUseCase,
-  private val getConfigurationUseCase: GetConfigurationUseCase,
-  private val sessionRepository: SessionRepository
-) : ViewModel() {
+class MainViewModel
+  @Inject
+  constructor(
+    private val verifyCodeUseCase: VerifyCodeUseCase,
+    private val getConfigurationUseCase: GetConfigurationUseCase,
+    private val sessionRepository: SessionRepository,
+  ) : ViewModel() {
+    private var config: Config? = null
 
-  private var config: Config? = null
+    private val _uiState = MutableStateFlow(MainPageUiState())
+    val uiState: StateFlow<MainPageUiState> = _uiState.asStateFlow()
 
-  private val _uiState = MutableStateFlow(MainPageUiState())
-  val uiState: StateFlow<MainPageUiState> = _uiState.asStateFlow()
+    private val _reloadMomentsDataTrigger = MutableLiveData<String>()
+    val reloadMomentsDataTrigger: LiveData<String> = _reloadMomentsDataTrigger
 
-  private val _reloadMomentsDataTrigger = MutableLiveData<String>()
-  val reloadMomentsDataTrigger: LiveData<String> = _reloadMomentsDataTrigger
+    private val _reloadHomeTrigger = MutableLiveData<String>()
+    val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
 
-  private val _reloadHomeTrigger = MutableLiveData<String>()
-  val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
+    private val _loginUiState = MutableStateFlow(LoginUiState(isLoggedIn = sessionRepository.apiKey != null))
+    val loginUiState = _loginUiState.asStateFlow()
 
-  private val _loginUiState = MutableStateFlow(LoginUiState(isLoggedIn = sessionRepository.apiKey != null))
-  val loginUiState = _loginUiState.asStateFlow()
-  fun setup() {
-    _uiState.update { it.copy(isMainScreenLoading = true) }
-    if (sessionRepository.apiKey != null) {
-      viewModelScope.launch {
-        config = getConfigurationUseCase.getConfiguration()
-        _uiState.emit(MainPageUiState(config = config))
-      }
-    }
-  }
-
-  fun triggerMomentsReloadData() {
-    // open to suggestions for a different way to do this. This requires a unique key for LaunchedEffect in MomentsScreen on every button click
-    _reloadMomentsDataTrigger.value = UUID.randomUUID().toString()
-  }
-
-  fun verifyCode(code: String) {
-    viewModelScope.launch {
-      if (code.isEmpty()) {
-        _loginUiState.update {
-          it.copy(loginState = LoginState.Error("Please enter a code"))
-        }
-        return@launch
-      }
-      _loginUiState.update {
-        it.copy(loginState = LoginState.Loading)
-      }
-      try {
-        verifyCodeUseCase.verifyCode(code)
-        config = getConfigurationUseCase.getConfiguration()
-        _loginUiState.value = LoginUiState(isLoggedIn = true, loginState = LoginState.Success)
+    fun setup() {
+      _uiState.update { it.copy(isMainScreenLoading = true) }
+      if (sessionRepository.apiKey != null) {
         viewModelScope.launch {
+          config = getConfigurationUseCase.getConfiguration()
           _uiState.emit(MainPageUiState(config = config))
         }
+      }
+    }
 
-      } catch (ex: Exception) {
-        viewModelScope.launch {
+    fun triggerMomentsReloadData() {
+      // open to suggestions for a different way to do this. This requires a unique key for LaunchedEffect in MomentsScreen on every button click
+      _reloadMomentsDataTrigger.value = UUID.randomUUID().toString()
+    }
+
+    fun verifyCode(code: String) {
+      viewModelScope.launch {
+        if (code.isEmpty()) {
           _loginUiState.update {
-            it.copy(isLoggedIn = false,loginState = LoginState.Error("The access code you entered is incorrect. Please double-check your code and try again."))
+            it.copy(loginState = LoginState.Error("Please enter a code"))
+          }
+          return@launch
+        }
+        _loginUiState.update {
+          it.copy(loginState = LoginState.Loading)
+        }
+        try {
+          verifyCodeUseCase.verifyCode(code)
+          config = getConfigurationUseCase.getConfiguration()
+          _loginUiState.value = LoginUiState(isLoggedIn = true, loginState = LoginState.Success)
+          viewModelScope.launch {
+            _uiState.emit(MainPageUiState(config = config))
+          }
+        } catch (ex: Exception) {
+          viewModelScope.launch {
+            _loginUiState.update {
+              it.copy(
+                isLoggedIn = false,
+                loginState =
+                  LoginState.Error(
+                    "The access code you entered is incorrect. Please double-check your code and try again.",
+                  ),
+              )
+            }
           }
         }
       }
     }
-  }
 
-  fun logout() {
-    _uiState.value = MainPageUiState()
-    _loginUiState.value = LoginUiState()
-  }
+    fun logout() {
+      _uiState.value = MainPageUiState()
+      _loginUiState.value = LoginUiState()
+    }
 
-  fun refreshMainPage() {
-    _reloadHomeTrigger.value = UUID.randomUUID().toString()
-  }
+    fun refreshMainPage() {
+      _reloadHomeTrigger.value = UUID.randomUUID().toString()
+    }
 
-  fun clearErrorState() {
-    _loginUiState.update {
-      it.copy(loginState = LoginState.Idle)
+    fun clearErrorState() {
+      _loginUiState.update {
+        it.copy(loginState = LoginState.Idle)
+      }
     }
   }
-}
 
 data class MainPageUiState(
   val isHomeRefreshing: Boolean = false,

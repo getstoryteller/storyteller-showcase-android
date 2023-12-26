@@ -17,7 +17,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class ShowcaseApp : Application() {
-
   @Inject
   lateinit var storytellerService: StorytellerService
 
@@ -27,6 +26,7 @@ class ShowcaseApp : Application() {
   companion object {
     internal const val PREFS_NAME = "ShowcaseAppPrefs"
   }
+
   override fun onCreate() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())

@@ -1,15 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.SparseArray
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,17 +26,20 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
   private val viewModel: MainViewModel by viewModels()
   private var savedStateSparseArray = SparseArray<SavedState>()
   private var currentSelectItemId = 0
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     if (savedInstanceState != null) {
       savedStateSparseArray = BundleCompat.getSparseParcelableArray(
-        /* in = */ savedInstanceState,
-        /* key = */ SAVED_STATE_CONTAINER_KEY,
-        /* clazz = */ SavedState::class.java,
+        // in =
+        savedInstanceState,
+        // key =
+        SAVED_STATE_CONTAINER_KEY,
+        // clazz =
+        SavedState::class.java,
       ) ?: savedStateSparseArray
       currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
     }
@@ -78,10 +78,11 @@ class MainActivity : AppCompatActivity() {
   private fun onCommit(
     fragment: Fragment,
     tag: String,
-  ): FragmentTransaction.(containerId: Int) -> Unit = { id ->
-    saveAndRetrieveFragment(supportFragmentManager, id, fragment)
-    replace(id, fragment, tag)
-  }
+  ): FragmentTransaction.(containerId: Int) -> Unit =
+    { id ->
+      saveAndRetrieveFragment(supportFragmentManager, id, fragment)
+      replace(id, fragment, tag)
+    }
 
   private fun saveAndRetrieveFragment(
     supportFragmentManager: FragmentManager,
@@ -99,7 +100,6 @@ class MainActivity : AppCompatActivity() {
     val savedState = savedStateSparseArray[currentSelectItemId]
     fragment.setInitialSavedState(savedState)
   }
-
 
   companion object {
     private const val SAVED_STATE_CONTAINER_KEY = "SAVED_STATE_CONTAINER_KEY"

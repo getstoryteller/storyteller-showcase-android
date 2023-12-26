@@ -15,7 +15,7 @@ class VerifyCodeUseCaseImpl(
   private val authRepository: AuthRepository,
   private val sessionRepository: SessionRepository,
   private val storytellerService: StorytellerService,
-  private val amplitudeService: AmplitudeService
+  private val amplitudeService: AmplitudeService,
 ) : VerifyCodeUseCase {
   override suspend fun verifyCode(code: String): TenantSettingsDto {
     val settings = authRepository.verifyCode(code)
@@ -26,7 +26,7 @@ class VerifyCodeUseCaseImpl(
     storytellerService.updateCustomAttributes()
     return TenantSettingsDto(
       topLevelClipsCollection = settings.topLevelClipsCollection,
-      tabsEnabled = settings.tabsEnabled
+      tabsEnabled = settings.tabsEnabled,
     )
   }
 }
