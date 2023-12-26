@@ -23,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.R
@@ -74,11 +76,7 @@ fun AccountScreen(
           .fillMaxWidth(),
     ) {
       config?.let {
-        Text(
-          text = "PERSONALISATION",
-          modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-          color = MaterialTheme.colorScheme.onSurface,
-        )
+        SettingsSection("PERSONALISATION")
         if (it.teams.isNotEmpty()) {
           SettingsRow(text = "Favorite Team", arrowVisible = true, onClick = {
             navController.navigate("account/${OptionSelectType.TEAM.name}")
@@ -93,11 +91,7 @@ fun AccountScreen(
           navController.navigate("account/${OptionSelectType.HAS_ACCOUNT.name}")
         })
       }
-      Text(
-        text = "SETTINGS",
-        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-        color = MaterialTheme.colorScheme.onSurface,
-      )
+      SettingsSection(text = "SETTINGS")
       SettingsRow(text = "Allow Event Tracking", arrowVisible = true, onClick = {
         navController.navigate("account/${OptionSelectType.EVENT_TRACKING.name}")
       })
@@ -117,11 +111,7 @@ fun AccountScreen(
         navController.navigate("home")
         viewModel.logout()
       })
-      Text(
-        text = "APP INFO",
-        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-        color = MaterialTheme.colorScheme.onSurface,
-      )
+      SettingsSection(text = "APP INFO")
       SettingsRow(text = "Version", onClick = {
         context.copyToClipboard(context.formatterApplicationVersion)
         context.toast("App version copied to clipboard")
@@ -137,6 +127,17 @@ fun AccountScreen(
 }
 
 @Composable
+private fun SettingsSection(text: String) {
+  Text(
+    text = text,
+    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+    color = MaterialTheme.colorScheme.onSurface,
+    fontSize = 12.sp,
+    fontWeight = FontWeight.W400,
+  )
+}
+
+@Composable
 fun SettingsRow(
   text: String,
   arrowVisible: Boolean = false,
@@ -149,12 +150,8 @@ fun SettingsRow(
       Modifier
         .fillMaxWidth()
         .height(56.dp)
-        .background(
-          MaterialTheme.colorScheme.tertiaryContainer,
-        )
-        .clickable {
-          onClick()
-        },
+        .background(MaterialTheme.colorScheme.tertiaryContainer)
+        .clickable { onClick() },
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(

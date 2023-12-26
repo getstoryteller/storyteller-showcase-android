@@ -56,8 +56,8 @@ fun OptionSelectScreen(
     modifier =
       modifier
         .fillMaxSize()
-        .padding(top = 20.dp)
         .background(color = MaterialTheme.colorScheme.surface)
+        .padding(top = 20.dp)
         .navigationBarsPadding(),
   ) {
     items(uiState.options, key = { it.key ?: uiState.options.indexOf(it) }) { model ->
@@ -65,10 +65,8 @@ fun OptionSelectScreen(
         modifier =
           Modifier
             .fillMaxWidth()
-            .height(40.dp)
-            .background(
-              if (isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
-            )
+            .height(56.dp)
+            .background(color = MaterialTheme.colorScheme.tertiaryContainer)
             .clickable {
               viewModel.selectOption(model.key)
             },
