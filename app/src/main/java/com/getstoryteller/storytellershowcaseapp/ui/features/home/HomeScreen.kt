@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,6 +25,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
+import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
@@ -54,7 +54,7 @@ fun HomeScreen(
   val pageUiState by viewModel.uiState.collectAsState()
   val loginState by sharedViewModel.loginUiState.collectAsState()
 
-  val refreshState = rememberPullToRefreshState()
+  val refreshState = rememberStorytellerPullToRefreshState()
 
   val listState = rememberLazyListState()
   val listItems = pageUiState.homeItems
@@ -96,7 +96,7 @@ fun HomeScreen(
             navController = navController,
             roundTheme = config?.roundTheme,
             squareTheme = config?.squareTheme,
-          ){
+          ) {
             viewModel.hideStorytellerItem(uiModel.itemId)
           }
         }

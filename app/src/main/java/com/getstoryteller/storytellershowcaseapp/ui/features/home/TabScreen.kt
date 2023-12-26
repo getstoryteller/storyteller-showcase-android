@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,9 +28,11 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
+import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,6 +49,7 @@ fun TabScreen(
   onSetBottomNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   setParentBottomNavigationInterceptor: () -> Unit = {}
 ) {
+
   LaunchedEffect(key1 = tabId, block = {
     viewModel.loadTab(tabId)
   })
@@ -56,7 +58,7 @@ fun TabScreen(
 
   val pageUiState by viewModel.uiState.collectAsState()
 
-  val refreshState = rememberPullToRefreshState()
+  val refreshState = rememberStorytellerPullToRefreshState()
 
   if (refreshState.isRefreshing) {
     LaunchedEffect(Unit) {
@@ -68,6 +70,7 @@ fun TabScreen(
     if (pageUiState.isRefreshing) {
       refreshState.startRefresh()
     } else {
+      delay(1000)
       refreshState.endRefresh()
     }
   }
@@ -130,12 +133,12 @@ fun TabScreen(
   }
 
   Box(modifier = Modifier
-      .fillMaxSize()
-      .background(color = MaterialTheme.colorScheme.background)
-      .nestedScroll(refreshState.nestedScrollConnection)
-      .onGloballyPositioned {
-          columnHeightPx = it.size.height
-      }) {
+    .fillMaxSize()
+    .background(color = MaterialTheme.colorScheme.background)
+    .nestedScroll(refreshState.nestedScrollConnection)
+    .onGloballyPositioned {
+      columnHeightPx = it.size.height
+    }) {
     LazyColumn(
       modifier = Modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -158,7 +161,7 @@ fun TabScreen(
 
     PullToRefreshContainer(
       modifier = Modifier.align(Alignment.TopCenter),
-      state = refreshState,
+      state = refreshState
     )
   }
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +20,7 @@ import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TileType
+import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +32,7 @@ fun MoreScreen(
 ) {
 
   var isRefreshing by remember(pageItemUiModel) { mutableStateOf(false) }
-  val refreshState = rememberPullToRefreshState()
+  val refreshState = rememberStorytellerPullToRefreshState()
 
   if (refreshState.isRefreshing) {
     LaunchedEffect(true) {
@@ -42,10 +42,10 @@ fun MoreScreen(
 
   Box(
     modifier = Modifier
-      .fillMaxSize()
-      .nestedScroll(refreshState.nestedScrollConnection)
-      .navigationBarsPadding()
-      .padding(bottom = 16.dp)
+        .fillMaxSize()
+        .nestedScroll(refreshState.nestedScrollConnection)
+        .navigationBarsPadding()
+        .padding(bottom = 16.dp)
   ) {
     StorytellerItem(
       uiModel = pageItemUiModel.copy(

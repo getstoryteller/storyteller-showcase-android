@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
@@ -65,7 +66,9 @@ fun TabLayout(
   }
 
   Column(modifier = Modifier.fillMaxSize()) {
-    StorytellerScrollableTabRow(selectedTabIndex = currentPage.value,
+    StorytellerScrollableTabRow(
+      modifier = Modifier.zIndex(1F),
+      selectedTabIndex = currentPage.value,
       backgroundColor = MaterialTheme.colorScheme.background,
       contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
