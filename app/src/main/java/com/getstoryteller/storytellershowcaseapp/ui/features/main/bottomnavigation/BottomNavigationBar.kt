@@ -1,14 +1,22 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -28,15 +36,22 @@ fun BottomNavigationBar(
   onTriggerMomentReload: () -> Unit,
   onSetNavigationInterceptor: () -> NavigationInterceptor = { NavigationInterceptor.None },
 ) {
-  if (navigationState == PageState.HOME) {
-    NavigationBar(
-      modifier = Modifier,
-      tonalElevation = 0.dp,
-    ) {
-      val navBackStackEntry by navController.currentBackStackEntryAsState()
-      val homeSelected = navBackStackEntry?.destination?.route == "home"
-      val coroutineScope = rememberCoroutineScope()
+  if (navigationState != PageState.HOME) return
+
+  NavigationBar(
+    modifier = Modifier,
+    tonalElevation = 0.dp,
+  ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val homeSelected = navBackStackEntry?.destination?.route == "home"
+    val coroutineScope = rememberCoroutineScope()
+    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
       NavigationBarItem(
+        colors =
+          NavigationBarItemDefaults.colors(
+            indicatorColor = Color.Transparent,
+          ),
+        interactionSource = remember { MutableInteractionSource() },
         icon = {
           Icon(
             painter = painterResource(id = R.drawable.ic_home),
@@ -67,6 +82,10 @@ fun BottomNavigationBar(
         },
       )
       NavigationBarItem(
+        colors =
+          NavigationBarItemDefaults.colors(
+            indicatorColor = Color.Transparent,
+          ),
         icon = {
           Icon(
             painter = painterResource(id = R.drawable.ic_moments),
@@ -104,6 +123,14 @@ fun BottomNavigationBar(
       )
     }
   }
+}
+
+private object NoRippleTheme : RippleTheme {
+  @Composable
+  override fun defaultColor() = Color.Unspecified
+
+  @Composable
+  override fun rippleAlpha(): RippleAlpha = RippleAlpha(0.0f, 0.0f, 0.0f, 0.0f)
 }
 
 fun NavController.popUpTo(destination: String) =
