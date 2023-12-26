@@ -6,11 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.Fragment.SavedState
@@ -31,6 +26,8 @@ class MainActivity : AppCompatActivity() {
   private var currentSelectItemId = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge()
+
     super.onCreate(savedInstanceState)
     if (savedInstanceState != null) {
       savedStateSparseArray = BundleCompat.getSparseParcelableArray(
@@ -43,30 +40,22 @@ class MainActivity : AppCompatActivity() {
       ) ?: savedStateSparseArray
       currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
     }
-
-    enableEdgeToEdge()
-
     viewModel.setup()
 
     val intentData = intent?.data?.toString()
     if (intentData != null && Storyteller.isStorytellerDeepLink(intentData)) {
       Storyteller.openDeepLink(this, intentData)
     }
-
     setContent {
       val navController = rememberNavController()
       ShowcaseAppTheme {
-        Surface(
-          modifier = Modifier.safeDrawingPadding().background(color = MaterialTheme.colorScheme.surface),
-        ) {
-          MainScreen(
-            activity = this,
-            navController = navController,
-            viewModel = viewModel,
-            onCommit = ::onCommit,
-            getClipsFragment = ::getStorytellerClipsFragment,
-          )
-        }
+        MainScreen(
+          activity = this,
+          navController = navController,
+          viewModel = viewModel,
+          onCommit = ::onCommit,
+          getClipsFragment = ::getStorytellerClipsFragment,
+        )
       }
     }
   }

@@ -28,6 +28,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 
 @Composable
 fun OptionSelectScreen(
+  modifier: Modifier = Modifier,
   navController: NavController,
   viewModel: OptionSelectViewModel,
   sharedViewModel: MainViewModel,
@@ -53,7 +54,7 @@ fun OptionSelectScreen(
 
   LazyColumn(
     modifier =
-      Modifier
+      modifier
         .fillMaxSize()
         .padding(top = 20.dp)
         .background(color = MaterialTheme.colorScheme.surface)

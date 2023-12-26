@@ -38,6 +38,7 @@ fun HomeScreen(
   config: Config?,
   navController: NavController,
   isRefreshing: Boolean,
+  modifier: Modifier = Modifier,
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   onNavigateToLogin: () -> Unit = {},
 ) {
@@ -73,7 +74,7 @@ fun HomeScreen(
   }
   Box(
     modifier =
-      Modifier
+      modifier
         .fillMaxSize()
         .nestedScroll(refreshState.nestedScrollConnection)
         .onGloballyPositioned {

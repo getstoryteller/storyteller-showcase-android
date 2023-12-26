@@ -26,6 +26,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.Storyte
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoreScreen(
+  modifier: Modifier = Modifier,
   pageItemUiModel: PageItemUiModel,
   navController: NavController,
   config: Config?,
@@ -41,7 +42,7 @@ fun MoreScreen(
 
   Box(
     modifier =
-      Modifier
+      modifier
         .fillMaxSize()
         .nestedScroll(refreshState.nestedScrollConnection)
         .navigationBarsPadding()

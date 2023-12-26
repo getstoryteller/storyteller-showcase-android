@@ -13,7 +13,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -48,7 +47,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellershowcaseapp.R
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.AccountScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectScreen
@@ -92,114 +90,119 @@ fun MainScreen(
     )
   }
 
-  val topBarColor = MaterialTheme.colorScheme.background
-  val isSystemDark = isSystemInDarkTheme()
+//  LaunchedEffect(navController.currentBackStackEntryAsState().value) {
+//    when (navController.currentDestination?.route) {
+//      "home/moments" -> {
+//        setStatusBarColor(activity, Color.Transparent, false)
+//      }
+//
+//      else -> setStatusBarColor(activity, topBarColor, !isSystemDark)
+//    }
+//  }
 
-  LaunchedEffect(navController.currentBackStackEntryAsState().value) {
-    when (navController.currentDestination?.route) {
-      "home/moments" -> {
-        setStatusBarColor(activity, Color.Transparent, false)
-      }
+  Scaffold(
+    topBar = {
+      if (navigationState == PageState.LOGIN) return@Scaffold
 
-      else -> setStatusBarColor(activity, topBarColor, !isSystemDark)
-    }
-  }
+      if (topBarVisible) {
+        TopAppBar(
+          title = {
+            if (navigationState != PageState.HOME) {
+              Text(text = title)
+            }
+          },
+          actions = {
+            if (navigationState == PageState.HOME) {
+              // The Storyteller SDK supports opening it's search experience using the
+              // Storyteller.openSearch method. This can be triggered from wherever you
+              // would like in your application. In this case, we show an example of doing
+              // it from a main nav bar button
 
-  Scaffold(topBar = {
-    if (navigationState == PageState.LOGIN) return@Scaffold
-
-    if (topBarVisible) {
-      TopAppBar(title = {
-        if (navigationState != PageState.HOME) {
-          Text(text = title)
-        }
-      }, actions = {
-        if (navigationState == PageState.HOME) {
-          // The Storyteller SDK supports opening it's search experience using the
-          // Storyteller.openSearch method. This can be triggered from wherever you
-          // would like in your application. In this case, we show an example of doing
-          // it from a main nav bar button
-
-          IconButton(
-            onClick = {
-              Storyteller.openSearch(activity)
-            },
-            enabled = !mainPageUiState.isMainScreenLoading,
-          ) {
-            Icon(
-              imageVector = Icons.Filled.Search,
-              contentDescription = "Open Search",
-              tint = MaterialTheme.colorScheme.onBackground,
-            )
-          }
-          IconButton(
-            onClick = {
-              navigationState = PageState.ACCOUNT
-              navController.navigate("home/account") {
-                popUpTo(navController.graph.startDestinationId) {
-                  saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
+              IconButton(
+                onClick = {
+                  Storyteller.openSearch(activity)
+                },
+                enabled = !mainPageUiState.isMainScreenLoading,
+              ) {
+                Icon(
+                  imageVector = Icons.Filled.Search,
+                  contentDescription = "Open Search",
+                  tint = MaterialTheme.colorScheme.onBackground,
+                )
               }
-            },
-            enabled = !mainPageUiState.isMainScreenLoading,
-          ) {
-            Icon(
-              imageVector = Icons.Filled.AccountCircle,
-              contentDescription = "Open Account",
-              tint = MaterialTheme.colorScheme.onBackground,
-            )
-          }
-        }
-      }, navigationIcon = {
-        IconButton(onClick = {
-          navController.navigateUp()
-        }) {
-          if (navigationState != PageState.HOME) {
-            Icon(
-              imageVector = Icons.Filled.ArrowBack,
-              contentDescription = null,
-              tint = MaterialTheme.colorScheme.onBackground,
-            )
-          } else {
-            Icon(
-              painter = painterResource(id = R.drawable.ic_logo_icon),
-              contentDescription = null,
-              tint = Color.Unspecified,
-            )
-          }
-        }
-      })
-    }
-  }, bottomBar = {
-    if (navigationState == PageState.LOGIN) return@Scaffold
+              IconButton(
+                onClick = {
+                  navigationState = PageState.ACCOUNT
+                  navController.navigate("home/account") {
+                    popUpTo(navController.graph.startDestinationId) {
+                      saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                  }
+                },
+                enabled = !mainPageUiState.isMainScreenLoading,
+              ) {
+                Icon(
+                  imageVector = Icons.Filled.AccountCircle,
+                  contentDescription = "Open Account",
+                  tint = MaterialTheme.colorScheme.onBackground,
+                )
+              }
+            }
+          },
+          navigationIcon = {
+            IconButton(onClick = {
+              navController.navigateUp()
+            }) {
+              if (navigationState != PageState.HOME) {
+                Icon(
+                  imageVector = Icons.Filled.ArrowBack,
+                  contentDescription = null,
+                  tint = MaterialTheme.colorScheme.onBackground,
+                )
+              } else {
+                Icon(
+                  painter = painterResource(id = R.drawable.ic_logo_icon),
+                  contentDescription = null,
+                  tint = Color.Unspecified,
+                )
+              }
+            }
+          },
+        )
+      }
+    },
+    bottomBar = {
+      if (navigationState == PageState.LOGIN) return@Scaffold
 
-    BottomNavigationBar(
-      navController = navController,
-      onSetTopBarVisible = {
-        topBarVisible = it
-      },
-      navigationState = navigationState,
-      onSetNavigationState = {
-        navigationState = it
-      },
-      onTriggerMomentReload = {
-        viewModel.triggerMomentsReloadData()
-      },
-      onSetNavigationInterceptor = { navigationInterceptor },
-    )
-  }) { innerPadding ->
+      BottomNavigationBar(
+        navController = navController,
+        onSetTopBarVisible = {
+          topBarVisible = it
+        },
+        navigationState = navigationState,
+        onSetNavigationState = {
+          navigationState = it
+        },
+        onTriggerMomentReload = {
+          viewModel.triggerMomentsReloadData()
+        },
+        onSetNavigationInterceptor = { navigationInterceptor },
+      )
+    },
+  ) { paddingValues ->
     Box(
       modifier =
         Modifier
           .fillMaxSize()
-          .padding(innerPadding),
+          .padding(bottom = paddingValues.calculateBottomPadding()),
     ) {
       NavHost(
         navController = navController,
         startDestination = "home",
       ) {
+        val topPaddingEnabledModifier = Modifier.padding(top = paddingValues.calculateTopPadding())
         composable("home", enterTransition = {
           if (initialState.destination.route == "home/moments") {
             EnterTransition.None
@@ -224,6 +227,7 @@ fun MainScreen(
             topBarVisible = true
           }
           HomeScreen(
+            modifier = topPaddingEnabledModifier,
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
@@ -243,7 +247,7 @@ fun MainScreen(
         }
         composable("login") {
           navigationState = PageState.LOGIN
-          LoginScreen(viewModel = viewModel) {
+          LoginScreen(modifier = topPaddingEnabledModifier, viewModel = viewModel) {
             navController.navigate("home") {
               popUpTo("home") {
                 inclusive = true
@@ -297,6 +301,7 @@ fun MainScreen(
           navigationState = PageState.ACCOUNT
           title = "Account"
           AccountScreen(
+            modifier = topPaddingEnabledModifier,
             navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
@@ -315,6 +320,7 @@ fun MainScreen(
           val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
           title = option.title
           OptionSelectScreen(
+            modifier = topPaddingEnabledModifier,
             navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
@@ -341,6 +347,7 @@ fun MainScreen(
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
+              modifier = topPaddingEnabledModifier,
               pageItemUiModel = it,
               navController = navController,
               config = mainPageUiState.config,
@@ -366,6 +373,7 @@ fun MainScreen(
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
+              modifier = topPaddingEnabledModifier,
               pageItemUiModel = it,
               navController = navController,
               config = mainPageUiState.config,

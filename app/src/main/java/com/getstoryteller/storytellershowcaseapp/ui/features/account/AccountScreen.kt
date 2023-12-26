@@ -50,6 +50,7 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
 fun AccountScreen(
+  modifier: Modifier = Modifier,
   navController: NavController,
   viewModel: AccountViewModel,
   sharedViewModel: MainViewModel,
@@ -66,7 +67,7 @@ fun AccountScreen(
   }
   Box(
     modifier =
-      Modifier
+      modifier
         .fillMaxSize()
         .background(
           color = MaterialTheme.colorScheme.surface,

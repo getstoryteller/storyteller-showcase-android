@@ -50,7 +50,8 @@ fun MomentsScreen(
   }
 
   Box(
-    modifier = modifier.fillMaxSize(),
+    modifier =
+      modifier.fillMaxSize(),
   ) {
     val clipsFragment by remember(config) {
       mutableStateOf(
@@ -82,7 +83,7 @@ fun MomentsScreen(
 
       ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
         val outInsets =
-          insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+          insets.getInsets(WindowInsetsCompat.Type.statusBars())
         clipsFragment.topInset = outInsets.top
         WindowInsetsCompat.CONSUMED
       }

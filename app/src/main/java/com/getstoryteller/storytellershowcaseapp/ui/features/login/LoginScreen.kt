@@ -10,9 +10,10 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 @Composable
 fun LoginScreen(
   viewModel: MainViewModel,
+  modifier: Modifier = Modifier,
   onLoggedIn: () -> Unit,
 ) {
-  Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+  Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
     LoginDialog(viewModel, onLoggedIn)
   }
 }
