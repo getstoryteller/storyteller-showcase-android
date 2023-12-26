@@ -1,6 +1,5 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,7 +30,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigati
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
 import java.util.UUID
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
   viewModel: HomeViewModel,
