@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,14 +35,13 @@ import com.storyteller.ui.pager.StorytellerClipsFragment
 
 @Composable
 fun MomentsScreen(
-  modifier: Modifier,
+  modifier: Modifier = Modifier,
   config: Config?,
   sharedViewModel: MainViewModel,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
   getClipsFragment: () -> StorytellerClipsFragment?,
-  tag: String
+  tag: String,
 ) {
-
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.observeAsState()
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
@@ -51,56 +50,64 @@ fun MomentsScreen(
   }
 
   Box(
-    modifier = modifier.fillMaxSize()
+    modifier =
+      modifier.fillMaxSize(),
   ) {
-
     val clipsFragment by remember(config) {
       mutableStateOf(
-        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: "")
+        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: ""),
       )
     }
 
     var isVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
     val view = LocalView.current
     LaunchedEffect(clipsFragment) {
-      clipsFragment.listener = object : StorytellerClipsFragment.Listener {
-        override fun onDataLoadStarted() {
-          isVisible = true
-        }
+      clipsFragment.listener =
+        object : StorytellerClipsFragment.Listener {
+          override fun onDataLoadStarted() {
+            isVisible = true
+          }
 
-        override fun onTopLevelBackPressed(): Boolean {
-          return super.onTopLevelBackPressed()
-        }
+          override fun onTopLevelBackPressed(): Boolean {
+            return super.onTopLevelBackPressed()
+          }
 
-        override fun onDataLoadComplete(success: Boolean, error: Error?, dataCount: Int) {
-          isVisible = false
+          override fun onDataLoadComplete(
+            success: Boolean,
+            error: Error?,
+            dataCount: Int,
+          ) {
+            isVisible = false
+          }
         }
-      }
 
       ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
         val outInsets =
-          insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+          insets.getInsets(WindowInsetsCompat.Type.statusBars())
         clipsFragment.topInset = outInsets.top
         WindowInsetsCompat.CONSUMED
       }
     }
 
     StorytellerEmbeddedClips(
-      modifier = Modifier
+      modifier =
+        Modifier
           .fillMaxWidth()
           .fillMaxHeight(),
-      onCommit = onCommit(
-        clipsFragment,
-        tag,
-      )
+      onCommit =
+        onCommit(
+          clipsFragment,
+          tag,
+        ),
     )
 
     if (isVisible) {
       CircularProgressIndicator(
-        modifier = Modifier
+        modifier =
+          Modifier
             .padding(16.dp)
             .background(color = Color.Transparent)
-            .align(Alignment.Center)
+            .align(Alignment.Center),
       )
     }
   }

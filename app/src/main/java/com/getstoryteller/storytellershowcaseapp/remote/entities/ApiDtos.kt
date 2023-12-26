@@ -14,35 +14,39 @@ import kotlinx.serialization.encoding.Encoder
 // However, it may be useful as you plan an integration with your own CMS.
 
 @kotlinx.serialization.Serializable
-data class ResponseApiDto<T>(@SerialName("data") val data: T)
+data class ResponseApiDto<T>(
+  @SerialName("data") val data: T,
+)
 
 @kotlinx.serialization.Serializable
-data class ResponseApiListDto<T>(@SerialName("data") val data: List<T>)
+data class ResponseApiListDto<T>(
+  @SerialName("data") val data: List<T>,
+)
 
 @kotlinx.serialization.Serializable
 data class TenantSettingsApiDto(
-    @SerialName("tenantName") val tenantName: String,
-    @SerialName("androidApiKey") val androidApiKey: String,
-    @SerialName("topLevelClipsCollection") val topLevelClipsCollection: String?,
-    @SerialName("tabsEnabled") val tabsEnabled: Boolean
+  @SerialName("tenantName") val tenantName: String,
+  @SerialName("androidApiKey") val androidApiKey: String,
+  @SerialName("topLevelClipsCollection") val topLevelClipsCollection: String?,
+  @SerialName("tabsEnabled") val tabsEnabled: Boolean,
 )
 
 @kotlinx.serialization.Serializable
 data class KeyValueDto(
-    @SerialName("value") val key: String,
-    @SerialName("name") val value: String,
+  @SerialName("value") val key: String,
+  @SerialName("name") val value: String,
 )
 
 @kotlinx.serialization.Serializable
 data class TabDto(
-    @SerialName("name") val name: String,
-    @SerialName("value") val value: String,
-    @SerialName("sortOrder") val sortOrder: Int,
+  @SerialName("name") val name: String,
+  @SerialName("value") val value: String,
+  @SerialName("sortOrder") val sortOrder: Int,
 )
 
 data class TenantSettingsDto(
-    val topLevelClipsCollection: String?,
-    val tabsEnabled: Boolean
+  val topLevelClipsCollection: String?,
+  val tabsEnabled: Boolean,
 )
 
 @kotlinx.serialization.Serializable
@@ -62,96 +66,123 @@ data class StorytellerItemApiDto(
 
 @kotlinx.serialization.Serializable(with = LayoutTypeSerializer::class)
 enum class LayoutType(val serializedName: String) {
-    ROW("row"), GRID("grid"), SINGLETON("singleton");
+  ROW("row"),
+  GRID("grid"),
+  SINGLETON("singleton"),
+  ;
 
-    companion object {
-        fun deserialize(serialisedName: String): LayoutType = entries
-            .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
-    }
+  companion object {
+    fun deserialize(serialisedName: String): LayoutType =
+      entries
+        .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
+  }
 }
 
 object LayoutTypeSerializer : KSerializer<LayoutType> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("LayoutType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("LayoutType", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: LayoutType) {
-        encoder.encodeString(value.serializedName)
-    }
+  override fun serialize(
+    encoder: Encoder,
+    value: LayoutType,
+  ) {
+    encoder.encodeString(value.serializedName)
+  }
 
-    override fun deserialize(decoder: Decoder): LayoutType {
-        val key = decoder.decodeString()
-        return LayoutType.deserialize(key)
-    }
+  override fun deserialize(decoder: Decoder): LayoutType {
+    val key = decoder.decodeString()
+    return LayoutType.deserialize(key)
+  }
 }
 
 @kotlinx.serialization.Serializable(with = TileTypeSerializer::class)
 enum class TileType(val serializedName: String) {
-    RECTANGULAR("rectangular"), ROUND("round");
+  RECTANGULAR("rectangular"),
+  ROUND("round"),
+  ;
 
-    companion object {
-        fun deserialize(serialisedName: String): TileType = entries
-            .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
-    }
+  companion object {
+    fun deserialize(serialisedName: String): TileType =
+      entries
+        .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
+  }
 }
 
 object TileTypeSerializer : KSerializer<TileType> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("TileType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("TileType", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: TileType) {
-        encoder.encodeString(value.serializedName)
-    }
+  override fun serialize(
+    encoder: Encoder,
+    value: TileType,
+  ) {
+    encoder.encodeString(value.serializedName)
+  }
 
-    override fun deserialize(decoder: Decoder): TileType {
-        val key = decoder.decodeString()
-        return TileType.deserialize(key)
-    }
+  override fun deserialize(decoder: Decoder): TileType {
+    val key = decoder.decodeString()
+    return TileType.deserialize(key)
+  }
 }
 
 @kotlinx.serialization.Serializable(with = VideoTypeSerializer::class)
 enum class VideoType(val serializedName: String) {
-    STORY("stories"), CLIP("clips");
+  STORY("stories"),
+  CLIP("clips"),
+  ;
 
-    companion object {
-        fun deserialize(serialisedName: String): VideoType = entries
-            .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
-    }
+  companion object {
+    fun deserialize(serialisedName: String): VideoType =
+      entries
+        .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
+  }
 }
 
 object VideoTypeSerializer : KSerializer<VideoType> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("VideoType", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("VideoType", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: VideoType) {
-        encoder.encodeString(value.serializedName)
-    }
+  override fun serialize(
+    encoder: Encoder,
+    value: VideoType,
+  ) {
+    encoder.encodeString(value.serializedName)
+  }
 
-    override fun deserialize(decoder: Decoder): VideoType {
-        val key = decoder.decodeString()
-        return VideoType.deserialize(key)
-    }
+  override fun deserialize(decoder: Decoder): VideoType {
+    val key = decoder.decodeString()
+    return VideoType.deserialize(key)
+  }
 }
 
 @kotlinx.serialization.Serializable(with = ItemSizeSerializer::class)
 enum class ItemSize(val serializedName: String) {
-    MEDIUM("medium"), REGULAR("regular"), LARGE("large"), SMALL("small");
+  MEDIUM("medium"),
+  REGULAR("regular"),
+  LARGE("large"),
+  SMALL("small"),
+  ;
 
-    companion object {
-        fun deserialize(serialisedName: String): ItemSize = entries
-            .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
-    }
+  companion object {
+    fun deserialize(serialisedName: String): ItemSize =
+      entries
+        .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
+  }
 }
 
 object ItemSizeSerializer : KSerializer<ItemSize> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("ItemSize", PrimitiveKind.STRING)
+  override val descriptor: SerialDescriptor =
+    PrimitiveSerialDescriptor("ItemSize", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: ItemSize) {
-        encoder.encodeString(value.serializedName)
-    }
+  override fun serialize(
+    encoder: Encoder,
+    value: ItemSize,
+  ) {
+    encoder.encodeString(value.serializedName)
+  }
 
-    override fun deserialize(decoder: Decoder): ItemSize {
-        val key = decoder.decodeString()
-        return ItemSize.deserialize(key)
-    }
+  override fun deserialize(decoder: Decoder): ItemSize {
+    val key = decoder.decodeString()
+    return ItemSize.deserialize(key)
+  }
 }

@@ -19,51 +19,53 @@ import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-  private val getHomeScreenUseCase: GetHomeScreenUseCase
-) : ViewModel() {
-  private val _uiState = MutableStateFlow(HomePageUiState())
-  val uiState: StateFlow<HomePageUiState> = _uiState.asStateFlow()
-  private lateinit var config: Config
+class HomeViewModel
+  @Inject
+  constructor(
+    private val getHomeScreenUseCase: GetHomeScreenUseCase,
+  ) : ViewModel() {
+    private val _uiState = MutableStateFlow(HomePageUiState())
+    val uiState: StateFlow<HomePageUiState> = _uiState.asStateFlow()
+    private lateinit var config: Config
 
-  fun loadHomePage(config: Config) {
-    this.config = config
-    onRefresh()
-  }
-
-  fun onRefresh() {
-    viewModelScope.launch {
-      _uiState.update {
-        it.copy(isRefreshing = true)
-      }
-
-      val homeItems = if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
-      _uiState.value =
-        HomePageUiState(
-          isRefreshing = false,
-          tabsEnabled = config.tabsEnabled,
-          homeItems = homeItems,
-          tabs = config.tabs
-        )
+    fun loadHomePage(config: Config) {
+      this.config = config
+      onRefresh()
     }
-  }
 
-  fun hideStorytellerItem(itemId: String) {
-    viewModelScope.launch {
-      _uiState.update {
-        it.copy(
-          homeItems = it.homeItems.filter { item -> item.itemId != itemId }
-        )
+    fun onRefresh() {
+      viewModelScope.launch {
+        _uiState.update {
+          it.copy(isRefreshing = true)
+        }
+
+        val homeItems = if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
+        _uiState.value =
+          HomePageUiState(
+            isRefreshing = false,
+            tabsEnabled = config.tabsEnabled,
+            homeItems = homeItems,
+            tabs = config.tabs,
+          )
       }
     }
+
+    fun hideStorytellerItem(itemId: String) {
+      viewModelScope.launch {
+        _uiState.update {
+          it.copy(
+            homeItems = it.homeItems.filter { item -> item.itemId != itemId },
+          )
+        }
+      }
+    }
   }
-}
 
 data class HomePageUiState(
   val isRefreshing: Boolean = false,
   val tabsEnabled: Boolean = false,
   val homeItems: List<PageItemUiModel> = emptyList(),
-  val tabs: List<TabDto> = emptyList()
+  val tabs: List<TabDto> = emptyList(),
 )
 
 @Serializable
@@ -77,5 +79,5 @@ data class PageItemUiModel(
   val categories: List<String>,
   val displayLimit: Int,
   val collectionId: String?,
-  val size: ItemSize
+  val size: ItemSize,
 )

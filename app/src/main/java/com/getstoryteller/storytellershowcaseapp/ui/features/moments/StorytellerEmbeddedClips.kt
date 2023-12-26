@@ -27,18 +27,19 @@ fun StorytellerEmbeddedClips(
   val fmgr = (localContext as? FragmentActivity)?.supportFragmentManager
   val containerId by rememberSaveable { mutableIntStateOf(View.generateViewId()) }
   val container = remember { mutableStateOf<FragmentContainerView?>(null) }
-  val viewBlock: (Context) -> View = remember(localContext) {
-    { context ->
-      FragmentContainerView(context)
-        .apply {
-          id = containerId
-        }
-        .also {
-          fmgr?.commit { onCommit(it.id) }
-          container.value = it
-        }
+  val viewBlock: (Context) -> View =
+    remember(localContext) {
+      { context ->
+        FragmentContainerView(context)
+          .apply {
+            id = containerId
+          }
+          .also {
+            fmgr?.commit { onCommit(it.id) }
+            container.value = it
+          }
+      }
     }
-  }
   AndroidView(
     modifier = modifier,
     factory = viewBlock,

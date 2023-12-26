@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -25,13 +25,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
+import com.getstoryteller.storytellershowcaseapp.ui.components.StorytellerScrollableTabRow
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
-import com.getstoryteller.storytellershowcaseapp.ui.components.StorytellerScrollableTabRow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -65,11 +66,14 @@ fun TabLayout(
   }
 
   Column(modifier = Modifier.fillMaxSize()) {
-    StorytellerScrollableTabRow(selectedTabIndex = currentPage.value,
-      backgroundColor = MaterialTheme.colors.background,
+    StorytellerScrollableTabRow(
+      modifier = Modifier.zIndex(1F),
+      selectedTabIndex = currentPage.value,
+      backgroundColor = MaterialTheme.colorScheme.surface,
       contentColor = Color.fromHex("#ffcd07"),
       edgePadding = 0.dp,
-      divider = {}) {
+      divider = {},
+    ) {
       tabs.forEachIndexed { index, tab ->
         val isSelected by remember(currentPage.value) {
           mutableStateOf(index == currentPage.value)
@@ -81,7 +85,7 @@ fun TabLayout(
             text = tab.name,
             fontSize = 16.sp,
             fontWeight = FontWeight.W600,
-            color = if (isSelected) MaterialTheme.colors.onBackground else MaterialTheme.colors.onSurface
+            color = if (isSelected) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface,
           )
         }, selected = isSelected, onClick = {
           val interceptor = topBarNavigationInterceptor
@@ -97,9 +101,12 @@ fun TabLayout(
         })
       }
     }
-    HorizontalPager(state = pagerState,
-      beyondBoundsPageCount = 0 /* This needs to be zero or nav interception will not work */,
-      key = { tabs[it].name }) { pageIndex ->
+    HorizontalPager(
+      state = pagerState,
+      // This needs to be zero or nav interception will not work
+      beyondBoundsPageCount = 0,
+      key = { tabs[it].name },
+    ) { pageIndex ->
       val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }
       val viewModel: TabViewModel = hiltViewModel<TabViewModel>(key = "${tabs.hashCode()}, $pageIndex")
 
@@ -107,7 +114,8 @@ fun TabLayout(
         viewModel.loadTab(tabValue)
       }
 
-      TabScreen(tabId = tabValue,
+      TabScreen(
+        tabId = tabValue,
         viewModel = viewModel,
         sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
@@ -135,14 +143,17 @@ fun TabLayout(
               ),
             )
           }
-        })
+        },
+      )
     }
   }
 }
 
 @Stable
 data class TabLayoutUiState(
-  val tabs: List<TabDto>, val isRefreshing: Boolean, val config: Config?
+  val tabs: List<TabDto>,
+  val isRefreshing: Boolean,
+  val config: Config?,
 )
 
 fun Color.Companion.fromHex(hexString: String) = Color(android.graphics.Color.parseColor(hexString))

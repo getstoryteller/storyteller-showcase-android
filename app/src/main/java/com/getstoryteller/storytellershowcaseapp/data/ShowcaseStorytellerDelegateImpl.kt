@@ -12,24 +12,32 @@ import com.storyteller.ui.list.StorytellerDelegate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
-class ShowcaseStorytellerDelegateImpl @Inject constructor(
-  private val storytellerAdsManager: StorytellerAdsManager,
-  private val amplitudeAnalyticsManager: AmplitudeAnalyticsManager
-) : StorytellerDelegate {
+class ShowcaseStorytellerDelegateImpl
+  @Inject
+  constructor(
+    private val storytellerAdsManager: StorytellerAdsManager,
+    private val amplitudeAnalyticsManager: AmplitudeAnalyticsManager,
+  ) : StorytellerDelegate {
+    override fun getAd(
+      adRequestInfo: StorytellerAdRequestInfo,
+      onComplete: (StorytellerAd) -> Unit,
+      onError: () -> Unit,
+    ) = storytellerAdsManager.handleAds(adRequestInfo, onComplete, onError)
 
-  override fun getAd(
-    adRequestInfo: StorytellerAdRequestInfo, onComplete: (StorytellerAd) -> Unit, onError: () -> Unit
-  ) = storytellerAdsManager.handleAds(adRequestInfo, onComplete, onError)
+    override fun configureWebView(
+      view: WebView,
+      url: String?,
+      favicon: Bitmap?,
+    ) = Unit
 
-  override fun configureWebView(view: WebView, url: String?, favicon: Bitmap?) = Unit
+    override fun userNavigatedToApp(url: String) = Unit
 
-  override fun userNavigatedToApp(url: String) = Unit
-
-  override fun onUserActivityOccurred(type: EventType, data: UserActivityData) {
-    storytellerAdsManager.handleAdEvents(type, data)
-    amplitudeAnalyticsManager.handleAnalyticsEvents(type, data)
+    override fun onUserActivityOccurred(
+      type: EventType,
+      data: UserActivityData,
+    ) {
+      storytellerAdsManager.handleAdEvents(type, data)
+      amplitudeAnalyticsManager.handleAnalyticsEvents(type, data)
+    }
   }
-}
-

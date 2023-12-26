@@ -9,7 +9,7 @@ interface LogoutUseCase {
 
 class LogoutUseCaseImpl(
   private val sessionRepository: SessionRepository,
-  private val amplitudeService: AmplitudeService
+  private val amplitudeService: AmplitudeService,
 ) : LogoutUseCase {
   override fun logout() {
     sessionRepository.apiKey = null

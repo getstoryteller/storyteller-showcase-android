@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,11 +28,12 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 
 @Composable
 fun OptionSelectScreen(
+  modifier: Modifier = Modifier,
   navController: NavController,
   viewModel: OptionSelectViewModel,
   sharedViewModel: MainViewModel,
   optionSelectType: OptionSelectType,
-  config: Config
+  config: Config,
 ) {
   val isDarkTheme = isSystemInDarkTheme()
   LaunchedEffect(key1 = optionSelectType.name, block = {
@@ -52,29 +53,31 @@ fun OptionSelectScreen(
   val uiState by viewModel.uiState.collectAsState()
 
   LazyColumn(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(top = 20.dp)
-      .background(color = MaterialTheme.colors.surface)
-      .navigationBarsPadding()
+    modifier =
+      modifier
+        .fillMaxSize()
+        .background(color = MaterialTheme.colorScheme.surface)
+        .padding(top = 20.dp)
+        .navigationBarsPadding(),
   ) {
     items(uiState.options, key = { it.key ?: uiState.options.indexOf(it) }) { model ->
       Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(40.dp)
-          .background(if (isDarkTheme) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.background)
-          .clickable {
-            viewModel.selectOption(model.key)
-          },
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+          Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+            .clickable {
+              viewModel.selectOption(model.key)
+            },
+        verticalAlignment = Alignment.CenterVertically,
       ) {
         RadioButton(selected = uiState.selectedOption == model.key, onClick = {
           viewModel.selectOption(model.key)
         })
         Text(
-          color = MaterialTheme.colors.onBackground,
-          text = model.value
+          color = MaterialTheme.colorScheme.onBackground,
+          text = model.value,
         )
       }
     }

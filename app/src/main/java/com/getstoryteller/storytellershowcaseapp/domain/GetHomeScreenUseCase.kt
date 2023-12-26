@@ -8,9 +8,8 @@ interface GetHomeScreenUseCase {
 }
 
 class GetHomeScreenUseCaseImpl(
-  private val tenantRepository: TenantRepository
+  private val tenantRepository: TenantRepository,
 ) : GetHomeScreenUseCase {
-
   override suspend fun getHomeScreen(): List<PageItemUiModel> {
     return tenantRepository.getHomePage()
       .map {
@@ -24,7 +23,7 @@ class GetHomeScreenUseCaseImpl(
           type = it.videoType,
           layout = it.layout,
           tileType = it.tileType,
-          size = it.size
+          size = it.size,
         )
       }
   }
