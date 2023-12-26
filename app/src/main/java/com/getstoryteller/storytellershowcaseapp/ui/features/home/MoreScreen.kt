@@ -2,7 +2,6 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -45,7 +44,6 @@ fun MoreScreen(
       modifier
         .fillMaxSize()
         .nestedScroll(refreshState.nestedScrollConnection)
-        .navigationBarsPadding()
         .padding(bottom = 16.dp),
   ) {
     StorytellerItem(

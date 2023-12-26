@@ -60,7 +60,7 @@ fun ListHeader(
       text = moreButtonTitle,
       fontWeight = FontWeight.W400,
       fontSize = 16.sp,
-      color = MaterialTheme.colorScheme.secondary,
+      color = MaterialTheme.colorScheme.onBackground,
     )
   }
 }
