@@ -17,6 +17,7 @@ data class StorytellerColors(
   val success: Color = Color.Unspecified,
   val subtitle: Color = Color.Unspecified,
   val header: Color = Color.Unspecified,
+  val border: Color = Color.Unspecified,
 )
 
 val LocalStorytellerColorsPalette = staticCompositionLocalOf { StorytellerColors() }
@@ -27,6 +28,7 @@ private val StorytellerLightColorScheme =
     success = Color(0xFF57F35D),
     subtitle = Color(0x993C3C43),
     header = Color(0xFF000000),
+    border = Color(0x5C3C3C43),
   )
 
 private val StorytellerDarkColorScheme =
@@ -35,6 +37,7 @@ private val StorytellerDarkColorScheme =
     success = Color(0xFF57F35D),
     subtitle = Color(0x9997979D),
     header = Color(0xFFFFFFFF),
+    border = Color(0xD9545458),
   )
 
 @SuppressLint("ConflictingOnColor")
@@ -44,7 +47,7 @@ private val DarkColorScheme =
     onPrimary = Color(0xFFFFFFFF),
     secondary = Color(0xFF1C62EB),
     background = Color(0xFF000000),
-    surface = Color(0xFF000000),
+    surface = Color(0xFF0D0D0D),
     onSurface = Color(0xB3FFFFFF),
     onBackground = Color(0xFFFFFFFF),
     tertiaryContainer = Color(0xFF1A1A1A),

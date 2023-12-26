@@ -24,7 +24,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.getstoryteller.storytellershowcaseapp.R
+import com.getstoryteller.storytellershowcaseapp.ui.LocalStorytellerColorsPalette
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.PageState
+import com.getstoryteller.storytellershowcaseapp.ui.utils.borderTop
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,8 +41,8 @@ fun BottomNavigationBar(
   if (navigationState != PageState.HOME) return
 
   NavigationBar(
-    modifier = Modifier,
-    tonalElevation = 0.dp,
+    modifier = Modifier.borderTop(0.5.dp, LocalStorytellerColorsPalette.current.border),
+    tonalElevation = 1.dp,
     containerColor = MaterialTheme.colorScheme.background,
   ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
