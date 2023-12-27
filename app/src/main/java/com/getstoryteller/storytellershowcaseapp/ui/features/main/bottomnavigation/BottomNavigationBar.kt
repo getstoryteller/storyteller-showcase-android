@@ -1,9 +1,11 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -13,10 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,7 +40,7 @@ fun BottomNavigationBar(
   onSetTopBarVisible: (Boolean) -> Unit,
   navigationState: PageState,
   onSetNavigationState: (PageState) -> Unit,
-  onTriggerMomentReload: () -> Unit,
+  onTriggerMomentReload: (() -> Unit) -> Unit,
   onSetNavigationInterceptor: () -> NavigationInterceptor = { NavigationInterceptor.None },
 ) {
   if (navigationState != PageState.HOME) return
@@ -84,17 +89,27 @@ fun BottomNavigationBar(
           navController.popUpTo("home")
         },
       )
+      var momentsIsLoading by remember { mutableStateOf(false) }
+
       NavigationBarItem(
         colors =
           NavigationBarItemDefaults.colors(
             indicatorColor = Color.Transparent,
           ),
         icon = {
-          Icon(
-            painter = painterResource(id = R.drawable.ic_moments),
-            contentDescription = null,
-            tint = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-          )
+          if (momentsIsLoading) {
+            CircularProgressIndicator(
+              modifier = Modifier.size(24.dp),
+              color = MaterialTheme.colorScheme.primary,
+              strokeCap = StrokeCap.Round,
+            )
+          } else {
+            Icon(
+              painter = painterResource(id = R.drawable.ic_moments),
+              contentDescription = null,
+              tint = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            )
+          }
         },
         label = {
           Text(
@@ -109,7 +124,10 @@ fun BottomNavigationBar(
               targetRoute = "home/moments",
               shouldIntercept = { true },
               onIntercepted = {
-                onTriggerMomentReload()
+                momentsIsLoading = true
+                onTriggerMomentReload {
+                  momentsIsLoading = false
+                }
               },
             )
 

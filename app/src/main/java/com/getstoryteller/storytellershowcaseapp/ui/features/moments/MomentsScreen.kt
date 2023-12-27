@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,6 +29,8 @@ import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.domain.entities.Error
 import com.storyteller.ui.pager.StorytellerClipsFragment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // This view embeds the StorytellerClipsFragment in a tab of its own.
 // There is more information available about this in our public documentation
@@ -61,6 +64,7 @@ fun MomentsScreen(
 
     var isVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
     val view = LocalView.current
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(clipsFragment) {
       clipsFragment.listener =
         object : StorytellerClipsFragment.Listener {
@@ -78,6 +82,10 @@ fun MomentsScreen(
             dataCount: Int,
           ) {
             isVisible = false
+            coroutineScope.launch {
+              delay(500)
+              reloadDataTrigger?.onComplete?.invoke()
+            }
           }
         }
 

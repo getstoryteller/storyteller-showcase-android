@@ -262,7 +262,7 @@ fun StorytellerScrollableTabRow(
   modifier: Modifier = Modifier,
   backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
   contentColor: Color = contentColorFor(backgroundColor),
-  edgePadding: Dp = TabRowDefaults.ScrollableTabRowPadding,
+  edgePadding: Dp = TabRowDefaults.SCROLLABLE_TAB_ROW_PADDING,
   indicator:
     @Composable @UiComposable
     (tabPositions: List<TabPosition>) -> Unit = @Composable { tabPositions ->
@@ -408,8 +408,8 @@ object TabRowDefaults {
   @Composable
   fun Divider(
     modifier: Modifier = Modifier,
-    thickness: Dp = DividerThickness,
-    color: Color = LocalContentColor.current.copy(alpha = DividerOpacity),
+    thickness: Dp = DIVIDER_THICKNESS,
+    color: Color = LocalContentColor.current.copy(alpha = DIVIDER_OPACITY),
   ) {
     HorizontalDivider(modifier = modifier, thickness = thickness, color = color)
   }
@@ -425,7 +425,7 @@ object TabRowDefaults {
   @Composable
   fun Indicator(
     modifier: Modifier = Modifier,
-    height: Dp = IndicatorHeight,
+    height: Dp = INDICATOR_HEIGHT,
     color: Color = LocalContentColor.current,
   ) {
     Box(
@@ -468,22 +468,22 @@ object TabRowDefaults {
   /**
    * Default opacity for the color of [Divider]
    */
-  const val DividerOpacity = 0.12f
+  private const val DIVIDER_OPACITY = 0.12f
 
   /**
    * Default thickness for [Divider]
    */
-  val DividerThickness = 1.dp
+  private val DIVIDER_THICKNESS = 1.dp
 
   /**
    * Default height for [Indicator]
    */
-  val IndicatorHeight = 2.dp
+  private val INDICATOR_HEIGHT = 2.dp
 
   /**
    * The default padding from the starting edge before a tab in a [StorytellerScrollableTabRow].
    */
-  val ScrollableTabRowPadding = 52.dp
+  val SCROLLABLE_TAB_ROW_PADDING = 52.dp
 }
 
 private enum class TabSlots {

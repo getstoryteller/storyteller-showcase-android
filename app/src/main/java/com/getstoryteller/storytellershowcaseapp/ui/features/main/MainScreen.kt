@@ -92,16 +92,6 @@ fun MainScreen(
     )
   }
 
-//  LaunchedEffect(navController.currentBackStackEntryAsState().value) {
-//    when (navController.currentDestination?.route) {
-//      "home/moments" -> {
-//        setStatusBarColor(activity, Color.Transparent, false)
-//      }
-//
-//      else -> setStatusBarColor(activity, topBarColor, !isSystemDark)
-//    }
-//  }
-
   Scaffold(
     topBar = {
       if (navigationState == PageState.LOGIN) return@Scaffold
@@ -195,8 +185,8 @@ fun MainScreen(
         onSetNavigationState = {
           navigationState = it
         },
-        onTriggerMomentReload = {
-          viewModel.triggerMomentsReloadData()
+        onTriggerMomentReload = { onComplete ->
+          viewModel.triggerMomentsReloadData(onComplete)
         },
         onSetNavigationInterceptor = { navigationInterceptor },
       )

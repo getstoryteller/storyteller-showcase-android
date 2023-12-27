@@ -45,8 +45,8 @@ class MainViewModel
     private val _uiState = MutableStateFlow(MainPageUiState())
     val uiState: StateFlow<MainPageUiState> = _uiState.asStateFlow()
 
-    private val _reloadMomentsDataTrigger = MutableLiveData<String>()
-    val reloadMomentsDataTrigger: LiveData<String> = _reloadMomentsDataTrigger
+    private val _reloadMomentsDataTrigger = MutableLiveData<MomentsSideEffect>()
+    val reloadMomentsDataTrigger: LiveData<MomentsSideEffect> = _reloadMomentsDataTrigger
 
     private val _reloadHomeTrigger = MutableLiveData<String>()
     val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
@@ -64,9 +64,9 @@ class MainViewModel
       }
     }
 
-    fun triggerMomentsReloadData() {
+    fun triggerMomentsReloadData(onComplete: () -> Unit) {
       // open to suggestions for a different way to do this. This requires a unique key for LaunchedEffect in MomentsScreen on every button click
-      _reloadMomentsDataTrigger.value = UUID.randomUUID().toString()
+      _reloadMomentsDataTrigger.value = MomentsSideEffect(onTrigger = UUID.randomUUID().toString(), onComplete = onComplete)
     }
 
     fun verifyCode(code: String) {
@@ -123,4 +123,9 @@ data class MainPageUiState(
   val isHomeRefreshing: Boolean = false,
   val isMainScreenLoading: Boolean = false,
   val config: Config? = null,
+)
+
+data class MomentsSideEffect(
+  val onTrigger: String,
+  val onComplete: (() -> Unit)? = null,
 )
