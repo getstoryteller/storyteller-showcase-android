@@ -2,11 +2,6 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Build
-import android.os.Bundle
-import android.os.Parcelable
-import android.view.View
-import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
 import androidx.compose.animation.EnterTransition
@@ -38,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -76,11 +70,23 @@ fun MainScreen(
     fragment: Fragment,
     tag: String,
   ) -> (FragmentTransaction.(containerId: Int) -> Unit),
-  getClipsFragment: () -> StorytellerClipsFragment?,
+  onSaveInstanceState: FragmentTransaction.(fragment: Fragment) -> Unit,
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember { mutableStateOf(PageState.HOME) }
   var title by remember { mutableStateOf("") }
+
+  val clipsFragment by remember {
+    mutableStateOf(
+      StorytellerClipsFragment.create(""),
+    )
+  }
+
+  LaunchedEffect(mainPageUiState.config) {
+    if (mainPageUiState.config != null) {
+      clipsFragment.collectionId = mainPageUiState.config?.topLevelCollectionId ?: ""
+    }
+  }
 
   var topBarVisible by remember {
     mutableStateOf(true)
@@ -266,10 +272,9 @@ fun MainScreen(
           }
           MomentsScreen(
             modifier = Modifier,
-            config = mainPageUiState.config,
-            tag = "moments",
+            clipsFragment = clipsFragment,
             onCommit = onCommit,
-            getClipsFragment = getClipsFragment,
+            onSaveInstanceState = onSaveInstanceState,
             sharedViewModel = viewModel,
           )
         }
@@ -399,36 +404,4 @@ enum class PageState {
   ACCOUNT,
   MORE,
   LOGIN,
-}
-
-inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? =
-  when {
-    Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
-    else ->
-      @Suppress("DEPRECATION")
-      getParcelable(key)
-        as? T
-  }
-
-@Suppress("DEPRECATION")
-fun setStatusBarColor(
-  activity: Activity,
-  color: Color,
-  useDarkIcons: Boolean,
-) {
-  activity.window.statusBarColor = color.toArgb()
-
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-    activity.window.insetsController?.setSystemBarsAppearance(
-      if (useDarkIcons) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
-      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-    )
-  } else {
-    activity.window.decorView.systemUiVisibility =
-      if (useDarkIcons) {
-        activity.window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-      } else {
-        activity.window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-      }
-  }
 }

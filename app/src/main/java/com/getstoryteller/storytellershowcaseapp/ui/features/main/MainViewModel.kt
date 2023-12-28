@@ -9,9 +9,14 @@ import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -45,14 +50,26 @@ class MainViewModel
     private val _uiState = MutableStateFlow(MainPageUiState())
     val uiState: StateFlow<MainPageUiState> = _uiState.asStateFlow()
 
-    private val _reloadMomentsDataTrigger = MutableLiveData<MomentsSideEffect>()
-    val reloadMomentsDataTrigger: LiveData<MomentsSideEffect> = _reloadMomentsDataTrigger
+    private val _reloadMomentsDataTrigger = MutableSharedFlow<MomentsSideEffect?>()
+    val reloadMomentsDataTrigger: SharedFlow<MomentsSideEffect?> = _reloadMomentsDataTrigger
 
     private val _reloadHomeTrigger = MutableLiveData<String>()
     val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
 
     private val _loginUiState = MutableStateFlow(LoginUiState(isLoggedIn = sessionRepository.apiKey != null))
     val loginUiState = _loginUiState.asStateFlow()
+
+    private val momentsDisposedAt = MutableStateFlow<Long?>(null)
+    val momentsReloadTimeout: StateFlow<Boolean> =
+      momentsDisposedAt.map {
+        if (it == null) {
+          false
+        } else {
+          val timeElapsed = System.currentTimeMillis() - it
+          val tenMinutesInMillis = 10 * 60 * 1000
+          timeElapsed > tenMinutesInMillis
+        }
+      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(7000), false)
 
     fun setup() {
       _uiState.update { it.copy(isMainScreenLoading = true) }
@@ -64,9 +81,13 @@ class MainViewModel
       }
     }
 
-    fun triggerMomentsReloadData(onComplete: () -> Unit) {
+    fun triggerMomentsReloadData(onComplete: () -> Unit = {}) {
       // open to suggestions for a different way to do this. This requires a unique key for LaunchedEffect in MomentsScreen on every button click
-      _reloadMomentsDataTrigger.value = MomentsSideEffect(onTrigger = UUID.randomUUID().toString(), onComplete = onComplete)
+      viewModelScope.launch {
+        _reloadMomentsDataTrigger.emit(
+          MomentsSideEffect(onTrigger = UUID.randomUUID().toString(), onComplete = onComplete),
+        )
+      }
     }
 
     fun verifyCode(code: String) {
@@ -116,6 +137,15 @@ class MainViewModel
       _loginUiState.update {
         it.copy(loginState = LoginState.Idle)
       }
+    }
+
+    fun momentsDisposed() {
+      momentsDisposedAt.value = System.currentTimeMillis()
+    }
+
+    override fun onCleared() {
+      momentsDisposedAt.value = null
+      super.onCleared()
     }
   }
 

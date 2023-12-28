@@ -2,17 +2,15 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.moments
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -25,7 +23,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.domain.entities.Error
 import com.storyteller.ui.pager.StorytellerClipsFragment
@@ -39,29 +36,29 @@ import kotlinx.coroutines.launch
 @Composable
 fun MomentsScreen(
   modifier: Modifier = Modifier,
-  config: Config?,
+  clipsFragment: StorytellerClipsFragment,
   sharedViewModel: MainViewModel,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
-  getClipsFragment: () -> StorytellerClipsFragment?,
-  tag: String,
+  onSaveInstanceState: FragmentTransaction.(fragment: Fragment) -> Unit,
 ) {
-  val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.observeAsState()
+  val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
+
   LaunchedEffect(reloadDataTrigger) {
-    reloadDataTrigger?.let {
-      getClipsFragment()?.reloadData()
+    if (reloadDataTrigger == null) return@LaunchedEffect
+    clipsFragment.reloadData()
+  }
+
+  val momentsReloadTimeout by sharedViewModel.momentsReloadTimeout.collectAsState()
+  LaunchedEffect(momentsReloadTimeout) {
+    if (momentsReloadTimeout) {
+      sharedViewModel.momentsDisposed()
+      sharedViewModel.triggerMomentsReloadData()
     }
   }
 
   Box(
-    modifier =
-      modifier.fillMaxSize(),
+    modifier = modifier.fillMaxSize(),
   ) {
-    val clipsFragment by remember(config) {
-      mutableStateOf(
-        StorytellerClipsFragment.create(config?.topLevelCollectionId ?: ""),
-      )
-    }
-
     var isVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
     val view = LocalView.current
     val coroutineScope = rememberCoroutineScope()
@@ -70,10 +67,6 @@ fun MomentsScreen(
         object : StorytellerClipsFragment.Listener {
           override fun onDataLoadStarted() {
             isVisible = true
-          }
-
-          override fun onTopLevelBackPressed(): Boolean {
-            return super.onTopLevelBackPressed()
           }
 
           override fun onDataLoadComplete(
@@ -90,23 +83,16 @@ fun MomentsScreen(
         }
 
       ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
-        val outInsets =
-          insets.getInsets(WindowInsetsCompat.Type.statusBars())
+        val outInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
         clipsFragment.topInset = outInsets.top
         WindowInsetsCompat.CONSUMED
       }
     }
 
     StorytellerEmbeddedClips(
-      modifier =
-        Modifier
-          .fillMaxWidth()
-          .fillMaxHeight(),
-      onCommit =
-        onCommit(
-          clipsFragment,
-          tag,
-        ),
+      modifier = Modifier.fillMaxSize(),
+      onCommit = onCommit(clipsFragment, "moments-fragment"),
+      onSaveInstanceState = onSaveInstanceState,
     )
 
     if (isVisible) {
@@ -117,6 +103,12 @@ fun MomentsScreen(
             .background(color = Color.Transparent)
             .align(Alignment.Center),
       )
+    }
+  }
+
+  DisposableEffect(Unit) {
+    onDispose {
+      sharedViewModel.momentsDisposed()
     }
   }
 }

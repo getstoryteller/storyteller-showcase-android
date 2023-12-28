@@ -6,31 +6,26 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.BundleCompat
+import androidx.core.os.BundleCompat.getSparseParcelableArray
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.Fragment.SavedState
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellershowcaseapp.ui.ShowcaseAppTheme
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.Storyteller
-import com.storyteller.ui.pager.StorytellerClipsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
   private val viewModel: MainViewModel by viewModels()
   private var savedStateSparseArray = SparseArray<SavedState>()
-  private var currentSelectItemId = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    enableEdgeToEdge()
-
     super.onCreate(savedInstanceState)
     if (savedInstanceState != null) {
-      savedStateSparseArray = BundleCompat.getSparseParcelableArray(
+      savedStateSparseArray = getSparseParcelableArray(
         // in =
         savedInstanceState,
         // key =
@@ -38,14 +33,15 @@ class MainActivity : AppCompatActivity() {
         // clazz =
         SavedState::class.java,
       ) ?: savedStateSparseArray
-      currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
     }
+
     viewModel.setup()
 
     val intentData = intent?.data?.toString()
     if (intentData != null && Storyteller.isStorytellerDeepLink(intentData)) {
       Storyteller.openDeepLink(this, intentData)
     }
+    enableEdgeToEdge()
     setContent {
       val navController = rememberNavController()
       ShowcaseAppTheme {
@@ -54,14 +50,19 @@ class MainActivity : AppCompatActivity() {
           navController = navController,
           viewModel = viewModel,
           onCommit = ::onCommit,
-          getClipsFragment = ::getStorytellerClipsFragment,
+          onSaveInstanceState = { fragmentSaveState(it) },
         )
       }
     }
   }
 
-  private fun getStorytellerClipsFragment(): StorytellerClipsFragment? {
-    return supportFragmentManager.fragments.firstOrNull { it is StorytellerClipsFragment } as? StorytellerClipsFragment
+  private fun FragmentTransaction.fragmentSaveState(fragment: Fragment) {
+    val currentFragment = supportFragmentManager.findFragmentByTag(fragment.tag)
+    if (currentFragment != null) {
+      val savedState = supportFragmentManager.saveFragmentInstanceState(currentFragment)
+      savedStateSparseArray.put(currentFragment.id, savedState)
+    }
+    remove(fragment)
   }
 
   private fun onCommit(
@@ -69,29 +70,18 @@ class MainActivity : AppCompatActivity() {
     tag: String,
   ): FragmentTransaction.(containerId: Int) -> Unit =
     { id ->
-      saveAndRetrieveFragment(supportFragmentManager, id, fragment)
+      saveAndRetrieveFragment(id, fragment)
       replace(id, fragment, tag)
     }
 
   private fun saveAndRetrieveFragment(
-    supportFragmentManager: FragmentManager,
-    tabId: Int,
+    id: Int,
     fragment: Fragment,
   ) {
-    val currentFragment = supportFragmentManager.findFragmentById(currentSelectItemId)
-    if (currentFragment != null) {
-      savedStateSparseArray.put(
-        currentSelectItemId,
-        supportFragmentManager.saveFragmentInstanceState(currentFragment),
-      )
-    }
-    currentSelectItemId = tabId
-    val savedState = savedStateSparseArray[currentSelectItemId]
-    fragment.setInitialSavedState(savedState)
+    fragment.setInitialSavedState(savedStateSparseArray[id])
   }
 
   companion object {
     private const val SAVED_STATE_CONTAINER_KEY = "SAVED_STATE_CONTAINER_KEY"
-    private const val SAVED_STATE_CURRENT_TAB_KEY = "SAVED_STATE_CURRENT_TAB_KEY"
   }
 }

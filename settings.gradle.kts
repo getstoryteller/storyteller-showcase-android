@@ -12,6 +12,7 @@ dependencyResolutionManagement {
   repositories {
     google()
     mavenCentral()
+    mavenLocal()
     maven {
       url = uri("https://storyteller.mycloudrepo.io/public/repositories/storyteller-sdk")
     }
