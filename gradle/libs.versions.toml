@@ -23,7 +23,7 @@ runtime = "1.5.4"
 timber = "5.0.1"
 
 # storyteller = "9.8.3"
-storyteller = "9.8.3-local-develop-57cd5f908-dev-SNAPSHOT"
+storyteller = "9.8.3-local-develop-57cd5f908"
 
 [libraries]
 android-sdk = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }
