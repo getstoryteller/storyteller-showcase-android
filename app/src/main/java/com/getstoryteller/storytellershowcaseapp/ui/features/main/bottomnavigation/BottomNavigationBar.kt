@@ -15,10 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -37,14 +35,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomNavigationBar(
   navController: NavHostController,
+  isSelectedTabLoading: Boolean,
   onSetTopBarVisible: (Boolean) -> Unit,
   navigationState: PageState,
   onSetNavigationState: (PageState) -> Unit,
-  onTriggerMomentReload: (() -> Unit) -> Unit,
+  onTriggerMomentReload: () -> Unit,
   onSetNavigationInterceptor: () -> NavigationInterceptor = { NavigationInterceptor.None },
 ) {
   if (navigationState != PageState.HOME) return
-
   NavigationBar(
     modifier = Modifier.borderTop(0.5.dp, LocalStorytellerColorsPalette.current.border),
     tonalElevation = 1.dp,
@@ -61,6 +59,19 @@ fun BottomNavigationBar(
           ),
         interactionSource = remember { MutableInteractionSource() },
         icon = {
+          if (isSelectedTabLoading && homeSelected) {
+            CircularProgressIndicator(
+              modifier = Modifier.size(24.dp),
+              color = MaterialTheme.colorScheme.primary,
+              strokeCap = StrokeCap.Round,
+            )
+          } else {
+            Icon(
+              painter = painterResource(id = R.drawable.ic_home),
+              contentDescription = null,
+              tint = MaterialTheme.colorScheme.onSurface,
+            )
+          }
           Icon(
             painter = painterResource(id = R.drawable.ic_home),
             contentDescription = null,
@@ -89,7 +100,6 @@ fun BottomNavigationBar(
           navController.popUpTo("home")
         },
       )
-      var momentsIsLoading by remember { mutableStateOf(false) }
 
       NavigationBarItem(
         colors =
@@ -97,7 +107,7 @@ fun BottomNavigationBar(
             indicatorColor = Color.Transparent,
           ),
         icon = {
-          if (momentsIsLoading) {
+          if (isSelectedTabLoading && !homeSelected) {
             CircularProgressIndicator(
               modifier = Modifier.size(24.dp),
               color = MaterialTheme.colorScheme.primary,
@@ -124,10 +134,7 @@ fun BottomNavigationBar(
               targetRoute = "home/moments",
               shouldIntercept = { true },
               onIntercepted = {
-                momentsIsLoading = true
-                onTriggerMomentReload {
-                  momentsIsLoading = false
-                }
+                onTriggerMomentReload()
               },
             )
 

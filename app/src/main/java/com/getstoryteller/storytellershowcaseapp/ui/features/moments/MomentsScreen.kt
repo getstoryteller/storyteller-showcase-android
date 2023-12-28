@@ -40,12 +40,13 @@ fun MomentsScreen(
   sharedViewModel: MainViewModel,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
   onSaveInstanceState: FragmentTransaction.(fragment: Fragment) -> Unit,
+  onMomentsTabLoading: (Boolean) -> Unit,
 ) {
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
 
   LaunchedEffect(reloadDataTrigger) {
     if (reloadDataTrigger == null) return@LaunchedEffect
-    clipsFragment.reloadData()
+    clipsFragment.goBack()
   }
 
   val momentsReloadTimeout by sharedViewModel.momentsReloadTimeout.collectAsState()
@@ -59,14 +60,15 @@ fun MomentsScreen(
   Box(
     modifier = modifier.fillMaxSize(),
   ) {
-    var isVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
+    var isProgressVisible by rememberSaveable(clipsFragment) { mutableStateOf(false) }
     val view = LocalView.current
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(clipsFragment) {
       clipsFragment.listener =
         object : StorytellerClipsFragment.Listener {
           override fun onDataLoadStarted() {
-            isVisible = true
+            isProgressVisible = true
+            onMomentsTabLoading(true)
           }
 
           override fun onDataLoadComplete(
@@ -74,10 +76,10 @@ fun MomentsScreen(
             error: Error?,
             dataCount: Int,
           ) {
-            isVisible = false
             coroutineScope.launch {
+              isProgressVisible = false
               delay(500)
-              reloadDataTrigger?.onComplete?.invoke()
+              onMomentsTabLoading(false)
             }
           }
         }
@@ -95,7 +97,7 @@ fun MomentsScreen(
       onSaveInstanceState = onSaveInstanceState,
     )
 
-    if (isVisible) {
+    if (isProgressVisible) {
       CircularProgressIndicator(
         modifier =
           Modifier
