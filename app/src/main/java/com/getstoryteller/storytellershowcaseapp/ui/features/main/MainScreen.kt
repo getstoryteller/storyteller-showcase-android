@@ -75,6 +75,7 @@ fun MainScreen(
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember { mutableStateOf(PageState.HOME) }
   var title by remember { mutableStateOf("") }
+  var momentsTabLoading by remember { mutableStateOf(false) }
 
   val clipsFragment by remember {
     mutableStateOf(
@@ -191,11 +192,11 @@ fun MainScreen(
         onSetNavigationState = {
           navigationState = it
         },
-        onTriggerMomentReload = { onComplete ->
-          viewModel.triggerMomentsReloadData(onComplete)
+        isSelectedTabLoading = momentsTabLoading,
+        onTriggerMomentReload = {
+          viewModel.triggerMomentsReloadData()
         },
-        onSetNavigationInterceptor = { navigationInterceptor },
-      )
+      ) { navigationInterceptor }
     },
   ) { paddingValues ->
     Box(
@@ -276,7 +277,9 @@ fun MainScreen(
             onCommit = onCommit,
             onSaveInstanceState = onSaveInstanceState,
             sharedViewModel = viewModel,
-          )
+          ) {
+            momentsTabLoading = it
+          }
         }
         composable("home/account", enterTransition = {
           if (initialState.destination.route?.startsWith("account") == true) {

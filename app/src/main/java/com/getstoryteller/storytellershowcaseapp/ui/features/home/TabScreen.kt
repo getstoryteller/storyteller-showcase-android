@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,7 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TabScreen(
   tabId: String,
-  viewModel: TabViewModel,
+  tabViewModel: TabViewModel,
   sharedViewModel: MainViewModel,
   rootNavController: NavController,
   isRefreshing: Boolean,
@@ -50,18 +51,24 @@ fun TabScreen(
   setParentBottomNavigationInterceptor: () -> Unit = {},
 ) {
   LaunchedEffect(key1 = tabId, block = {
-    viewModel.loadTab(tabId)
+    tabViewModel.loadTab(tabId)
   })
 
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
-  val pageUiState by viewModel.uiState.collectAsState()
+  val pageUiState by tabViewModel.uiState.collectAsState()
 
   val refreshState = rememberStorytellerPullToRefreshState()
+  val listState = rememberLazyListState()
+  val scope = rememberCoroutineScope()
+  val listItems = pageUiState.tabItems
+  var columnHeightPx by remember {
+    mutableIntStateOf(0)
+  }
 
   if (refreshState.isRefreshing) {
     LaunchedEffect(Unit) {
-      viewModel.onRefresh()
+      tabViewModel.onRefresh()
     }
   }
 
@@ -74,16 +81,24 @@ fun TabScreen(
     }
   }
 
-  val listState = rememberLazyListState()
-  val scope = rememberCoroutineScope()
-  val listItems = pageUiState.tabItems
-  var columnHeightPx by remember {
-    mutableIntStateOf(0)
+  val tabReloadTimeout by tabViewModel.tabReloadTimeout.collectAsState()
+  LaunchedEffect(tabReloadTimeout) {
+    if (tabReloadTimeout) {
+      tabViewModel.tabDisposed()
+      tabViewModel.onRefresh()
+      listState.animateScrollToItem(0)
+    }
+  }
+
+  DisposableEffect(Unit) {
+    onDispose {
+      tabViewModel.tabDisposed()
+    }
   }
 
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
-      viewModel.onRefresh()
+      tabViewModel.onRefresh()
       scope.launch {
         listState.scrollToItem(0)
       }
@@ -100,7 +115,7 @@ fun TabScreen(
           },
           onIntercepted = {
             listState.animateScrollToItem(0)
-            viewModel.onRefresh()
+            tabViewModel.onRefresh()
           },
         ),
       )
@@ -121,7 +136,7 @@ fun TabScreen(
           },
           onIntercepted = {
             listState.animateScrollToItem(0)
-            viewModel.onRefresh()
+            tabViewModel.onRefresh()
           },
         ),
       )
@@ -155,7 +170,7 @@ fun TabScreen(
           roundTheme = config?.roundTheme,
           squareTheme = config?.squareTheme,
         ) {
-          viewModel.hideStorytellerItem(uiModel.itemId)
+          tabViewModel.hideStorytellerItem(uiModel.itemId)
         }
       }
     }

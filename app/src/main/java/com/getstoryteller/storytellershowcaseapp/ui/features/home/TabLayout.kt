@@ -16,6 +16,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,7 +46,7 @@ fun TabLayout(
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
 ) {
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
-
+  var reloadCurrentTabSignal by remember { mutableIntStateOf(-1) }
   val tabs = remember(parentState.tabs) { parentState.tabs }
 
   val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -94,6 +95,8 @@ fun TabLayout(
               interceptor.onIntercepted()
             }
             return@Tab
+          } else if (interceptor is NavigationInterceptor.None && isSelected) {
+            reloadCurrentTabSignal = index
           }
           scope.launch {
             pagerState.animateScrollToPage(index)
@@ -101,6 +104,7 @@ fun TabLayout(
         })
       }
     }
+
     HorizontalPager(
       state = pagerState,
       // This needs to be zero or nav interception will not work
@@ -114,9 +118,16 @@ fun TabLayout(
         viewModel.loadTab(tabValue)
       }
 
+      LaunchedEffect(reloadCurrentTabSignal) {
+        if (reloadCurrentTabSignal == pageIndex) {
+          viewModel.onRefresh()
+          reloadCurrentTabSignal = -1
+        }
+      }
+
       TabScreen(
         tabId = tabValue,
-        viewModel = viewModel,
+        tabViewModel = viewModel,
         sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
         isRefreshing = parentState.isRefreshing,
@@ -135,9 +146,7 @@ fun TabLayout(
                 onIntercepted = {
                   coroutineScope.launch {
                     pagerState.scrollToPage(0)
-                  }
-                  if (pagerState.currentPage == 0) {
-                    viewModel.onRefresh()
+                    reloadCurrentTabSignal = 0
                   }
                 },
               ),

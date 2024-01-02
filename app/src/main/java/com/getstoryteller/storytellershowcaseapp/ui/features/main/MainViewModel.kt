@@ -50,8 +50,8 @@ class MainViewModel
     private val _uiState = MutableStateFlow(MainPageUiState())
     val uiState: StateFlow<MainPageUiState> = _uiState.asStateFlow()
 
-    private val _reloadMomentsDataTrigger = MutableSharedFlow<MomentsSideEffect?>()
-    val reloadMomentsDataTrigger: SharedFlow<MomentsSideEffect?> = _reloadMomentsDataTrigger
+    private val _reloadMomentsDataTrigger = MutableSharedFlow<String?>()
+    val reloadMomentsDataTrigger: SharedFlow<String?> = _reloadMomentsDataTrigger
 
     private val _reloadHomeTrigger = MutableLiveData<String>()
     val reloadHomeTrigger: LiveData<String> = _reloadHomeTrigger
@@ -81,11 +81,11 @@ class MainViewModel
       }
     }
 
-    fun triggerMomentsReloadData(onComplete: () -> Unit = {}) {
+    fun triggerMomentsReloadData() {
       // open to suggestions for a different way to do this. This requires a unique key for LaunchedEffect in MomentsScreen on every button click
       viewModelScope.launch {
         _reloadMomentsDataTrigger.emit(
-          MomentsSideEffect(onTrigger = UUID.randomUUID().toString(), onComplete = onComplete),
+          UUID.randomUUID().toString(),
         )
       }
     }
@@ -153,9 +153,4 @@ data class MainPageUiState(
   val isHomeRefreshing: Boolean = false,
   val isMainScreenLoading: Boolean = false,
   val config: Config? = null,
-)
-
-data class MomentsSideEffect(
-  val onTrigger: String,
-  val onComplete: (() -> Unit)? = null,
 )
