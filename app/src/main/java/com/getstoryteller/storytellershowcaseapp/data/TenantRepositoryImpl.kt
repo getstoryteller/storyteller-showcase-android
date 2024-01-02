@@ -38,7 +38,9 @@ class TenantRepositoryImpl(
       .data
   }
 
-  override suspend fun getTabForId(tabId: String): List<StorytellerItemApiDto> {
+  override suspend fun getTabForId(
+    tabId: String,
+  ): List<StorytellerItemApiDto> {
     return apiService.getTabById(tabId)
       .data
   }

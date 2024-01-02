@@ -74,12 +74,12 @@ fun HomeScreen(
   }
   Box(
     modifier =
-      modifier
-        .fillMaxSize()
-        .nestedScroll(refreshState.nestedScrollConnection)
-        .onGloballyPositioned {
-          columnHeightPx = it.size.height
-        },
+    modifier
+      .fillMaxSize()
+      .nestedScroll(refreshState.nestedScrollConnection)
+      .onGloballyPositioned {
+        columnHeightPx = it.size.height
+      },
   ) {
     if (!pageUiState.tabsEnabled) {
       LazyColumn(
@@ -106,11 +106,11 @@ fun HomeScreen(
         rootNavController = navController,
         sharedViewModel = sharedViewModel,
         parentState =
-          TabLayoutUiState(
-            tabs = pageUiState.tabs,
-            isRefreshing = pageUiState.isRefreshing || isRefreshing,
-            config = config,
-          ),
+        TabLayoutUiState(
+          tabs = pageUiState.tabs,
+          isRefreshing = pageUiState.isRefreshing || isRefreshing,
+          config = config,
+        ),
         onSetNavigationInterceptor = onSetNavigationInterceptor,
       )
     }

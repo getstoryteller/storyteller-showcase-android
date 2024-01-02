@@ -72,7 +72,9 @@ enum class LayoutType(val serializedName: String) {
   ;
 
   companion object {
-    fun deserialize(serialisedName: String): LayoutType =
+    fun deserialize(
+      serialisedName: String,
+    ): LayoutType =
       entries
         .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
   }
@@ -89,7 +91,9 @@ object LayoutTypeSerializer : KSerializer<LayoutType> {
     encoder.encodeString(value.serializedName)
   }
 
-  override fun deserialize(decoder: Decoder): LayoutType {
+  override fun deserialize(
+    decoder: Decoder,
+  ): LayoutType {
     val key = decoder.decodeString()
     return LayoutType.deserialize(key)
   }
@@ -102,7 +106,9 @@ enum class TileType(val serializedName: String) {
   ;
 
   companion object {
-    fun deserialize(serialisedName: String): TileType =
+    fun deserialize(
+      serialisedName: String,
+    ): TileType =
       entries
         .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
   }
@@ -119,7 +125,9 @@ object TileTypeSerializer : KSerializer<TileType> {
     encoder.encodeString(value.serializedName)
   }
 
-  override fun deserialize(decoder: Decoder): TileType {
+  override fun deserialize(
+    decoder: Decoder,
+  ): TileType {
     val key = decoder.decodeString()
     return TileType.deserialize(key)
   }
@@ -132,7 +140,9 @@ enum class VideoType(val serializedName: String) {
   ;
 
   companion object {
-    fun deserialize(serialisedName: String): VideoType =
+    fun deserialize(
+      serialisedName: String,
+    ): VideoType =
       entries
         .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
   }
@@ -149,7 +159,9 @@ object VideoTypeSerializer : KSerializer<VideoType> {
     encoder.encodeString(value.serializedName)
   }
 
-  override fun deserialize(decoder: Decoder): VideoType {
+  override fun deserialize(
+    decoder: Decoder,
+  ): VideoType {
     val key = decoder.decodeString()
     return VideoType.deserialize(key)
   }
@@ -164,7 +176,9 @@ enum class ItemSize(val serializedName: String) {
   ;
 
   companion object {
-    fun deserialize(serialisedName: String): ItemSize =
+    fun deserialize(
+      serialisedName: String,
+    ): ItemSize =
       entries
         .first { it.serializedName.equals(serialisedName, ignoreCase = true) }
   }
@@ -181,7 +195,9 @@ object ItemSizeSerializer : KSerializer<ItemSize> {
     encoder.encodeString(value.serializedName)
   }
 
-  override fun deserialize(decoder: Decoder): ItemSize {
+  override fun deserialize(
+    decoder: Decoder,
+  ): ItemSize {
     val key = decoder.decodeString()
     return ItemSize.deserialize(key)
   }

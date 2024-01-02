@@ -33,10 +33,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 @InstallIn(ViewModelComponent::class)
 object AppModule {
   @Provides
-  fun provideAuthRepository(apiService: ApiService): AuthRepository = AuthRepositoryImpl(apiService)
+  fun provideAuthRepository(
+    apiService: ApiService,
+  ): AuthRepository = AuthRepositoryImpl(apiService)
 
   @Provides
-  fun provideTenantRepository(apiService: ApiService): TenantRepository = TenantRepositoryImpl(apiService)
+  fun provideTenantRepository(
+    apiService: ApiService,
+  ): TenantRepository = TenantRepositoryImpl(apiService)
 
   @Provides
   fun provideVerifyCodeUseCase(
@@ -53,8 +57,9 @@ object AppModule {
   ): GetTenantSettingsUseCase = GetTenantSettingsUseCaseImpl(tenantRepository, storytellerService)
 
   @Provides
-  fun provideGetHomeScreenUseCase(tenantRepository: TenantRepository): GetHomeScreenUseCase =
-    GetHomeScreenUseCaseImpl(tenantRepository)
+  fun provideGetHomeScreenUseCase(
+    tenantRepository: TenantRepository,
+  ): GetHomeScreenUseCase = GetHomeScreenUseCaseImpl(tenantRepository)
 
   @Provides
   fun provideLogoutUseCase(
@@ -69,6 +74,7 @@ object AppModule {
   ): GetConfigurationUseCase = GetConfigurationUseCaseImpl(tenantRepository, context)
 
   @Provides
-  fun provideGetTabContentUseCase(tenantRepository: TenantRepository): GetTabContentUseCase =
-    GetTabContentUseCaseImpl(tenantRepository)
+  fun provideGetTabContentUseCase(
+    tenantRepository: TenantRepository,
+  ): GetTabContentUseCase = GetTabContentUseCaseImpl(tenantRepository)
 }

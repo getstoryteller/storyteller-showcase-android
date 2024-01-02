@@ -106,10 +106,10 @@ fun MomentsScreen(
     if (isProgressVisible) {
       CircularProgressIndicator(
         modifier =
-          Modifier
-            .padding(16.dp)
-            .background(color = Color.Transparent)
-            .align(Alignment.Center),
+        Modifier
+          .padding(16.dp)
+          .background(color = Color.Transparent)
+          .align(Alignment.Center),
       )
     }
   }

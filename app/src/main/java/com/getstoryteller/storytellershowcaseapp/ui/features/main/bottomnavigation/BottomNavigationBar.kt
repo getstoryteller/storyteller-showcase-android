@@ -54,9 +54,9 @@ fun BottomNavigationBar(
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
       NavigationBarItem(
         colors =
-          NavigationBarItemDefaults.colors(
-            indicatorColor = Color.Transparent,
-          ),
+        NavigationBarItemDefaults.colors(
+          indicatorColor = Color.Transparent,
+        ),
         interactionSource = remember { MutableInteractionSource() },
         icon = {
           if (isSelectedTabLoading && homeSelected) {
@@ -103,9 +103,9 @@ fun BottomNavigationBar(
 
       NavigationBarItem(
         colors =
-          NavigationBarItemDefaults.colors(
-            indicatorColor = Color.Transparent,
-          ),
+        NavigationBarItemDefaults.colors(
+          indicatorColor = Color.Transparent,
+        ),
         icon = {
           if (isSelectedTabLoading && !homeSelected) {
             CircularProgressIndicator(
@@ -161,10 +161,11 @@ private object NoRippleTheme : RippleTheme {
   override fun rippleAlpha(): RippleAlpha = RippleAlpha(0.0f, 0.0f, 0.0f, 0.0f)
 }
 
-fun NavController.popUpTo(destination: String) =
-  navigate(destination) {
-    popUpTo(graph.findStartDestination().id) {
-      saveState = true
-    }
-    restoreState = true
+fun NavController.popUpTo(
+  destination: String,
+) = navigate(destination) {
+  popUpTo(graph.findStartDestination().id) {
+    saveState = true
   }
+  restoreState = true
+}

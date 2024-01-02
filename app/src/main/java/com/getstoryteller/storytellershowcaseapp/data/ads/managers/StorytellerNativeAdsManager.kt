@@ -82,7 +82,9 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
     storytellerAdsTracker.trackAdEnteredView(nativeAd, adView ?: return)
   }
 
-  fun trackAdClicked(adId: String) {
+  fun trackAdClicked(
+    adId: String,
+  ) {
     val nativeAd = nativeAds[adId]?.nativeAd ?: return
     storytellerAdsTracker.trackAdClicked(nativeAd)
   }

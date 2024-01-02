@@ -14,7 +14,9 @@ interface TenantRepository {
 
   suspend fun getTabs(): List<TabDto>
 
-  suspend fun getTabForId(tabId: String): List<StorytellerItemApiDto>
+  suspend fun getTabForId(
+    tabId: String,
+  ): List<StorytellerItemApiDto>
 
   suspend fun getHomePage(): List<StorytellerItemApiDto>
 }

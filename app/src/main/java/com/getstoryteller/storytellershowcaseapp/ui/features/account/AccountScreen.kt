@@ -67,13 +67,13 @@ fun AccountScreen(
   }
   Surface(
     modifier =
-      modifier
-        .fillMaxSize(),
+    modifier
+      .fillMaxSize(),
   ) {
     Column(
       modifier =
-        Modifier
-          .fillMaxWidth(),
+      Modifier
+        .fillMaxWidth(),
     ) {
       config?.let {
         SettingsSection("PERSONALISATION")
@@ -127,7 +127,9 @@ fun AccountScreen(
 }
 
 @Composable
-private fun SettingsSection(text: String) {
+private fun SettingsSection(
+  text: String,
+) {
   Text(
     text = text,
     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
@@ -147,20 +149,20 @@ fun SettingsRow(
 ) {
   Row(
     modifier =
-      Modifier
-        .fillMaxWidth()
-        .height(56.dp)
-        .background(MaterialTheme.colorScheme.tertiaryContainer)
-        .clickable { onClick() },
+    Modifier
+      .fillMaxWidth()
+      .height(56.dp)
+      .background(MaterialTheme.colorScheme.tertiaryContainer)
+      .clickable { onClick() },
     verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
       text = text,
       color = color,
       modifier =
-        Modifier
-          .padding(start = 16.dp)
-          .weight(1f),
+      Modifier
+        .padding(start = 16.dp)
+        .weight(1f),
     )
     if (arrowVisible) {
       Icon(

@@ -165,4 +165,6 @@ data class TabLayoutUiState(
   val config: Config?,
 )
 
-fun Color.Companion.fromHex(hexString: String) = Color(android.graphics.Color.parseColor(hexString))
+fun Color.Companion.fromHex(
+  hexString: String,
+) = Color(android.graphics.Color.parseColor(hexString))

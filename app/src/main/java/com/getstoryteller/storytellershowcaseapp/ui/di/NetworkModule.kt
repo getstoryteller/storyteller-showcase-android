@@ -30,12 +30,12 @@ object NetworkModule {
       install(ContentNegotiation) {
         json(
           json =
-            Json {
-              prettyPrint = true
-              isLenient = true
-              ignoreUnknownKeys = true
-              explicitNulls = false
-            },
+          Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+            explicitNulls = false
+          },
         )
       }
     }

@@ -22,7 +22,9 @@ class MainActivity : AppCompatActivity() {
   private val viewModel: MainViewModel by viewModels()
   private var savedStateSparseArray = SparseArray<SavedState>()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
+  override fun onCreate(
+    savedInstanceState: Bundle?,
+  ) {
     super.onCreate(savedInstanceState)
     if (savedInstanceState != null) {
       savedStateSparseArray = getSparseParcelableArray(
@@ -56,7 +58,9 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun FragmentTransaction.fragmentSaveState(fragment: Fragment) {
+  private fun FragmentTransaction.fragmentSaveState(
+    fragment: Fragment,
+  ) {
     val currentFragment = supportFragmentManager.findFragmentByTag(fragment.tag)
     if (currentFragment != null) {
       val savedState = supportFragmentManager.saveFragmentInstanceState(currentFragment)

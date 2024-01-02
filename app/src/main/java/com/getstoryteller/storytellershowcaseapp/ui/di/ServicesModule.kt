@@ -35,14 +35,20 @@ object ServicesModule {
   abstract class ServicesBindingModule {
     @Singleton
     @Binds
-    abstract fun bindSessionService(impl: SessionRepositoryImpl): SessionRepository
+    abstract fun bindSessionService(
+      impl: SessionRepositoryImpl,
+    ): SessionRepository
 
     @Singleton
     @Binds
-    abstract fun bindStorytellerService(impl: StorytellerServiceImpl): StorytellerService
+    abstract fun bindStorytellerService(
+      impl: StorytellerServiceImpl,
+    ): StorytellerService
 
     @Singleton
     @Binds
-    abstract fun bindAmplitudeService(impl: AmplitudeServiceImpl): AmplitudeService
+    abstract fun bindAmplitudeService(
+      impl: AmplitudeServiceImpl,
+    ): AmplitudeService
   }
 }

@@ -110,10 +110,10 @@ fun MainScreen(
               Text(
                 text = title,
                 style =
-                  MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.W600,
-                  ),
+                MaterialTheme.typography.titleLarge.copy(
+                  fontSize = 20.sp,
+                  fontWeight = FontWeight.W600,
+                ),
                 color = MaterialTheme.colorScheme.onBackground,
               )
             }
@@ -201,9 +201,9 @@ fun MainScreen(
   ) { paddingValues ->
     Box(
       modifier =
-        Modifier
-          .fillMaxSize()
-          .padding(bottom = paddingValues.calculateBottomPadding()),
+      Modifier
+        .fillMaxSize()
+        .padding(bottom = paddingValues.calculateBottomPadding()),
     ) {
       NavHost(
         navController = navController,
@@ -392,10 +392,10 @@ fun MainScreen(
       if (mainPageUiState.isMainScreenLoading && navController.isCurrentDestination("home")) {
         CircularProgressIndicator(
           modifier =
-            Modifier
-              .padding(16.dp)
-              .background(color = Color.Transparent)
-              .align(Alignment.Center),
+          Modifier
+            .padding(16.dp)
+            .background(color = Color.Transparent)
+            .align(Alignment.Center),
         )
       }
     }

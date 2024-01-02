@@ -12,26 +12,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel
-  @Inject
-  constructor(
-    private val logoutUseCase: LogoutUseCase,
-    private val sessionRepository: SessionRepository,
-    private val storytellerService: StorytellerService,
-    private val amplitudeService: AmplitudeService,
-  ) : ViewModel() {
-    val isLoggedOut = MutableStateFlow(false)
+class AccountViewModel @Inject constructor(
+  private val logoutUseCase: LogoutUseCase,
+  private val sessionRepository: SessionRepository,
+  private val storytellerService: StorytellerService,
+  private val amplitudeService: AmplitudeService,
+) : ViewModel() {
+  val isLoggedOut = MutableStateFlow(false)
 
-    fun logout() {
-      viewModelScope.launch {
-        logoutUseCase.logout()
-        isLoggedOut.value = true
-      }
-    }
-
-    fun reset() {
-      sessionRepository.reset()
-      storytellerService.initStoryteller()
-      amplitudeService.init()
+  fun logout() {
+    viewModelScope.launch {
+      logoutUseCase.logout()
+      isLoggedOut.value = true
     }
   }
+
+  fun reset() {
+    sessionRepository.reset()
+    storytellerService.initStoryteller()
+    amplitudeService.init()
+  }
+}

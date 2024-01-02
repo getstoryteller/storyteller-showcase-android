@@ -8,7 +8,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
 
-fun NavController.isCurrentDestination(destination: String): Boolean {
+fun NavController.isCurrentDestination(
+  destination: String,
+): Boolean {
   return currentDestination?.route == destination
 }
 

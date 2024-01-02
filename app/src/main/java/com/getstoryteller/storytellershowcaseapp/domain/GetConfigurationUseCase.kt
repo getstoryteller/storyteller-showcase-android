@@ -107,37 +107,37 @@ class GetConfigurationUseCaseImpl(
     get() {
       return squareTheme.copy(
         light =
-          squareTheme.light.copy(
-            storyTiles =
-              squareTheme.light.storyTiles.copy(
-                title =
-                  squareTheme.light.storyTiles.title.copy(
-                    alignment = Gravity.CENTER,
-                    titleSize = 10,
-                    lineHeight = 13,
-                  ),
-                circularTile =
-                  squareTheme.light.storyTiles.circularTile.copy(
-                    unreadIndicatorColor = ofHexCode("#C8102E"),
-                  ),
-              ),
+        squareTheme.light.copy(
+          storyTiles =
+          squareTheme.light.storyTiles.copy(
+            title =
+            squareTheme.light.storyTiles.title.copy(
+              alignment = Gravity.CENTER,
+              titleSize = 10,
+              lineHeight = 13,
+            ),
+            circularTile =
+            squareTheme.light.storyTiles.circularTile.copy(
+              unreadIndicatorColor = ofHexCode("#C8102E"),
+            ),
           ),
+        ),
         dark =
-          squareTheme.dark.copy(
-            storyTiles =
-              squareTheme.dark.storyTiles.copy(
-                title =
-                  squareTheme.dark.storyTiles.title.copy(
-                    alignment = Gravity.CENTER,
-                    titleSize = 10,
-                    lineHeight = 13,
-                  ),
-                circularTile =
-                  squareTheme.dark.storyTiles.circularTile.copy(
-                    unreadIndicatorColor = ofHexCode("#C8102E"),
-                  ),
-              ),
+        squareTheme.dark.copy(
+          storyTiles =
+          squareTheme.dark.storyTiles.copy(
+            title =
+            squareTheme.dark.storyTiles.title.copy(
+              alignment = Gravity.CENTER,
+              titleSize = 10,
+              lineHeight = 13,
+            ),
+            circularTile =
+            squareTheme.dark.storyTiles.circularTile.copy(
+              unreadIndicatorColor = ofHexCode("#C8102E"),
+            ),
           ),
+        ),
       )
     }
 }

@@ -3,7 +3,9 @@ package com.getstoryteller.storytellershowcaseapp.data.ads.kvps
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 
 interface StorytellerKVPProvider<T : StorytellerAdRequestInfo> {
-  fun getKVPs(adRequestInfo: T): Map<String, String>
+  fun getKVPs(
+    adRequestInfo: T,
+  ): Map<String, String>
 
   val StorytellerAdRequestInfo.itemCategories
     get() =

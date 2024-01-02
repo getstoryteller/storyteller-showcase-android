@@ -82,13 +82,17 @@ internal class StorytellerPullToRefreshStateImpl(
           else -> Offset.Zero
         }
 
-      override suspend fun onPreFling(available: Velocity): Velocity {
+      override suspend fun onPreFling(
+        available: Velocity,
+      ): Velocity {
         return Velocity(0f, onRelease(available.y))
       }
     }
 
   /** Helper method for nested scroll connection */
-  fun consumeAvailableOffset(available: Offset): Offset {
+  fun consumeAvailableOffset(
+    available: Offset,
+  ): Offset {
     val y =
       if (isRefreshing) {
         0f
@@ -104,7 +108,9 @@ internal class StorytellerPullToRefreshStateImpl(
   }
 
   /** Helper method for nested scroll connection. Calls onRefresh callback when triggered */
-  suspend fun onRelease(velocity: Float): Float {
+  suspend fun onRelease(
+    velocity: Float,
+  ): Float {
     if (isRefreshing) return 0f // Already refreshing, do nothing
     // Trigger refresh
     if (adjustedDistancePulled > positionalThreshold) {
@@ -129,16 +135,18 @@ internal class StorytellerPullToRefreshStateImpl(
     return consumed
   }
 
-  private suspend fun animateTo(offset: Float) {
+  private suspend fun animateTo(
+    offset: Float,
+  ) {
     animate(
       initialValue = _verticalOffset,
       targetValue = offset,
       animationSpec =
-        spring(
-          stiffness = Spring.StiffnessMediumLow,
-          dampingRatio = Spring.DampingRatioMediumBouncy,
-          visibilityThreshold = 16.dp.value,
-        ),
+      spring(
+        stiffness = Spring.StiffnessMediumLow,
+        dampingRatio = Spring.DampingRatioMediumBouncy,
+        visibilityThreshold = 16.dp.value,
+      ),
     ) { value, _ ->
       _verticalOffset = value
     }
@@ -197,11 +205,11 @@ fun rememberStorytellerPullToRefreshState(
     positionalThresholdPx,
     enabled,
     saver =
-      StorytellerPullToRefreshStateImpl.Saver(
-        coroutineScope = coroutineScope,
-        positionalThreshold = positionalThresholdPx,
-        enabled = enabled,
-      ),
+    StorytellerPullToRefreshStateImpl.Saver(
+      coroutineScope = coroutineScope,
+      positionalThreshold = positionalThresholdPx,
+      enabled = enabled,
+    ),
   ) {
     StorytellerPullToRefreshStateImpl(
       coroutineScope = coroutineScope,

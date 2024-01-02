@@ -63,8 +63,8 @@ fun StorytellerItem(
 ) {
   Column(
     modifier =
-      Modifier
-        .fillMaxWidth(),
+    Modifier
+      .fillMaxWidth(),
   ) {
     val uiStyle =
       if (isSystemInDarkTheme()) {
@@ -120,26 +120,26 @@ private fun StorytellerComposable(
             }
           StorytellerStoriesRow(
             modifier =
-              Modifier
-                .fillMaxWidth()
-                .height(uiModel.getRowHeight())
-                .padding(top = 8.dp, bottom = bottomPadding),
+            Modifier
+              .fillMaxWidth()
+              .height(uiModel.getRowHeight())
+              .padding(top = 8.dp, bottom = bottomPadding),
             dataModel =
-              StorytellerStoriesDataModel(
-                theme =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> squareTheme
-                    TileType.ROUND -> roundTheme
-                  },
-                uiStyle = uiStyle,
-                displayLimit = uiModel.displayLimit,
-                categories = uiModel.categories,
-                cellType =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                    TileType.ROUND -> StorytellerListViewCellType.ROUND
-                  },
-              ),
+            StorytellerStoriesDataModel(
+              theme =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> squareTheme
+                TileType.ROUND -> roundTheme
+              },
+              uiStyle = uiStyle,
+              displayLimit = uiModel.displayLimit,
+              categories = uiModel.categories,
+              cellType =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                TileType.ROUND -> StorytellerListViewCellType.ROUND
+              },
+            ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing,
           )
@@ -148,25 +148,25 @@ private fun StorytellerComposable(
         LayoutType.GRID -> {
           StorytellerStoriesGrid(
             modifier =
-              Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp),
+            Modifier
+              .fillMaxWidth()
+              .padding(start = 12.dp, end = 12.dp),
             dataModel =
-              StorytellerStoriesDataModel(
-                theme =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> squareTheme
-                    TileType.ROUND -> roundTheme
-                  },
-                uiStyle = uiStyle,
-                displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
-                categories = uiModel.categories,
-                cellType =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                    TileType.ROUND -> StorytellerListViewCellType.ROUND
-                  },
-              ),
+            StorytellerStoriesDataModel(
+              theme =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> squareTheme
+                TileType.ROUND -> roundTheme
+              },
+              uiStyle = uiStyle,
+              displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
+              categories = uiModel.categories,
+              cellType =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                TileType.ROUND -> StorytellerListViewCellType.ROUND
+              },
+            ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = isScrollable,
             isRefreshing = isRefreshing,
@@ -176,68 +176,68 @@ private fun StorytellerComposable(
         LayoutType.SINGLETON -> {
           StorytellerStoriesGrid(
             modifier =
-              Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp),
+            Modifier
+              .fillMaxWidth()
+              .padding(start = 12.dp, end = 12.dp),
             dataModel =
-              StorytellerStoriesDataModel(
-                theme =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> squareTheme
-                    TileType.ROUND -> roundTheme
-                  }?.let {
-                    it.copy(
-                      light =
-                        it.light.copy(
-                          lists =
-                            it.light.lists.copy(
-                              grid =
-                                it.light.lists.grid.copy(
-                                  topInset = 0,
-                                  columns = 1,
-                                ),
-                            ),
-                          storyTiles =
-                            it.light.storyTiles.copy(
-                              title =
-                                it.light.storyTiles.title.copy(
-                                  titleSize = 21,
-                                  alignment = Gravity.START,
-                                  lineHeight = 24,
-                                ),
-                            ),
-                        ),
-                      dark =
-                        it.dark.copy(
-                          lists =
-                            it.dark.lists.copy(
-                              grid =
-                                it.dark.lists.grid.copy(
-                                  topInset = 0,
-                                  columns = 1,
-                                ),
-                            ),
-                          storyTiles =
-                            it.dark.storyTiles.copy(
-                              title =
-                                it.dark.storyTiles.title.copy(
-                                  titleSize = 21,
-                                  alignment = Gravity.START,
-                                  lineHeight = 24,
-                                ),
-                            ),
-                        ),
-                    )
-                  },
-                uiStyle = uiStyle,
-                displayLimit = 1,
-                categories = uiModel.categories,
-                cellType =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                    TileType.ROUND -> StorytellerListViewCellType.ROUND
-                  },
-              ),
+            StorytellerStoriesDataModel(
+              theme =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> squareTheme
+                TileType.ROUND -> roundTheme
+              }?.let {
+                it.copy(
+                  light =
+                  it.light.copy(
+                    lists =
+                    it.light.lists.copy(
+                      grid =
+                      it.light.lists.grid.copy(
+                        topInset = 0,
+                        columns = 1,
+                      ),
+                    ),
+                    storyTiles =
+                    it.light.storyTiles.copy(
+                      title =
+                      it.light.storyTiles.title.copy(
+                        titleSize = 21,
+                        alignment = Gravity.START,
+                        lineHeight = 24,
+                      ),
+                    ),
+                  ),
+                  dark =
+                  it.dark.copy(
+                    lists =
+                    it.dark.lists.copy(
+                      grid =
+                      it.dark.lists.grid.copy(
+                        topInset = 0,
+                        columns = 1,
+                      ),
+                    ),
+                    storyTiles =
+                    it.dark.storyTiles.copy(
+                      title =
+                      it.dark.storyTiles.title.copy(
+                        titleSize = 21,
+                        alignment = Gravity.START,
+                        lineHeight = 24,
+                      ),
+                    ),
+                  ),
+                )
+              },
+              uiStyle = uiStyle,
+              displayLimit = 1,
+              categories = uiModel.categories,
+              cellType =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                TileType.ROUND -> StorytellerListViewCellType.ROUND
+              },
+            ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = false,
             isRefreshing = isRefreshing,
@@ -251,26 +251,26 @@ private fun StorytellerComposable(
         LayoutType.ROW -> {
           StorytellerClipsRow(
             modifier =
-              Modifier
-                .fillMaxWidth()
-                .height(uiModel.getRowHeight())
-                .padding(bottom = 15.dp),
+            Modifier
+              .fillMaxWidth()
+              .height(uiModel.getRowHeight())
+              .padding(bottom = 15.dp),
             dataModel =
-              StorytellerClipsDataModel(
-                theme =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> squareTheme
-                    TileType.ROUND -> roundTheme
-                  },
-                uiStyle = uiStyle,
-                displayLimit = uiModel.displayLimit,
-                collection = uiModel.collectionId ?: "",
-                cellType =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                    TileType.ROUND -> StorytellerListViewCellType.ROUND
-                  },
-              ),
+            StorytellerClipsDataModel(
+              theme =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> squareTheme
+                TileType.ROUND -> roundTheme
+              },
+              uiStyle = uiStyle,
+              displayLimit = uiModel.displayLimit,
+              collection = uiModel.collectionId ?: "",
+              cellType =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                TileType.ROUND -> StorytellerListViewCellType.ROUND
+              },
+            ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing,
           )
@@ -279,68 +279,68 @@ private fun StorytellerComposable(
         LayoutType.SINGLETON -> {
           StorytellerClipsGrid(
             modifier =
-              Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp),
+            Modifier
+              .fillMaxWidth()
+              .padding(start = 12.dp, end = 12.dp),
             dataModel =
-              StorytellerClipsDataModel(
-                theme =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> squareTheme
-                    TileType.ROUND -> roundTheme
-                  }?.let {
-                    it.copy(
-                      light =
-                        it.light.copy(
-                          lists =
-                            it.light.lists.copy(
-                              grid =
-                                it.light.lists.grid.copy(
-                                  topInset = 0,
-                                  columns = 1,
-                                ),
-                            ),
-                          storyTiles =
-                            it.light.storyTiles.copy(
-                              title =
-                                it.light.storyTiles.title.copy(
-                                  titleSize = 21,
-                                  alignment = Gravity.START,
-                                  lineHeight = 24,
-                                ),
-                            ),
-                        ),
-                      dark =
-                        it.dark.copy(
-                          lists =
-                            it.dark.lists.copy(
-                              grid =
-                                it.dark.lists.grid.copy(
-                                  topInset = 0,
-                                  columns = 1,
-                                ),
-                            ),
-                          storyTiles =
-                            it.dark.storyTiles.copy(
-                              title =
-                                it.dark.storyTiles.title.copy(
-                                  titleSize = 21,
-                                  alignment = Gravity.START,
-                                  lineHeight = 24,
-                                ),
-                            ),
-                        ),
-                    )
-                  },
-                uiStyle = uiStyle,
-                displayLimit = 1,
-                collection = uiModel.collectionId ?: "",
-                cellType =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                    TileType.ROUND -> StorytellerListViewCellType.ROUND
-                  },
-              ),
+            StorytellerClipsDataModel(
+              theme =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> squareTheme
+                TileType.ROUND -> roundTheme
+              }?.let {
+                it.copy(
+                  light =
+                  it.light.copy(
+                    lists =
+                    it.light.lists.copy(
+                      grid =
+                      it.light.lists.grid.copy(
+                        topInset = 0,
+                        columns = 1,
+                      ),
+                    ),
+                    storyTiles =
+                    it.light.storyTiles.copy(
+                      title =
+                      it.light.storyTiles.title.copy(
+                        titleSize = 21,
+                        alignment = Gravity.START,
+                        lineHeight = 24,
+                      ),
+                    ),
+                  ),
+                  dark =
+                  it.dark.copy(
+                    lists =
+                    it.dark.lists.copy(
+                      grid =
+                      it.dark.lists.grid.copy(
+                        topInset = 0,
+                        columns = 1,
+                      ),
+                    ),
+                    storyTiles =
+                    it.dark.storyTiles.copy(
+                      title =
+                      it.dark.storyTiles.title.copy(
+                        titleSize = 21,
+                        alignment = Gravity.START,
+                        lineHeight = 24,
+                      ),
+                    ),
+                  ),
+                )
+              },
+              uiStyle = uiStyle,
+              displayLimit = 1,
+              collection = uiModel.collectionId ?: "",
+              cellType =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                TileType.ROUND -> StorytellerListViewCellType.ROUND
+              },
+            ),
             isScrollable = false,
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing,
@@ -350,25 +350,25 @@ private fun StorytellerComposable(
         LayoutType.GRID -> {
           StorytellerClipsGrid(
             modifier =
-              Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp),
+            Modifier
+              .fillMaxWidth()
+              .padding(start = 12.dp, end = 12.dp),
             dataModel =
-              StorytellerClipsDataModel(
-                theme =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> squareTheme
-                    TileType.ROUND -> roundTheme
-                  },
-                uiStyle = uiStyle,
-                displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
-                collection = uiModel.collectionId ?: "",
-                cellType =
-                  when (uiModel.tileType) {
-                    TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
-                    TileType.ROUND -> StorytellerListViewCellType.ROUND
-                  },
-              ),
+            StorytellerClipsDataModel(
+              theme =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> squareTheme
+                TileType.ROUND -> roundTheme
+              },
+              uiStyle = uiStyle,
+              displayLimit = if (isScrollable) Int.MAX_VALUE else uiModel.displayLimit,
+              collection = uiModel.collectionId ?: "",
+              cellType =
+              when (uiModel.tileType) {
+                TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+                TileType.ROUND -> StorytellerListViewCellType.ROUND
+              },
+            ),
             isScrollable = isScrollable,
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isRefreshing = isRefreshing,

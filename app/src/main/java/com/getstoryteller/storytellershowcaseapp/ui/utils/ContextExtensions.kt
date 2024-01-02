@@ -10,12 +10,16 @@ val Context.formatterApplicationVersion: String
     return "v${packageInfo.versionName} ($versionCode)"
   }
 
-fun Context.copyToClipboard(text: String) {
+fun Context.copyToClipboard(
+  text: String,
+) {
   val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
   val clip = android.content.ClipData.newPlainText("Copied Text", text)
   clipboard.setPrimaryClip(clip)
 }
 
-fun Context.toast(message: String) {
+fun Context.toast(
+  message: String,
+) {
   android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_LONG).show()
 }

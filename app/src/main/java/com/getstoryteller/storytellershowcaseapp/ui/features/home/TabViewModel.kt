@@ -16,76 +16,78 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TabViewModel
-  @Inject
-  constructor(
-    private val getTabContentUseCase: GetTabContentUseCase,
-  ) : ViewModel() {
-    private val _uiState = MutableStateFlow(TabPageUiState())
-    val uiState = _uiState.asStateFlow()
+class TabViewModel @Inject constructor(
+  private val getTabContentUseCase: GetTabContentUseCase,
+) : ViewModel() {
+  private val _uiState = MutableStateFlow(TabPageUiState())
+  val uiState = _uiState.asStateFlow()
 
-    private val tabDisposedAt = MutableStateFlow<Long?>(null)
-    val tabReloadTimeout: StateFlow<Boolean> =
-      tabDisposedAt.map {
-        if (it == null) {
-          false
-        } else {
-          val timeElapsed = System.currentTimeMillis() - it
-          val tenMinutesInMillis = 10 * 60 * 1000
-          timeElapsed > tenMinutesInMillis
-        }
-      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(7000), false)
-
-    fun tabDisposed() {
-      tabDisposedAt.value = System.currentTimeMillis()
-    }
-
-    fun loadTab(tabId: String) {
-      viewModelScope.launch {
-        val items = getTabContentUseCase.getTabContent(tabId)
-        _uiState.update {
-          TabPageUiState(
-            isRefreshing = false,
-            tabItems = items,
-          )
-        }
+  private val tabDisposedAt = MutableStateFlow<Long?>(null)
+  val tabReloadTimeout: StateFlow<Boolean> =
+    tabDisposedAt.map {
+      if (it == null) {
+        false
+      } else {
+        val timeElapsed = System.currentTimeMillis() - it
+        val tenMinutesInMillis = 10 * 60 * 1000
+        timeElapsed > tenMinutesInMillis
       }
-    }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(7000), false)
 
-    private var refreshJob: kotlinx.coroutines.Job? = null
-      set(value) {
-        field?.cancel()
-        field = value
+  fun tabDisposed() {
+    tabDisposedAt.value = System.currentTimeMillis()
+  }
+
+  fun loadTab(
+    tabId: String,
+  ) {
+    viewModelScope.launch {
+      val items = getTabContentUseCase.getTabContent(tabId)
+      _uiState.update {
+        TabPageUiState(
+          isRefreshing = false,
+          tabItems = items,
+        )
       }
-
-    fun onRefresh() {
-      refreshJob =
-        viewModelScope.launch {
-          _uiState.update {
-            it.copy(isRefreshing = true)
-          }
-          delay(1000)
-          _uiState.update {
-            it.copy(isRefreshing = false)
-          }
-        }
-    }
-
-    fun hideStorytellerItem(itemId: String) {
-      viewModelScope.launch {
-        _uiState.update {
-          it.copy(
-            tabItems = it.tabItems.filter { item -> item.itemId != itemId },
-          )
-        }
-      }
-    }
-
-    override fun onCleared() {
-      tabDisposedAt.value = null
-      super.onCleared()
     }
   }
+
+  private var refreshJob: kotlinx.coroutines.Job? = null
+    set(value) {
+      field?.cancel()
+      field = value
+    }
+
+  fun onRefresh() {
+    refreshJob =
+      viewModelScope.launch {
+        _uiState.update {
+          it.copy(isRefreshing = true)
+        }
+        delay(1000)
+        _uiState.update {
+          it.copy(isRefreshing = false)
+        }
+      }
+  }
+
+  fun hideStorytellerItem(
+    itemId: String,
+  ) {
+    viewModelScope.launch {
+      _uiState.update {
+        it.copy(
+          tabItems = it.tabItems.filter { item -> item.itemId != itemId },
+        )
+      }
+    }
+  }
+
+  override fun onCleared() {
+    tabDisposedAt.value = null
+    super.onCleared()
+  }
+}
 
 data class TabPageUiState(
   val isRefreshing: Boolean = false,

@@ -70,26 +70,26 @@ fun LoginDialog(
   Dialog(
     onDismissRequest = {},
     properties =
-      DialogProperties(
-        dismissOnBackPress = false,
-        dismissOnClickOutside = false,
-        usePlatformDefaultWidth = false,
-      ),
+    DialogProperties(
+      dismissOnBackPress = false,
+      dismissOnClickOutside = false,
+      usePlatformDefaultWidth = false,
+    ),
   ) {
     val isDarkTheme = isSystemInDarkTheme()
     Surface(
       modifier =
-        Modifier
-          .fillMaxWidth()
-          .wrapContentHeight()
-          .padding(start = 10.dp, end = 10.dp),
+      Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+        .padding(start = 10.dp, end = 10.dp),
       shape = RoundedCornerShape(8.dp),
     ) {
       Column(
         modifier =
-          Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        Modifier
+          .fillMaxWidth()
+          .padding(16.dp),
       ) {
         var text by rememberSaveable { mutableStateOf("") }
         val focusRequester = remember { FocusRequester() }
@@ -109,36 +109,36 @@ fun LoginDialog(
         )
         Text(
           modifier =
-            Modifier
-              .padding(top = 16.dp)
-              .align(alignment = Alignment.CenterHorizontally),
+          Modifier
+            .padding(top = 16.dp)
+            .align(alignment = Alignment.CenterHorizontally),
           text = stringResource(id = R.string.label_login_description),
         )
 
         OutlinedTextField(
           modifier =
-            Modifier
-              .fillMaxWidth()
-              .padding(top = 16.dp)
-              .focusRequester(focusRequester),
+          Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp)
+            .focusRequester(focusRequester),
           value = text,
           onValueChange = {
             text = it
             viewModel.clearErrorState()
           },
           keyboardOptions =
-            KeyboardOptions(
-              capitalization = KeyboardCapitalization.Characters,
-              keyboardType = KeyboardType.Text,
-              imeAction = ImeAction.Done,
-            ),
+          KeyboardOptions(
+            capitalization = KeyboardCapitalization.Characters,
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done,
+          ),
           keyboardActions =
-            KeyboardActions(
-              onDone = {
-                viewModel.verifyCode(text)
-                keyboardController?.hide()
-              },
-            ),
+          KeyboardActions(
+            onDone = {
+              viewModel.verifyCode(text)
+              keyboardController?.hide()
+            },
+          ),
           singleLine = true,
           isError = loginState is Error,
           placeholder = { Text(text = stringResource(id = R.string.label_login_enter_code)) },
@@ -189,15 +189,15 @@ fun LoginDialog(
 
         Button(
           modifier =
-            Modifier
-              .height(48.dp)
-              .padding(top = 8.dp)
-              .fillMaxWidth(),
+          Modifier
+            .height(48.dp)
+            .padding(top = 8.dp)
+            .fillMaxWidth(),
           colors =
-            ButtonDefaults.buttonColors(
-              disabledContainerColor = MaterialTheme.colorScheme.primary,
-              disabledContentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
+          ButtonDefaults.buttonColors(
+            disabledContainerColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.onPrimary,
+          ),
           enabled = !loginUiState.isLoggedIn && loginState !is LoginState.Loading,
           onClick = {
             viewModel.verifyCode(text)

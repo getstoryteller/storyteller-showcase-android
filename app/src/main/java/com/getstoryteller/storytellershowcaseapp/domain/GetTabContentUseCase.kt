@@ -4,12 +4,16 @@ import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
 
 interface GetTabContentUseCase {
-  suspend fun getTabContent(tabId: String): List<PageItemUiModel>
+  suspend fun getTabContent(
+    tabId: String,
+  ): List<PageItemUiModel>
 }
 
 class GetTabContentUseCaseImpl(private val tenantRepository: TenantRepository) :
   GetTabContentUseCase {
-  override suspend fun getTabContent(tabId: String): List<PageItemUiModel> {
+  override suspend fun getTabContent(
+    tabId: String,
+  ): List<PageItemUiModel> {
     return tenantRepository.getTabForId(tabId)
       .map {
         PageItemUiModel(

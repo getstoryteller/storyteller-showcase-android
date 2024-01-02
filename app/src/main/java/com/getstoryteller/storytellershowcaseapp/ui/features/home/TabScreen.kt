@@ -147,13 +147,13 @@ fun TabScreen(
 
   Box(
     modifier =
-      Modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.surface)
-        .nestedScroll(refreshState.nestedScrollConnection)
-        .onGloballyPositioned {
-          columnHeightPx = it.size.height
-        },
+    Modifier
+      .fillMaxSize()
+      .background(color = MaterialTheme.colorScheme.surface)
+      .nestedScroll(refreshState.nestedScrollConnection)
+      .onGloballyPositioned {
+        columnHeightPx = it.size.height
+      },
   ) {
     LazyColumn(
       modifier = Modifier.fillMaxWidth(),

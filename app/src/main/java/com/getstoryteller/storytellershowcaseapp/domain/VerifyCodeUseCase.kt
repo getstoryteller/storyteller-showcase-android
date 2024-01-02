@@ -8,7 +8,9 @@ import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsD
 import java.util.UUID
 
 interface VerifyCodeUseCase {
-  suspend fun verifyCode(code: String): TenantSettingsDto
+  suspend fun verifyCode(
+    code: String,
+  ): TenantSettingsDto
 }
 
 class VerifyCodeUseCaseImpl(
@@ -17,7 +19,9 @@ class VerifyCodeUseCaseImpl(
   private val storytellerService: StorytellerService,
   private val amplitudeService: AmplitudeService,
 ) : VerifyCodeUseCase {
-  override suspend fun verifyCode(code: String): TenantSettingsDto {
+  override suspend fun verifyCode(
+    code: String,
+  ): TenantSettingsDto {
     val settings = authRepository.verifyCode(code)
     sessionRepository.apiKey = settings.androidApiKey
     sessionRepository.userId = UUID.randomUUID().toString()

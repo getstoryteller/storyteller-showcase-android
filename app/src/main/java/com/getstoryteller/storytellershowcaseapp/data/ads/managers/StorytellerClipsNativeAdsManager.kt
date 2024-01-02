@@ -10,17 +10,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StorytellerClipsNativeAdsManager
-  @Inject
-  constructor(
-    googleNativeAdsManager: GoogleNativeAdsManager,
-    storytellerAdsMapper: StorytellerAdsMapper,
-    clipsKVPsProvider: ClipsKVPsProvider,
-    storytellerAdsTracker: StorytellerAdsTracker,
-  ) : StorytellerNativeAdsManager<StorytellerAdRequestInfo.ClipsAdRequestInfo>(
-      storytellerKVPProvider = clipsKVPsProvider,
-      googleNativeAdsManager = googleNativeAdsManager,
-      googleAdInfo = StorytellerGoogleAdInfo.CLIP_ADS,
-      storytellerAdsMapper = storytellerAdsMapper,
-      storytellerAdsTracker = storytellerAdsTracker,
-    )
+class StorytellerClipsNativeAdsManager @Inject constructor(
+  googleNativeAdsManager: GoogleNativeAdsManager,
+  storytellerAdsMapper: StorytellerAdsMapper,
+  clipsKVPsProvider: ClipsKVPsProvider,
+  storytellerAdsTracker: StorytellerAdsTracker,
+) : StorytellerNativeAdsManager<StorytellerAdRequestInfo.ClipsAdRequestInfo>(
+  storytellerKVPProvider = clipsKVPsProvider,
+  googleNativeAdsManager = googleNativeAdsManager,
+  googleAdInfo = StorytellerGoogleAdInfo.CLIP_ADS,
+  storytellerAdsMapper = storytellerAdsMapper,
+  storytellerAdsTracker = storytellerAdsTracker,
+)

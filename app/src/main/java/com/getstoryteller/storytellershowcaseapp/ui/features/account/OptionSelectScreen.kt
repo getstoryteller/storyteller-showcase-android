@@ -54,22 +54,22 @@ fun OptionSelectScreen(
 
   LazyColumn(
     modifier =
-      modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.surface)
-        .padding(top = 20.dp)
-        .navigationBarsPadding(),
+    modifier
+      .fillMaxSize()
+      .background(color = MaterialTheme.colorScheme.surface)
+      .padding(top = 20.dp)
+      .navigationBarsPadding(),
   ) {
     items(uiState.options, key = { it.key ?: uiState.options.indexOf(it) }) { model ->
       Row(
         modifier =
-          Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-            .clickable {
-              viewModel.selectOption(model.key)
-            },
+        Modifier
+          .fillMaxWidth()
+          .height(56.dp)
+          .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+          .clickable {
+            viewModel.selectOption(model.key)
+          },
         verticalAlignment = Alignment.CenterVertically,
       ) {
         RadioButton(selected = uiState.selectedOption == model.key, onClick = {

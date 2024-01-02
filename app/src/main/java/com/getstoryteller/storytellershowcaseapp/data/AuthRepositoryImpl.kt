@@ -10,7 +10,9 @@ import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsA
 class AuthRepositoryImpl(
   private val apiService: ApiService,
 ) : AuthRepository {
-  override suspend fun verifyCode(code: String): TenantSettingsApiDto {
+  override suspend fun verifyCode(
+    code: String,
+  ): TenantSettingsApiDto {
     return apiService.verifyCode(code)
       .data
   }

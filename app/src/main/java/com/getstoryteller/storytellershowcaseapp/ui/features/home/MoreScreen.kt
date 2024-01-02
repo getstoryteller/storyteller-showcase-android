@@ -43,46 +43,46 @@ fun MoreScreen(
 
   Box(
     modifier =
-      modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.surface)
-        .nestedScroll(refreshState.nestedScrollConnection)
-        .padding(bottom = 16.dp),
+    modifier
+      .fillMaxSize()
+      .background(MaterialTheme.colorScheme.surface)
+      .nestedScroll(refreshState.nestedScrollConnection)
+      .padding(bottom = 16.dp),
   ) {
     StorytellerItem(
       uiModel =
-        pageItemUiModel.copy(
-          tileType = TileType.RECTANGULAR,
-          layout = LayoutType.GRID,
-        ),
+      pageItemUiModel.copy(
+        tileType = TileType.RECTANGULAR,
+        layout = LayoutType.GRID,
+      ),
       isRefreshing = isRefreshing,
       navController = navController,
       roundTheme = config?.roundTheme,
       squareTheme =
-        config?.squareTheme?.let {
-          it.copy(
-            light =
-              it.light.copy(
-                lists =
-                  it.light.lists.copy(
-                    grid =
-                      it.light.lists.grid.copy(
-                        topInset = 12,
-                      ),
-                  ),
+      config?.squareTheme?.let {
+        it.copy(
+          light =
+          it.light.copy(
+            lists =
+            it.light.lists.copy(
+              grid =
+              it.light.lists.grid.copy(
+                topInset = 12,
               ),
-            dark =
-              it.dark.copy(
-                lists =
-                  it.dark.lists.copy(
-                    grid =
-                      it.dark.lists.grid.copy(
-                        topInset = 12,
-                      ),
-                  ),
+            ),
+          ),
+          dark =
+          it.dark.copy(
+            lists =
+            it.dark.lists.copy(
+              grid =
+              it.dark.lists.grid.copy(
+                topInset = 12,
               ),
-          )
-        },
+            ),
+          ),
+        )
+      },
       disableHeader = true,
       isScrollable = true,
       onShouldHide = {

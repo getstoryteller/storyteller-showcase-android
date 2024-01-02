@@ -29,7 +29,9 @@ import kotlin.contracts.contract
  */
 @Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
-inline fun <T> List<T>.fastForEach(action: (T) -> Unit) {
+inline fun <T> List<T>.fastForEach(
+  action: (T) -> Unit,
+) {
   contract { callsInPlace(action) }
   for (index in indices) {
     val item = get(index)
@@ -47,7 +49,9 @@ inline fun <T> List<T>.fastForEach(action: (T) -> Unit) {
  */
 @Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
-inline fun <T> List<T>.fastForEachIndexed(action: (Int, T) -> Unit) {
+inline fun <T> List<T>.fastForEachIndexed(
+  action: (Int, T) -> Unit,
+) {
   contract { callsInPlace(action) }
   for (index in indices) {
     val item = get(index)
@@ -65,7 +69,9 @@ inline fun <T> List<T>.fastForEachIndexed(action: (Int, T) -> Unit) {
  */
 @Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> List<T>.fastMap(transform: (T) -> R): List<R> {
+inline fun <T, R> List<T>.fastMap(
+  transform: (T) -> R,
+): List<R> {
   contract { callsInPlace(transform) }
   val target = ArrayList<R>(size)
   fastForEach {
@@ -84,7 +90,9 @@ inline fun <T, R> List<T>.fastMap(transform: (T) -> R): List<R> {
  */
 @Suppress("BanInlineOptIn")
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R : Comparable<R>> List<T>.fastMaxBy(selector: (T) -> R): T? {
+inline fun <T, R : Comparable<R>> List<T>.fastMaxBy(
+  selector: (T) -> R,
+): T? {
   contract { callsInPlace(selector) }
   if (isEmpty()) return null
   var maxElem = get(0)

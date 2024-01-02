@@ -60,13 +60,15 @@ import com.getstoryteller.storytellershowcaseapp.ui.utils.fastMaxBy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-fun Modifier.tabIndicatorOffset(currentTabPosition: TabPosition): Modifier =
+fun Modifier.tabIndicatorOffset(
+  currentTabPosition: TabPosition,
+): Modifier =
   composed(
     inspectorInfo =
-      debugInspectorInfo {
-        name = "tabIndicatorOffset"
-        value = currentTabPosition
-      },
+    debugInspectorInfo {
+      name = "tabIndicatorOffset"
+      value = currentTabPosition
+    },
   ) {
     val currentTabWidth by animateDpAsState(
       targetValue = currentTabPosition.width,
@@ -162,21 +164,21 @@ fun TabRow(
   backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
   contentColor: Color = contentColorFor(backgroundColor),
   indicator:
-    @Composable @UiComposable
-    (tabPositions: List<TabPosition>) -> Unit = @Composable { tabPositions ->
+  @Composable @UiComposable
+  (tabPositions: List<TabPosition>) -> Unit = @Composable { tabPositions ->
     TabRowDefaults.Indicator(
       Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
     )
   },
   divider:
-    @Composable @UiComposable
-    () -> Unit =
+  @Composable @UiComposable
+  () -> Unit =
     @Composable {
       TabRowDefaults.Divider()
     },
   tabs:
-    @Composable @UiComposable
-    () -> Unit,
+  @Composable @UiComposable
+  () -> Unit,
 ) {
   Surface(
     modifier = modifier.selectableGroup(),
@@ -264,21 +266,21 @@ fun StorytellerScrollableTabRow(
   contentColor: Color = contentColorFor(backgroundColor),
   edgePadding: Dp = TabRowDefaults.SCROLLABLE_TAB_ROW_PADDING,
   indicator:
-    @Composable @UiComposable
-    (tabPositions: List<TabPosition>) -> Unit = @Composable { tabPositions ->
+  @Composable @UiComposable
+  (tabPositions: List<TabPosition>) -> Unit = @Composable { tabPositions ->
     TabRowDefaults.Indicator(
       Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
     )
   },
   divider:
-    @Composable @UiComposable
-    () -> Unit =
+  @Composable @UiComposable
+  () -> Unit =
     @Composable {
       TabRowDefaults.Divider()
     },
   tabs:
-    @Composable @UiComposable
-    () -> Unit,
+  @Composable @UiComposable
+  () -> Unit,
 ) {
   Surface(
     modifier = modifier,
@@ -372,7 +374,9 @@ fun StorytellerScrollableTabRow(
 class TabPosition internal constructor(val left: Dp, val width: Dp) {
   val right: Dp get() = left + width
 
-  override fun equals(other: Any?): Boolean {
+  override fun equals(
+    other: Any?,
+  ): Boolean {
     if (this === other) return true
     if (other !is TabPosition) return false
 
@@ -443,13 +447,15 @@ object TabRowDefaults {
    * @param currentTabPosition [TabPosition] of the currently selected tab. This is used to
    * calculate the offset of the indicator this modifier is applied to, as well as its width.
    */
-  fun Modifier.tabIndicatorOffset(currentTabPosition: TabPosition): Modifier =
+  fun Modifier.tabIndicatorOffset(
+    currentTabPosition: TabPosition,
+  ): Modifier =
     composed(
       inspectorInfo =
-        debugInspectorInfo {
-          name = "tabIndicatorOffset"
-          value = currentTabPosition
-        },
+      debugInspectorInfo {
+        name = "tabIndicatorOffset"
+        value = currentTabPosition
+      },
     ) {
       val currentTabWidth by animateDpAsState(
         targetValue = currentTabPosition.width,

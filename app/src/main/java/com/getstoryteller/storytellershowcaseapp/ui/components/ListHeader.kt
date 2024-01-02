@@ -29,17 +29,17 @@ fun ListHeader(
 ) {
   Row(
     modifier =
-      Modifier
-        .fillMaxWidth()
-        .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
+    Modifier
+      .fillMaxWidth()
+      .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {
     Text(
       modifier =
-        Modifier
-          .fillMaxHeight()
-          .weight(1F),
+      Modifier
+        .fillMaxHeight()
+        .weight(1F),
       text = text,
       textAlign = TextAlign.Start,
       fontSize = 20.sp,
@@ -50,13 +50,13 @@ fun ListHeader(
     )
     Text(
       modifier =
-        Modifier
-          .fillMaxHeight()
-          .wrapContentWidth()
-          .clickable {
-            onMoreClicked(collectionId, categories)
-          }
-          .padding(start = 12.dp),
+      Modifier
+        .fillMaxHeight()
+        .wrapContentWidth()
+        .clickable {
+          onMoreClicked(collectionId, categories)
+        }
+        .padding(start = 12.dp),
       text = moreButtonTitle,
       fontWeight = FontWeight.W400,
       fontSize = 16.sp,
