@@ -16,6 +16,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -101,6 +102,9 @@ fun TabLayout(
         })
       }
     }
+
+    var reloadTabSignal by remember { mutableIntStateOf(-1) }
+
     HorizontalPager(
       state = pagerState,
       // This needs to be zero or nav interception will not work
@@ -112,6 +116,13 @@ fun TabLayout(
 
       LaunchedEffect(tabs.hashCode(), pageIndex) {
         viewModel.loadTab(tabValue)
+      }
+
+      LaunchedEffect(reloadTabSignal) {
+        if (reloadTabSignal == pageIndex) {
+          viewModel.onRefresh()
+          reloadTabSignal = -1
+        }
       }
 
       TabScreen(
@@ -135,9 +146,7 @@ fun TabLayout(
                 onIntercepted = {
                   coroutineScope.launch {
                     pagerState.scrollToPage(0)
-                  }
-                  if (pagerState.currentPage == 0) {
-                    viewModel.onRefresh()
+                    reloadTabSignal = 0
                   }
                 },
               ),
