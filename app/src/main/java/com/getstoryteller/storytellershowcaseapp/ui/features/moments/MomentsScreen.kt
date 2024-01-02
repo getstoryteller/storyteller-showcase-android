@@ -57,6 +57,12 @@ fun MomentsScreen(
     }
   }
 
+  DisposableEffect(Unit) {
+    onDispose {
+      sharedViewModel.momentsDisposed()
+    }
+  }
+
   Box(
     modifier = modifier.fillMaxSize(),
   ) {
@@ -105,12 +111,6 @@ fun MomentsScreen(
             .background(color = Color.Transparent)
             .align(Alignment.Center),
       )
-    }
-  }
-
-  DisposableEffect(Unit) {
-    onDispose {
-      sharedViewModel.momentsDisposed()
     }
   }
 }

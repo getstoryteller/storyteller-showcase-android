@@ -127,7 +127,7 @@ fun TabLayout(
 
       TabScreen(
         tabId = tabValue,
-        viewModel = viewModel,
+        tabViewModel = viewModel,
         sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
         isRefreshing = parentState.isRefreshing,

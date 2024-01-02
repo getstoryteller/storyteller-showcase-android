@@ -6,7 +6,11 @@ import com.getstoryteller.storytellershowcaseapp.domain.GetTabContentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +23,22 @@ class TabViewModel
   ) : ViewModel() {
     private val _uiState = MutableStateFlow(TabPageUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val tabDisposedAt = MutableStateFlow<Long?>(null)
+    val tabReloadTimeout: StateFlow<Boolean> =
+      tabDisposedAt.map {
+        if (it == null) {
+          false
+        } else {
+          val timeElapsed = System.currentTimeMillis() - it
+          val tenMinutesInMillis = 10 * 60 * 1000
+          timeElapsed > tenMinutesInMillis
+        }
+      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(7000), false)
+
+    fun tabDisposed() {
+      tabDisposedAt.value = System.currentTimeMillis()
+    }
 
     fun loadTab(tabId: String) {
       viewModelScope.launch {
@@ -59,6 +79,11 @@ class TabViewModel
           )
         }
       }
+    }
+
+    override fun onCleared() {
+      tabDisposedAt.value = null
+      super.onCleared()
     }
   }
 
