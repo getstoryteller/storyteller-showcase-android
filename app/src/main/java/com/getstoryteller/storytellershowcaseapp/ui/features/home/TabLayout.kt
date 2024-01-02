@@ -95,7 +95,7 @@ fun TabLayout(
               interceptor.onIntercepted()
             }
             return@Tab
-          } else if (interceptor is NavigationInterceptor.None) {
+          } else if (interceptor is NavigationInterceptor.None && isSelected) {
             reloadCurrentTabSignal = index
           }
           scope.launch {
