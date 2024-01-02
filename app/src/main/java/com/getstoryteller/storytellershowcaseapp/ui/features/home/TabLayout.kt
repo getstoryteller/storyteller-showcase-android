@@ -46,7 +46,7 @@ fun TabLayout(
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
 ) {
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
-
+  var reloadCurrentTabSignal by remember { mutableIntStateOf(-1) }
   val tabs = remember(parentState.tabs) { parentState.tabs }
 
   val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -95,6 +95,8 @@ fun TabLayout(
               interceptor.onIntercepted()
             }
             return@Tab
+          } else if (interceptor is NavigationInterceptor.None) {
+            reloadCurrentTabSignal = index
           }
           scope.launch {
             pagerState.animateScrollToPage(index)
@@ -102,8 +104,6 @@ fun TabLayout(
         })
       }
     }
-
-    var reloadTabSignal by remember { mutableIntStateOf(-1) }
 
     HorizontalPager(
       state = pagerState,
@@ -118,10 +118,10 @@ fun TabLayout(
         viewModel.loadTab(tabValue)
       }
 
-      LaunchedEffect(reloadTabSignal) {
-        if (reloadTabSignal == pageIndex) {
+      LaunchedEffect(reloadCurrentTabSignal) {
+        if (reloadCurrentTabSignal == pageIndex) {
           viewModel.onRefresh()
-          reloadTabSignal = -1
+          reloadCurrentTabSignal = -1
         }
       }
 
@@ -146,7 +146,7 @@ fun TabLayout(
                 onIntercepted = {
                   coroutineScope.launch {
                     pagerState.scrollToPage(0)
-                    reloadTabSignal = 0
+                    reloadCurrentTabSignal = 0
                   }
                 },
               ),
