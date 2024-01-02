@@ -87,6 +87,6 @@ fun OptionSelectScreen(
 enum class OptionSelectType(val title: String) {
   HAS_ACCOUNT("Has Account"),
   LANGUAGE("Language"),
-  TEAM("Favorite Team"),
+  FAVORITE_TEAM("Favorite Team"),
   EVENT_TRACKING("Allow Event Tracking"),
 }

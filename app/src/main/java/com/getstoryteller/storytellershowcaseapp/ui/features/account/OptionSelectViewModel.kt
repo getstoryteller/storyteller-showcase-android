@@ -47,11 +47,11 @@ class OptionSelectViewModel @Inject constructor(
           )
       }
 
-      OptionSelectType.TEAM -> {
+      OptionSelectType.FAVORITE_TEAM -> {
         _uiState.value =
           OptionSelectUIModel(
             title = "Favorite Team",
-            type = OptionSelectType.TEAM,
+            type = OptionSelectType.FAVORITE_TEAM,
             selectedOption = sessionRepository.team,
             options =
             config.teams.map {
@@ -114,7 +114,7 @@ class OptionSelectViewModel @Inject constructor(
     when (_uiState.value.type) {
       OptionSelectType.HAS_ACCOUNT -> sessionRepository.hasAccount = key == "yes"
       OptionSelectType.LANGUAGE -> sessionRepository.language = key
-      OptionSelectType.TEAM -> sessionRepository.team = key
+      OptionSelectType.FAVORITE_TEAM -> sessionRepository.team = key
       OptionSelectType.EVENT_TRACKING -> sessionRepository.trackEvents = key == "yes"
     }
     storytellerService.updateCustomAttributes()

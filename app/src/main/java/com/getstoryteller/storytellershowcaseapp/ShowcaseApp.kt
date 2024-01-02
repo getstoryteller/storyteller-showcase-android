@@ -23,15 +23,18 @@ class ShowcaseApp : Application() {
   @Inject
   lateinit var amplitudeService: AmplitudeService
 
+  @Inject
+  lateinit var timberTree: Timber.Tree
+
   companion object {
     internal const val PREFS_NAME = "ShowcaseAppPrefs"
   }
 
   override fun onCreate() {
     super.onCreate()
-    Timber.plant(Timber.DebugTree())
     storytellerService.initStoryteller()
     amplitudeService.init()
     MobileAds.initialize(this)
+    Timber.plant(timberTree)
   }
 }

@@ -110,6 +110,7 @@ dependencies {
 
   implementation(libs.timber)
   implementation(libs.android.sdk)
+  debugImplementation(libs.ktor.client.logging)
 
   // DI Hilt
   implementation(libs.hilt.android)

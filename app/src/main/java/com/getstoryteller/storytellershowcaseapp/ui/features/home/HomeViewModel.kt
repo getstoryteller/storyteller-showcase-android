@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
     onRefresh()
   }
 
-  fun onRefresh() {
+  private fun onRefresh() {
     viewModelScope.launch {
       _uiState.update {
         it.copy(isRefreshing = true)

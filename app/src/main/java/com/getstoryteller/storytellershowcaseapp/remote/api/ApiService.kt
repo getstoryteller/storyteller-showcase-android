@@ -59,5 +59,5 @@ class ApiService @Inject constructor(
 
   suspend fun getHomeItems(): ResponseApiListDto<StorytellerItemApiDto> =
     client.get("home?apiKey=${sessionRepository.apiKey}")
-      .body()
+      .body<ResponseApiListDto<StorytellerItemApiDto>>()
 }
