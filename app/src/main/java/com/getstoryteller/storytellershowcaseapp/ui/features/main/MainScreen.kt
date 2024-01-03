@@ -2,11 +2,6 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Right
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,6 +49,18 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.home.MoreScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.link.LinkScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.login.LoginScreen
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountOptionsScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountOptionsScreenExitTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountScreenExitTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.homeScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.homeScreenExitTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.linkScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.linkScreenExitTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.momentsScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.momentsScreenExitTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.moreScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.moreScreenExitTransition
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.BottomNavigationBar
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
 import com.getstoryteller.storytellershowcaseapp.ui.features.moments.MomentsScreen
@@ -217,26 +224,8 @@ fun MainScreen(
         val topPaddingEnabledModifier = Modifier.padding(top = paddingValues.calculateTopPadding())
         composable(
           "home",
-          enterTransition = {
-            if (initialState.destination.route == "home/moments") {
-              EnterTransition.None
-            } else {
-              slideIntoContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            }
-          },
-          exitTransition = {
-            if (targetState.destination.route == "home/moments") {
-              ExitTransition.None
-            } else {
-              slideOutOfContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            }
-          },
+          enterTransition = homeScreenEnterTransition(),
+          exitTransition = homeScreenExitTransition(),
         ) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
@@ -273,8 +262,8 @@ fun MainScreen(
         }
         composable(
           "home/moments",
-          enterTransition = { EnterTransition.None },
-          exitTransition = { ExitTransition.None },
+          enterTransition = momentsScreenEnterTransition(),
+          exitTransition = momentsScreenExitTransition(),
         ) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
@@ -286,38 +275,18 @@ fun MainScreen(
             onCommit = onCommit,
             onSaveInstanceState = onSaveInstanceState,
             sharedViewModel = viewModel,
-          ) {
-            momentsTabLoading = it
-          }
+            onSetTopBarVisible = {
+              topBarVisible = it
+            },
+            onMomentsTabLoading = {
+              momentsTabLoading = it
+            },
+          )
         }
         composable(
           "home/account",
-          enterTransition = {
-            if (initialState.destination.route?.startsWith("account") == true) {
-              slideIntoContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            } else {
-              slideIntoContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            }
-          },
-          exitTransition = {
-            if (targetState.destination.route?.startsWith("account") == true) {
-              slideOutOfContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            } else {
-              slideOutOfContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            }
-          },
+          enterTransition = accountScreenEnterTransition(),
+          exitTransition = accountScreenExitTransition(),
         ) {
           navigationState = PageState.ACCOUNT
           title = "Account"
@@ -334,8 +303,8 @@ fun MainScreen(
         }
         composable(
           "account/{option}",
-          enterTransition = { slideIntoContainer(towards = Left, animationSpec = tween(700)) },
-          exitTransition = { slideOutOfContainer(towards = Right, animationSpec = tween(700)) },
+          enterTransition = accountOptionsScreenEnterTransition(),
+          exitTransition = accountOptionsScreenExitTransition(),
         ) {
           navigationState = PageState.ACCOUNT
           val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
@@ -351,32 +320,8 @@ fun MainScreen(
         }
         composable(
           "moreClips/{model}",
-          enterTransition = {
-            if (initialState.destination.route?.startsWith("home/link") == true) {
-              slideIntoContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            } else {
-              slideIntoContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            }
-          },
-          exitTransition = {
-            if (initialState.destination.route?.startsWith("home/link") == true) {
-              slideOutOfContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            } else {
-              slideOutOfContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            }
-          },
+          enterTransition = moreScreenEnterTransition(),
+          exitTransition = moreScreenExitTransition(),
         ) { backStackEntry ->
           val uiModel: PageItemUiModel? =
             Json.decodeFromString(
@@ -395,32 +340,8 @@ fun MainScreen(
         }
         composable(
           "moreStories/{model}",
-          enterTransition = {
-            if (initialState.destination.route?.startsWith("home/link") == true) {
-              slideIntoContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            } else {
-              slideIntoContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            }
-          },
-          exitTransition = {
-            if (initialState.destination.route?.startsWith("home/link") == true) {
-              slideOutOfContainer(
-                towards = Left,
-                animationSpec = tween(700),
-              )
-            } else {
-              slideOutOfContainer(
-                towards = Right,
-                animationSpec = tween(700),
-              )
-            }
-          },
+          enterTransition = moreScreenEnterTransition(),
+          exitTransition = moreScreenExitTransition(),
         ) { backStackEntry ->
           val uiModel: PageItemUiModel? =
             Json.decodeFromString(
@@ -440,20 +361,11 @@ fun MainScreen(
         composable(
           "home/link/{url}",
           arguments = listOf(navArgument("url") { type = NavType.StringType }),
-          enterTransition = {
-            slideIntoContainer(
-              towards = Left,
-              animationSpec = tween(700),
-            )
-          },
-          exitTransition = {
-            slideOutOfContainer(
-              towards = Right,
-              animationSpec = tween(700),
-            )
-          },
+          enterTransition = linkScreenEnterTransition(),
+          exitTransition = linkScreenExitTransition(),
         ) { backStackEntry ->
-          navigationState = PageState.MORE
+          navigationState = PageState.LINK
+          topBarVisible = true
           title = "Action Link"
           val url = backStackEntry.arguments?.getString("url")
           LinkScreen(link = url)

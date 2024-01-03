@@ -1,11 +1,13 @@
 package com.getstoryteller.storytellershowcaseapp.ui.utils
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 
 fun NavController.isCurrentDestination(
@@ -40,3 +42,10 @@ fun Modifier.debug(): Modifier {
     drawRect(randomColor)
   }
 }
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.goingTo(
+  destination: String,
+) = targetState.destination.route?.startsWith(destination) == true
+fun AnimatedContentTransitionScope<NavBackStackEntry>.comingFrom(
+  destination: String,
+) = initialState.destination.route?.startsWith(destination) == true

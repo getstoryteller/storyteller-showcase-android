@@ -40,6 +40,7 @@ fun MomentsScreen(
   sharedViewModel: MainViewModel,
   onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
   onSaveInstanceState: FragmentTransaction.(fragment: Fragment) -> Unit,
+  onSetTopBarVisible: (Boolean) -> Unit,
   onMomentsTabLoading: (Boolean) -> Unit,
 ) {
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
@@ -47,6 +48,10 @@ fun MomentsScreen(
   LaunchedEffect(reloadDataTrigger) {
     if (reloadDataTrigger == null) return@LaunchedEffect
     clipsFragment.goBack()
+  }
+
+  LaunchedEffect(Unit) {
+    onSetTopBarVisible(false)
   }
 
   val momentsReloadTimeout by sharedViewModel.momentsReloadTimeout.collectAsState()
