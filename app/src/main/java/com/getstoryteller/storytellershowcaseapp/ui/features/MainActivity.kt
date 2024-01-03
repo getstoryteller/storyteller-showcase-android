@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.compose.setContent
@@ -11,14 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.Fragment.SavedState
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.compose.rememberNavController
+import com.getstoryteller.storytellershowcaseapp.data.ShowcaseStorytellerDelegate
 import com.getstoryteller.storytellershowcaseapp.ui.ShowcaseAppTheme
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.Storyteller
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var storytellerDelegate: ShowcaseStorytellerDelegate
+
   private val viewModel: MainViewModel by viewModels()
   private var savedStateSparseArray = SparseArray<SavedState>()
 
@@ -46,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     enableEdgeToEdge()
     setContent {
       val navController = rememberNavController()
+      storytellerDelegate.onInterceptNavigation {
+        val uriToPass = Uri.encode(it)
+        navController.navigate("home/link/$uriToPass")
+      }
       ShowcaseAppTheme {
         MainScreen(
           activity = this,

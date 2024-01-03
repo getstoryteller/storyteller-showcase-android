@@ -28,3 +28,15 @@ fun Modifier.borderTop(
     strokeWidth = borderSize,
   )
 }
+
+@Stable
+fun Modifier.debug(): Modifier {
+  return this then drawBehind {
+    val randomColor = Color(
+      red = (0..255).random(),
+      green = (0..255).random(),
+      blue = (0..255).random(),
+    )
+    drawRect(randomColor)
+  }
+}

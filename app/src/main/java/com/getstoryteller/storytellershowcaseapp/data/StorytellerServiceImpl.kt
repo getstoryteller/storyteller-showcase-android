@@ -13,7 +13,7 @@ import javax.inject.Inject
  */
 class StorytellerServiceImpl @Inject constructor(
   private val sessionRepository: SessionRepository,
-  private val showcaseStorytellerDelegateImpl: ShowcaseStorytellerDelegateImpl,
+  private val showcaseStorytellerDelegate: ShowcaseStorytellerDelegate,
 ) : StorytellerService {
   companion object {
     private const val LANGUAGE_ATTRIBUTE_KEY = "language"
@@ -23,7 +23,7 @@ class StorytellerServiceImpl @Inject constructor(
 
   override fun initStoryteller() {
     Storyteller.apply {
-      storytellerDelegate = showcaseStorytellerDelegateImpl
+      storytellerDelegate = showcaseStorytellerDelegate
       initialize(
         apiKey = sessionRepository.apiKey ?: "",
         userInput = sessionRepository.userId?.let { UserInput(it) },

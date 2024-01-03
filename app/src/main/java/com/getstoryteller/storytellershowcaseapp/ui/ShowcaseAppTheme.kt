@@ -18,6 +18,7 @@ data class StorytellerColors(
   val subtitle: Color = Color.Unspecified,
   val header: Color = Color.Unspecified,
   val border: Color = Color.Unspecified,
+  val linkIconColor: Color = Color.Unspecified,
 )
 
 val LocalStorytellerColorsPalette = staticCompositionLocalOf { StorytellerColors() }
@@ -29,6 +30,7 @@ private val StorytellerLightColorScheme =
     subtitle = Color(0x993C3C43),
     header = Color(0xFF000000),
     border = Color(0x5C3C3C43),
+    linkIconColor = Color(0xFFC5C5C5),
   )
 
 private val StorytellerDarkColorScheme =
@@ -38,6 +40,7 @@ private val StorytellerDarkColorScheme =
     subtitle = Color(0x9997979D),
     header = Color(0xFFFFFFFF),
     border = Color(0xD9545458),
+    linkIconColor = Color(0xFFC5C5C5),
   )
 
 @SuppressLint("ConflictingOnColor")

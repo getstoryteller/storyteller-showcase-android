@@ -41,8 +41,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.getstoryteller.storytellershowcaseapp.R
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.AccountScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectScreen
@@ -50,6 +52,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelec
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.HomeScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.MoreScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
+import com.getstoryteller.storytellershowcaseapp.ui.features.link.LinkScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.login.LoginScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.BottomNavigationBar
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
@@ -159,9 +162,11 @@ fun MainScreen(
             }
           },
           navigationIcon = {
-            IconButton(onClick = {
-              navController.navigateUp()
-            }) {
+            IconButton(
+              onClick = {
+                navController.navigateUp()
+              },
+            ) {
               if (navigationState != PageState.HOME) {
                 Icon(
                   imageVector = Icons.Filled.ArrowBack,
@@ -210,25 +215,29 @@ fun MainScreen(
         startDestination = "home",
       ) {
         val topPaddingEnabledModifier = Modifier.padding(top = paddingValues.calculateTopPadding())
-        composable("home", enterTransition = {
-          if (initialState.destination.route == "home/moments") {
-            EnterTransition.None
-          } else {
-            slideIntoContainer(
-              towards = Right,
-              animationSpec = tween(700),
-            )
-          }
-        }, exitTransition = {
-          if (targetState.destination.route == "home/moments") {
-            ExitTransition.None
-          } else {
-            slideOutOfContainer(
-              towards = Left,
-              animationSpec = tween(700),
-            )
-          }
-        }) {
+        composable(
+          "home",
+          enterTransition = {
+            if (initialState.destination.route == "home/moments") {
+              EnterTransition.None
+            } else {
+              slideIntoContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            }
+          },
+          exitTransition = {
+            if (targetState.destination.route == "home/moments") {
+              ExitTransition.None
+            } else {
+              slideOutOfContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            }
+          },
+        ) {
           navigationState = PageState.HOME
           LaunchedEffect(Unit) {
             topBarVisible = true
@@ -281,31 +290,35 @@ fun MainScreen(
             momentsTabLoading = it
           }
         }
-        composable("home/account", enterTransition = {
-          if (initialState.destination.route?.startsWith("account") == true) {
-            slideIntoContainer(
-              towards = Right,
-              animationSpec = tween(700),
-            )
-          } else {
-            slideIntoContainer(
-              towards = Left,
-              animationSpec = tween(700),
-            )
-          }
-        }, exitTransition = {
-          if (targetState.destination.route?.startsWith("account") == true) {
-            slideOutOfContainer(
-              towards = Left,
-              animationSpec = tween(700),
-            )
-          } else {
-            slideOutOfContainer(
-              towards = Right,
-              animationSpec = tween(700),
-            )
-          }
-        }) {
+        composable(
+          "home/account",
+          enterTransition = {
+            if (initialState.destination.route?.startsWith("account") == true) {
+              slideIntoContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            } else {
+              slideIntoContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            }
+          },
+          exitTransition = {
+            if (targetState.destination.route?.startsWith("account") == true) {
+              slideOutOfContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            } else {
+              slideOutOfContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            }
+          },
+        ) {
           navigationState = PageState.ACCOUNT
           title = "Account"
           AccountScreen(
@@ -336,17 +349,35 @@ fun MainScreen(
             config = mainPageUiState.config!!,
           )
         }
-        composable("moreClips/{model}", enterTransition = {
-          slideIntoContainer(
-            towards = Left,
-            animationSpec = tween(700),
-          )
-        }, exitTransition = {
-          slideOutOfContainer(
-            towards = Right,
-            animationSpec = tween(700),
-          )
-        }) { backStackEntry ->
+        composable(
+          "moreClips/{model}",
+          enterTransition = {
+            if (initialState.destination.route?.startsWith("home/link") == true) {
+              slideIntoContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            } else {
+              slideIntoContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            }
+          },
+          exitTransition = {
+            if (initialState.destination.route?.startsWith("home/link") == true) {
+              slideOutOfContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            } else {
+              slideOutOfContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            }
+          },
+        ) { backStackEntry ->
           val uiModel: PageItemUiModel? =
             Json.decodeFromString(
               backStackEntry.arguments?.getString("model")!!,
@@ -362,17 +393,35 @@ fun MainScreen(
             )
           }
         }
-        composable("moreStories/{model}", enterTransition = {
-          slideIntoContainer(
-            towards = Left,
-            animationSpec = tween(700),
-          )
-        }, exitTransition = {
-          slideOutOfContainer(
-            towards = Right,
-            animationSpec = tween(700),
-          )
-        }) { backStackEntry ->
+        composable(
+          "moreStories/{model}",
+          enterTransition = {
+            if (initialState.destination.route?.startsWith("home/link") == true) {
+              slideIntoContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            } else {
+              slideIntoContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            }
+          },
+          exitTransition = {
+            if (initialState.destination.route?.startsWith("home/link") == true) {
+              slideOutOfContainer(
+                towards = Left,
+                animationSpec = tween(700),
+              )
+            } else {
+              slideOutOfContainer(
+                towards = Right,
+                animationSpec = tween(700),
+              )
+            }
+          },
+        ) { backStackEntry ->
           val uiModel: PageItemUiModel? =
             Json.decodeFromString(
               backStackEntry.arguments?.getString("model")!!,
@@ -387,6 +436,27 @@ fun MainScreen(
               config = mainPageUiState.config,
             )
           }
+        }
+        composable(
+          "home/link/{url}",
+          arguments = listOf(navArgument("url") { type = NavType.StringType }),
+          enterTransition = {
+            slideIntoContainer(
+              towards = Left,
+              animationSpec = tween(700),
+            )
+          },
+          exitTransition = {
+            slideOutOfContainer(
+              towards = Right,
+              animationSpec = tween(700),
+            )
+          },
+        ) { backStackEntry ->
+          navigationState = PageState.MORE
+          title = "Action Link"
+          val url = backStackEntry.arguments?.getString("url")
+          LinkScreen(link = url)
         }
       }
       if (mainPageUiState.isMainScreenLoading && navController.isCurrentDestination("home")) {
@@ -406,5 +476,6 @@ enum class PageState {
   HOME,
   ACCOUNT,
   MORE,
+  LINK,
   LOGIN,
 }
