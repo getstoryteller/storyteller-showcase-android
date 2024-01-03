@@ -69,9 +69,6 @@ class GetConfigurationUseCaseImpl(
 
         light.lists.backgroundColor = ofHexCode("#F3F4F5")
 
-        light.buttons.textColor = ofHexCode("#FFFFFF")
-        light.buttons.backgroundColor = ofHexCode("#000000")
-
         light.engagementUnits.poll.selectedAnswerBorderColor = ofHexCode("#B3FFFFFF")
 
         light.storyTiles.rectangularTile.unreadIndicator.backgroundColor = ofHexCode("#FBCD44")
