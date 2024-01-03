@@ -21,7 +21,7 @@ class BuildConfigSpecificSetupImpl @Inject constructor() : BuildConfigSpecificSe
           Timber.tag("ST-LOG").d(message)
         }
       }
-      level = LogLevel.ALL
+      level = LogLevel.INFO
     }
   }
 }
