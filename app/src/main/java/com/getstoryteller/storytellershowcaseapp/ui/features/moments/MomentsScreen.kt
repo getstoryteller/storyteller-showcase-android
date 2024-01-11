@@ -98,6 +98,7 @@ fun MomentsScreen(
       ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
         val outInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
         clipsFragment.topInset = outInsets.top
+        clipsFragment.bottomInset = outInsets.bottom
         WindowInsetsCompat.CONSUMED
       }
     }
