@@ -134,19 +134,26 @@ fun MainScreen(
               // Storyteller.openSearch method. This can be triggered from wherever you
               // would like in your application. In this case, we show an example of doing
               // it from a main nav bar button
-
-              IconButton(
-                onClick = {
-                  Storyteller.openSearch(activity)
-                },
-                enabled = !mainPageUiState.isMainScreenLoading,
-              ) {
-                Icon(
-                  imageVector = Icons.Filled.Search,
-                  contentDescription = "Open Search",
-                  tint = MaterialTheme.colorScheme.onBackground,
-                )
+              var isSearchVisible by remember { mutableStateOf(false) }
+              LaunchedEffect(key1 = Unit) {
+                isSearchVisible = Storyteller.isSearchEnabled
               }
+
+              if (isSearchVisible) {
+                IconButton(
+                  onClick = {
+                    Storyteller.openSearch(activity)
+                  },
+                  enabled = !mainPageUiState.isMainScreenLoading,
+                ) {
+                  Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Open Search",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                  )
+                }
+              }
+
               IconButton(
                 onClick = {
                   navigationState = PageState.ACCOUNT
@@ -228,9 +235,7 @@ fun MainScreen(
           exitTransition = homeScreenExitTransition(),
         ) {
           navigationState = PageState.HOME
-          LaunchedEffect(Unit) {
-            topBarVisible = true
-          }
+          topBarVisible = true
           HomeScreen(
             modifier = topPaddingEnabledModifier,
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
@@ -266,6 +271,7 @@ fun MainScreen(
           exitTransition = momentsScreenExitTransition(),
         ) {
           navigationState = PageState.HOME
+          topBarVisible = false
           LaunchedEffect(Unit) {
             navigationInterceptor = NavigationInterceptor.None
           }

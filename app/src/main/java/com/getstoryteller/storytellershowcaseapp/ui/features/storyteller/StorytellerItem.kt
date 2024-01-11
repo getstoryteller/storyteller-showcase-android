@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -110,20 +109,12 @@ private fun StorytellerComposable(
     VideoType.STORY -> {
       when (uiModel.layout) {
         LayoutType.ROW -> {
-          val bottomPadding =
-            remember {
-              if (uiModel.tileType == TileType.ROUND) {
-                36.dp
-              } else {
-                0.dp
-              }
-            }
           StorytellerStoriesRow(
             modifier =
             Modifier
               .fillMaxWidth()
               .height(uiModel.getRowHeight())
-              .padding(top = 8.dp, bottom = bottomPadding),
+              .padding(top = 8.dp),
             dataModel =
             StorytellerStoriesDataModel(
               theme =
