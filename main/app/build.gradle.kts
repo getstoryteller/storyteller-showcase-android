@@ -1,23 +1,27 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
-  id("com.android.application")
-  id("org.jetbrains.kotlin.android")
-  id("kotlin-kapt")
-  id("kotlinx-serialization")
-  id("kotlin-parcelize")
-  id("com.google.dagger.hilt.android")
+  alias(libs.plugins.androidApplication)
+  alias(libs.plugins.jetbrainsKotlinAndroid)
+  alias(libs.plugins.jetbrainsKotlinKapt)
+  alias(libs.plugins.jetbrainsKotlinParcelize)
+  alias(libs.plugins.jetbrainsKotlinSerialization)
+  alias(libs.plugins.hilt)
+  alias(libs.plugins.ktlint)
 }
 
 android {
-  namespace = "com.getstoryteller.storytellersampleapp"
+  namespace = "com.getstoryteller.storytellershowcaseapp"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.getstoryteller.storytellersampleapp"
+    applicationId = "com.getstoryteller.storytellershowcaseapp"
     minSdk = 24
     targetSdk = 34
     versionCode = 1
     versionName = "1.0.0"
-
+    buildConfigField("String", "API_BASE_URL", "\"${property("API_BASE_URL")}\"")
+    buildConfigField("String", "AMPLITUDE_API_KEY", "\"${property("AMPLITUDE_API_KEY")}\"")
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -37,7 +41,7 @@ android {
       isShrinkResources = true
       proguardFiles(
         getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro"
+        "proguard-rules.pro",
       )
       signingConfig = signingConfigs.getByName("release")
     }
@@ -51,9 +55,10 @@ android {
   }
   buildFeatures {
     compose = true
+    buildConfig = true
   }
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.2"
+    kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -64,46 +69,57 @@ android {
   }
 }
 
+// ktLintFormat task will need to run before preBuild
+tasks.getByPath("preBuild").dependsOn("ktlintFormat")
+
+ktlint {
+  version.set(libs.versions.ktlint.get())
+  android.set(true)
+  ignoreFailures.set(false)
+  reporters {
+    reporter(ReporterType.PLAIN)
+    reporter(ReporterType.CHECKSTYLE)
+    reporter(ReporterType.SARIF)
+  }
+}
+
 dependencies {
-  val storytellerVersion = "9.8.3"
-
-  implementation(group = "Storyteller", name = "sdk", version = storytellerVersion)
-
-  implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-
-  implementation ("androidx.fragment:fragment-ktx:1.6.2")
-  implementation("androidx.activity:activity-compose:1.8.1")
-  implementation("androidx.compose.ui:ui")
-  implementation("androidx.compose.material:material")
-  implementation("androidx.compose.material3:material3")
-  implementation("androidx.compose.ui:ui-tooling-preview")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-  implementation("androidx.navigation:navigation-compose:2.7.5")
-  implementation("androidx.compose.runtime:runtime:1.5.4")
-  implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
-  implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
-  implementation("androidx.core:core-ktx:1.12.0")
-  implementation("androidx.appcompat:appcompat:1.6.1")
-  implementation("com.google.android.material:material:1.10.0")
+  implementation(platform(libs.androidx.compose.bom.beta))
+  implementation(libs.androidx.fragment.ktx)
+  implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.navigation.compose)
+  implementation(libs.androidx.runtime)
+  implementation(libs.androidx.runtime.livedata)
+  implementation(libs.androidx.hilt.navigation.compose)
+  implementation(libs.androidx.ui)
+  implementation(libs.androidx.ui.tooling.preview)
+  implementation(libs.androidx.material3)
+  debugImplementation(libs.androidx.ui.tooling)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.appcompat)
+  implementation(libs.material)
 
   // Network, Serialization and Logging
-  val ktorVersion = "2.3.6"
-  implementation("io.ktor:ktor-client-core:$ktorVersion")
-  implementation("io.ktor:ktor-client-cio:$ktorVersion")
-  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-  implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+  implementation(libs.ktor.client.core)
+  implementation(libs.ktor.client.okhttp)
+  implementation(libs.ktor.serialization.kotlinx.json)
+  implementation(libs.ktor.client.content.negotiation)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
+  implementation(libs.kotlinx.serialization.json)
 
-  implementation("com.jakewharton.timber:timber:5.0.1")
+  implementation(libs.timber)
+  implementation(libs.android.sdk)
+  debugImplementation(libs.ktor.client.logging)
 
   // DI Hilt
-  implementation("com.google.dagger:hilt-android:2.48")
-  kapt("com.google.dagger:hilt-android-compiler:2.48")
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.android.compiler)
 
   /**
    * GAM for Storyteller Ads
    */
-  implementation("com.google.android.gms:play-services-ads:22.6.0")
+  implementation(libs.play.services.ads)
+
+  implementation(libs.storyteller) // we need Storyteller SDK :upside_down_face: 🙃
 }
