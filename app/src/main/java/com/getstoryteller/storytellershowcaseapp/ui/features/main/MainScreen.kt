@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -92,7 +93,7 @@ fun MainScreen(
 
   val clipsFragment by remember(mainPageUiState.config) {
     mutableStateOf(
-      StorytellerClipsFragment.create(collection)
+      StorytellerClipsFragment.create(collection),
     )
   }
 
@@ -175,12 +176,14 @@ fun MainScreen(
           navigationIcon = {
             IconButton(
               onClick = {
-                navController.navigateUp()
+                if (navigationState != PageState.HOME) {
+                  navController.navigateUp()
+                }
               },
             ) {
               if (navigationState != PageState.HOME) {
                 Icon(
-                  imageVector = Icons.Filled.ArrowBack,
+                  imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                   contentDescription = null,
                   tint = MaterialTheme.colorScheme.onBackground,
                 )
