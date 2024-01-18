@@ -86,17 +86,14 @@ fun MainScreen(
   var navigationState by remember { mutableStateOf(PageState.HOME) }
   var title by remember { mutableStateOf("") }
   var momentsTabLoading by remember { mutableStateOf(false) }
-
-  val clipsFragment by remember {
-    mutableStateOf(
-      StorytellerClipsFragment.create(""),
-    )
+  val collection by remember(mainPageUiState.config) {
+    mutableStateOf(mainPageUiState.config?.topLevelCollectionId ?: "")
   }
 
-  LaunchedEffect(mainPageUiState.config) {
-    if (mainPageUiState.config != null) {
-      clipsFragment.collectionId = mainPageUiState.config?.topLevelCollectionId ?: ""
-    }
+  val clipsFragment by remember(mainPageUiState.config) {
+    mutableStateOf(
+      StorytellerClipsFragment.create(collection)
+    )
   }
 
   var topBarVisible by remember {
