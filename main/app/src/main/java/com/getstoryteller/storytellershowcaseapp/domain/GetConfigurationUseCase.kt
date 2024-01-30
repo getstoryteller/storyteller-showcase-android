@@ -71,30 +71,30 @@ class GetConfigurationUseCaseImpl(
 
         light.engagementUnits.poll.selectedAnswerBorderColor = ofHexCode("#B3FFFFFF")
 
-        light.storyTiles.rectangularTile.unreadIndicator.backgroundColor = ofHexCode("#FBCD44")
-        light.storyTiles.rectangularTile.unreadIndicator.textColor = ofHexCode("#000000")
-        light.storyTiles.rectangularTile.chip.alignment = Gravity.START
+        light.tiles.rectangularTile.unreadIndicator.backgroundColor = ofHexCode("#FBCD44")
+        light.tiles.rectangularTile.unreadIndicator.textColor = ofHexCode("#000000")
+        light.tiles.rectangularTile.chip.alignment = Gravity.START
 
-        light.storyTiles.rectangularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
-        light.storyTiles.rectangularTile.liveChip.readBackgroundColor = ofHexCode("#4E5356")
+        light.tiles.rectangularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
+        light.tiles.rectangularTile.liveChip.readBackgroundColor = ofHexCode("#4E5356")
 
-        light.storyTiles.circularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
-        light.storyTiles.circularTile.liveChip.readBackgroundColor = ofHexCode("#4E5356")
+        light.tiles.circularTile.liveChip.unreadBackgroundColor = ofHexCode("#C8102E")
+        light.tiles.circularTile.liveChip.readBackgroundColor = ofHexCode("#4E5356")
 
-        light.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
-        light.storyTiles.circularTile.title.readTextColor = ofHexCode("#4E5356")
-        light.storyTiles.circularTile.readIndicatorColor = ofHexCode("#C5C5C5")
-        light.storyTiles.circularTile.unreadIndicatorColor = ofHexCode("#FBCD44")
+        light.tiles.circularTile.title.unreadTextColor = ofHexCode("#000000")
+        light.tiles.circularTile.title.readTextColor = ofHexCode("#4E5356")
+        light.tiles.circularTile.readIndicatorColor = ofHexCode("#C5C5C5")
+        light.tiles.circularTile.unreadIndicatorColor = ofHexCode("#FBCD44")
 
-        light.storyTiles.title.alignment = Gravity.START
-        light.storyTiles.title.textSize = 13
-        light.storyTiles.title.lineHeight = 13
+        light.tiles.title.alignment = Gravity.START
+        light.tiles.title.textSize = 13
+        light.tiles.title.lineHeight = 13
 
         light.instructions.button.textColor = ofHexCode("#ffffff")
 
         dark from light
 
-        dark.storyTiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
+        dark.tiles.circularTile.title.unreadTextColor = ofHexCode("#FFFFFF")
         dark.lists.backgroundColor = ofHexCode("#000000")
         dark.instructions.button.textColor = ofHexCode("#000000")
       }
@@ -105,32 +105,32 @@ class GetConfigurationUseCaseImpl(
       return squareTheme.copy(
         light =
         squareTheme.light.copy(
-          storyTiles =
-          squareTheme.light.storyTiles.copy(
+          tiles =
+          squareTheme.light.tiles.copy(
             title =
-            squareTheme.light.storyTiles.title.copy(
+            squareTheme.light.tiles.title.copy(
               alignment = Gravity.CENTER,
               titleSize = 10,
               lineHeight = 13,
             ),
             circularTile =
-            squareTheme.light.storyTiles.circularTile.copy(
+            squareTheme.light.tiles.circularTile.copy(
               unreadIndicatorColor = ofHexCode("#C8102E"),
             ),
           ),
         ),
         dark =
         squareTheme.dark.copy(
-          storyTiles =
-          squareTheme.dark.storyTiles.copy(
+          tiles =
+          squareTheme.dark.tiles.copy(
             title =
-            squareTheme.dark.storyTiles.title.copy(
+            squareTheme.dark.tiles.title.copy(
               alignment = Gravity.CENTER,
               titleSize = 10,
               lineHeight = 13,
             ),
             circularTile =
-            squareTheme.dark.storyTiles.circularTile.copy(
+            squareTheme.dark.tiles.circularTile.copy(
               unreadIndicatorColor = ofHexCode("#C8102E"),
             ),
           ),
