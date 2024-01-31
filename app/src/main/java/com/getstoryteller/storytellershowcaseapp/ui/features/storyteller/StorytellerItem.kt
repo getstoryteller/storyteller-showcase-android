@@ -188,10 +188,10 @@ private fun StorytellerComposable(
                         columns = 1,
                       ),
                     ),
-                    storyTiles =
-                    it.light.storyTiles.copy(
+                    tiles =
+                    it.light.tiles.copy(
                       title =
-                      it.light.storyTiles.title.copy(
+                      it.light.tiles.title.copy(
                         titleSize = 21,
                         alignment = Gravity.START,
                         lineHeight = 24,
@@ -208,10 +208,10 @@ private fun StorytellerComposable(
                         columns = 1,
                       ),
                     ),
-                    storyTiles =
-                    it.dark.storyTiles.copy(
+                    tiles =
+                    it.dark.tiles.copy(
                       title =
-                      it.dark.storyTiles.title.copy(
+                      it.dark.tiles.title.copy(
                         titleSize = 21,
                         alignment = Gravity.START,
                         lineHeight = 24,
@@ -291,10 +291,10 @@ private fun StorytellerComposable(
                         columns = 1,
                       ),
                     ),
-                    storyTiles =
-                    it.light.storyTiles.copy(
+                    tiles =
+                    it.light.tiles.copy(
                       title =
-                      it.light.storyTiles.title.copy(
+                      it.light.tiles.title.copy(
                         titleSize = 21,
                         alignment = Gravity.START,
                         lineHeight = 24,
@@ -311,10 +311,10 @@ private fun StorytellerComposable(
                         columns = 1,
                       ),
                     ),
-                    storyTiles =
-                    it.dark.storyTiles.copy(
+                    tiles =
+                    it.dark.tiles.copy(
                       title =
-                      it.dark.storyTiles.title.copy(
+                      it.dark.tiles.title.copy(
                         titleSize = 21,
                         alignment = Gravity.START,
                         lineHeight = 24,
