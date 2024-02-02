@@ -22,7 +22,7 @@ gms = "22.6.0"
 runtime = "1.5.4"
 timber = "5.0.1"
 
-storyteller = "9.9.0"
+storyteller = "9.9.1"
 
 [libraries]
 android-sdk = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }

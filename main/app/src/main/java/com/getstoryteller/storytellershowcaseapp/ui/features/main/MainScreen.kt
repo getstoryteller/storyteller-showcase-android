@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -86,17 +87,14 @@ fun MainScreen(
   var navigationState by remember { mutableStateOf(PageState.HOME) }
   var title by remember { mutableStateOf("") }
   var momentsTabLoading by remember { mutableStateOf(false) }
-
-  val clipsFragment by remember {
-    mutableStateOf(
-      StorytellerClipsFragment.create(""),
-    )
+  val collection by remember(mainPageUiState.config) {
+    mutableStateOf(mainPageUiState.config?.topLevelCollectionId ?: "")
   }
 
-  LaunchedEffect(mainPageUiState.config) {
-    if (mainPageUiState.config != null) {
-      clipsFragment.collectionId = mainPageUiState.config?.topLevelCollectionId ?: ""
-    }
+  val clipsFragment by remember(mainPageUiState.config) {
+    mutableStateOf(
+      StorytellerClipsFragment.create(collection),
+    )
   }
 
   var topBarVisible by remember {
@@ -178,12 +176,14 @@ fun MainScreen(
           navigationIcon = {
             IconButton(
               onClick = {
-                navController.navigateUp()
+                if (navigationState != PageState.HOME) {
+                  navController.navigateUp()
+                }
               },
             ) {
               if (navigationState != PageState.HOME) {
                 Icon(
-                  imageVector = Icons.Filled.ArrowBack,
+                  imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                   contentDescription = null,
                   tint = MaterialTheme.colorScheme.onBackground,
                 )
