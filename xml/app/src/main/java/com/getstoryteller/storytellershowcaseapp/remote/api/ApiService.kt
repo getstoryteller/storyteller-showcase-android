@@ -1,15 +1,9 @@
 package com.getstoryteller.storytellershowcaseapp.remote.api
 
-import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
-import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.ResponseApiDto
-import com.getstoryteller.storytellershowcaseapp.remote.entities.ResponseApiListDto
-import com.getstoryteller.storytellershowcaseapp.remote.entities.StorytellerItemApiDto
-import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsApiDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -25,7 +19,6 @@ import javax.inject.Singleton
 @Singleton
 class ApiService @Inject constructor(
   private val client: HttpClient,
-  private val sessionRepository: SessionRepository,
 ) {
   suspend fun verifyCode(
     code: String,
@@ -34,30 +27,4 @@ class ApiService @Inject constructor(
       setBody(mapOf("code" to code))
       contentType(ContentType.Application.Json)
     }.body()
-
-  suspend fun getTenantSettings(): ResponseApiDto<TenantSettingsApiDto> =
-    client.get("settings?apiKey=${sessionRepository.apiKey}")
-      .body()
-
-  suspend fun getLanguages(): ResponseApiListDto<KeyValueDto> =
-    client.get("languages?apiKey=${sessionRepository.apiKey}")
-      .body()
-
-  suspend fun getTeams(): ResponseApiListDto<KeyValueDto> =
-    client.get("teams?apiKey=${sessionRepository.apiKey}")
-      .body()
-
-  suspend fun getTabs(): ResponseApiListDto<TabDto> =
-    client.get("tabs?apiKey=${sessionRepository.apiKey}")
-      .body()
-
-  suspend fun getTabById(
-    tabId: String,
-  ): ResponseApiListDto<StorytellerItemApiDto> =
-    client.get("tabs/$tabId?apiKey=${sessionRepository.apiKey}")
-      .body()
-
-  suspend fun getHomeItems(): ResponseApiListDto<StorytellerItemApiDto> =
-    client.get("home?apiKey=${sessionRepository.apiKey}")
-      .body<ResponseApiListDto<StorytellerItemApiDto>>()
 }

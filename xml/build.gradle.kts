@@ -9,6 +9,12 @@ plugins {
   alias(libs.plugins.ktlint) apply false
 }
 
+buildscript {
+  dependencies {
+    classpath(libs.pluginClasspath.navigationSafeArgs)
+  }
+}
+
 tasks.create<Delete>("clean") {
   delete(rootProject.layout.buildDirectory)
 }

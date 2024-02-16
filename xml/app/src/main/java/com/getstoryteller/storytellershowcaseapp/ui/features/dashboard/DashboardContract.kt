@@ -1,11 +1,11 @@
-package com.getstoryteller.storytellershowcaseapp.ui.features.mainxml
+package com.getstoryteller.storytellershowcaseapp.ui.features.dashboard
 
 import com.getstoryteller.storytellershowcaseapp.ui.base.BaseViewAction
 import com.getstoryteller.storytellershowcaseapp.ui.base.BaseViewEffect
 import com.getstoryteller.storytellershowcaseapp.ui.base.BaseViewState
-import com.getstoryteller.storytellershowcaseapp.ui.features.mainxml.adapter.UiElement
+import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.UiElement
 
-class MainFragmentContract {
+class DashboardContract {
 
   data class State(
     val isLoading: Boolean = false,

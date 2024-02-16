@@ -11,15 +11,16 @@ coreKtx = "1.12.0"
 fragmentKtx = "1.6.2"
 hilt = "2.48"
 hiltNavigationCompose = "1.1.0"
-ktlint = "1.1.0"
-gradleKtlint = "12.0.3"
+ktlint = "1.1.1"
+gradleKtlint = "12.1.0"
 serialization = "1.6.1"
 ktor = "2.3.6"
 lifecycleViewmodelCompose = "2.7.0"
 material = "1.11.0"
-navigationCompose = "2.7.6"
+navigationCompose = "2.7.7"
 gms = "22.6.0"
 runtime = "1.5.4"
+swiperefreshlayout = "1.1.0"
 timber = "5.0.1"
 
 storyteller = "9.9.1"
@@ -31,11 +32,14 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 androidx-compose-bom-beta = { module = "dev.chrisbanes.compose:compose-bom", version.ref = "composeBomBeta" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationCompose" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
@@ -52,8 +56,8 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 material = { module = "com.google.android.material:material", version.ref = "material" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "gms" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
-
 storyteller = { module = "Storyteller:sdk", version.ref = "storyteller" }
+pluginClasspath-navigationSafeArgs = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -63,3 +67,4 @@ jetbrainsKotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", versi
 jetbrainsKotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "gradleKtlint" }
+navigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin" }

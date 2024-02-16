@@ -36,10 +36,10 @@ object NetworkModule {
       }
       install(HttpRequestRetry) {
         maxRetries = 5
-        retryIf { request, response ->
+        retryIf { _, response ->
           !response.status.isSuccess()
         }
-        retryOnExceptionIf { request, cause ->
+        retryOnExceptionIf { _, cause ->
           cause is Error.NetworkError
         }
         delayMillis { retry ->

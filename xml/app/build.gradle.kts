@@ -8,6 +8,7 @@ plugins {
   alias(libs.plugins.jetbrainsKotlinSerialization)
   alias(libs.plugins.hilt)
   alias(libs.plugins.ktlint)
+  id(libs.plugins.navigationSafeArgs.get().pluginId)
 }
 
 android {
@@ -15,7 +16,7 @@ android {
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.getstoryteller.storytellershowcaseapp"
+    applicationId = "com.getstoryteller.storytellershowcaseapp.xml"
     minSdk = 24
     targetSdk = 34
     versionCode = 1
@@ -56,6 +57,7 @@ android {
   buildFeatures {
     compose = true
     buildConfig = true
+    viewBinding = true
   }
   composeOptions {
     kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
@@ -99,6 +101,9 @@ dependencies {
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)
+  implementation(libs.navigation.ui.ktx)
+  implementation(libs.navigation.fragment.ktx)
+  implementation(libs.androidx.swiperefreshlayout)
 
   // Network, Serialization and Logging
   implementation(libs.ktor.client.core)

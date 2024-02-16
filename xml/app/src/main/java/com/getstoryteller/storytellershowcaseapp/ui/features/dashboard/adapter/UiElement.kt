@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ui.features.mainxml.adapter
+package com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter
 
 import androidx.annotation.Dimension
 import com.storyteller.domain.entities.StorytellerListViewCellType

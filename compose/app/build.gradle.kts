@@ -15,7 +15,7 @@ android {
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.getstoryteller.storytellershowcaseapp"
+    applicationId = "com.getstoryteller.storytellershowcaseapp.compose"
     minSdk = 24
     targetSdk = 34
     versionCode = 1

@@ -1,13 +1,14 @@
 package com.getstoryteller.storytellershowcaseapp.domain
 
-import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsDto
-import com.getstoryteller.storytellershowcaseapp.ui.features.mainxml.adapter.UiElement
-import com.getstoryteller.storytellershowcaseapp.ui.features.mainxml.adapter.UiPadding
+import com.getstoryteller.storytellershowcaseapp.ShowcaseApp.Companion.CLIP_COLLECTION
+import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.UiElement
+import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.UiPadding
 import com.storyteller.domain.entities.StorytellerListViewCellType
 
 interface GetDemoDataUseCase {
   fun getDemoData(
     forceDataReload: Boolean,
+    onRemoveStorytellerItem: (String) -> Unit,
   ): List<UiElement>
 }
 
@@ -21,6 +22,7 @@ class GetDemoDataUseCaseImpl : GetDemoDataUseCase {
 
   override fun getDemoData(
     forceDataReload: Boolean,
+    onRemoveStorytellerItem: (String) -> Unit,
   ): List<UiElement> =
     listOf(
       UiElement.StoryRow(
@@ -49,18 +51,17 @@ class GetDemoDataUseCaseImpl : GetDemoDataUseCase {
       UiElement.ClipRow(
         cellType = StorytellerListViewCellType.SQUARE,
         height = 174,
-        collection = "rapid-replay",
+        collection = CLIP_COLLECTION,
         forceDataReload = forceDataReload,
         padding = rowPadding,
         onFailure = { idToRemove -> onRemoveStorytellerItem(idToRemove) },
       ),
       UiElement.ClipGrid(
         cellType = StorytellerListViewCellType.SQUARE,
-        collection = "rapid-replay",
+        collection = CLIP_COLLECTION,
         forceDataReload = forceDataReload,
         padding = gridPadding.copy(bottomPadding = 8),
         onFailure = { idToRemove -> onRemoveStorytellerItem(idToRemove) },
       ),
     )
-
 }

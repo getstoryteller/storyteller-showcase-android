@@ -1,4 +1,4 @@
-package com.getstoryteller.storytellershowcaseapp.ui.features.mainxml.adapter
+package com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
