@@ -1,0 +1,20 @@
+root = true
+
+# noinspection EditorConfigKeyCorrectness
+[*]
+indent_style = space
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 120
+ktlint_function_naming_ignore_when_annotated_with=Composable
+
+[*.{kt,kts}]
+ij_kotlin_allow_trailing_comma_on_call_site = true
+ktlint_function_signature_body_expression_wrapping=multiline
+ktlint_code_style=intellij_idea
+function-signature=true
+ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than=1
+parameter-list-wrapping=multiline
+statement-wrapping=multiline
