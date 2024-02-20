@@ -50,6 +50,7 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) : DemoElement
   ) {
     super.bind(uiElement)
     val storyRow = uiElement as UiElement.StoryRow
+    binding.titleTextView.text = storyRow.title
     binding.storytellerRow.run {
       val heightResolved = storyRow.height.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {
@@ -84,6 +85,7 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) : DemoEleme
   ) {
     super.bind(uiElement)
     val storyGrid = uiElement as UiElement.StoryGrid
+    binding.titleTextView.text = storyGrid.title
     binding.storytellerGrid.run {
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyGrid.categories,
@@ -114,6 +116,7 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) : DemoElement
   ) {
     super.bind(uiElement)
     val clipsGrid = uiElement as UiElement.ClipGrid
+    binding.titleTextView.text = clipsGrid.title
     binding.storytellerClipGrid.run {
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsGrid.collection,
@@ -144,6 +147,7 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) : DemoElementVi
   ) {
     super.bind(uiElement)
     val clipsRow = uiElement as UiElement.ClipRow
+    binding.titleTextView.text = clipsRow.title
     binding.storytellerClipRow.run {
       val heightResolved = clipsRow.height.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {

@@ -1,5 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.domain
 
+import com.getstoryteller.storytellershowcaseapp.domain.model.CategoriesModel
+import com.getstoryteller.storytellershowcaseapp.domain.model.CollectionModel
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
 
@@ -13,9 +15,15 @@ class GetHomeScreenUseCaseImpl(
 ) : GetHomeScreenUseCase {
   override suspend fun getHomeItems() {
     val result = tenantRepository.getHomePage()
-    val categories = result.firstOrNull()?.categories.orEmpty()
-    val collection = result.find { it.collection.isNullOrEmpty().not() }?.collection.orEmpty()
-    sessionRepository.categories = categories
-    sessionRepository.collection = collection
+    val categories = result.find { it.title != null }
+    val collection = result.find { it.collection.isNullOrEmpty().not() }
+    sessionRepository.categories = CategoriesModel(
+      title = categories?.title ?: "Moments",
+      categories = categories?.categories.orEmpty(),
+    )
+    sessionRepository.collection = CollectionModel(
+      title = collection?.title ?: "Moments",
+      collection = collection?.collection.orEmpty(),
+    )
   }
 }

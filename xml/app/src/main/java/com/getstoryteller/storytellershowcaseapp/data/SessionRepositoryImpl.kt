@@ -1,7 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.data
 
 import android.content.SharedPreferences
+import com.getstoryteller.storytellershowcaseapp.domain.model.CategoriesModel
+import com.getstoryteller.storytellershowcaseapp.domain.model.CollectionModel
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.Json.Default.decodeFromString
 import java.util.UUID
 import javax.inject.Inject
 
@@ -42,13 +47,13 @@ class SessionRepositoryImpl @Inject constructor(private val prefs: SharedPrefere
     get() = prefs.getBoolean(KEY_TRACK_EVENTS, true)
     set(value) = prefs.edit().putBoolean(KEY_TRACK_EVENTS, value).apply()
 
-  override var categories: List<String>
-    get() = prefs.getStringSet(KEY_CATEGORIES, emptySet()).orEmpty().toList()
-    set(value) = prefs.edit().putStringSet(KEY_CATEGORIES, value.toSet()).apply()
+  override var categories: CategoriesModel
+    get() = decodeFromString(prefs.getString(KEY_CATEGORIES, "").orEmpty())
+    set(value) = prefs.edit().putString(KEY_CATEGORIES, Json.encodeToString(value)).apply()
 
-  override var collection: String
-    get() = prefs.getString(KEY_COLLECTION, "").orEmpty()
-    set(value) = prefs.edit().putString(KEY_COLLECTION, value).apply()
+  override var collection: CollectionModel
+    get() = decodeFromString(prefs.getString(KEY_COLLECTION, "").orEmpty())
+    set(value) = prefs.edit().putString(KEY_COLLECTION, Json.encodeToString(value)).apply()
 
   override fun reset() {
     userId = UUID.randomUUID().toString()

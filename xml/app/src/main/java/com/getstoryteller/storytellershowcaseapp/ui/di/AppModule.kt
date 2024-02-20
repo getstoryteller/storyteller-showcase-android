@@ -6,6 +6,8 @@ import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCaseImpl
+import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
+import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
@@ -57,5 +59,15 @@ object AppModule {
     GetHomeScreenUseCaseImpl(
       tenantRepository,
       sessionRepository,
+    )
+
+  @Provides
+  fun provideLogoutUseCase(
+    sessionRepository: SessionRepository,
+    amplitudeService: AmplitudeService,
+  ): LogoutUseCase =
+    LogoutUseCaseImpl(
+      sessionRepository,
+      amplitudeService,
     )
 }

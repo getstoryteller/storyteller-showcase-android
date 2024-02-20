@@ -23,5 +23,8 @@ class DashboardContract {
     data class Success(val data: List<UiElement>) : Action
   }
 
-  sealed interface Effect : BaseViewEffect
+  sealed interface Effect : BaseViewEffect {
+
+    data object Logout : Effect
+  }
 }

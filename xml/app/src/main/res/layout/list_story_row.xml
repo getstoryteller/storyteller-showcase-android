@@ -9,6 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="start"
+    android:paddingStart="24dp"
     android:paddingBottom="16dp"
     android:text="StoryRowView"
     android:textSize="16sp"

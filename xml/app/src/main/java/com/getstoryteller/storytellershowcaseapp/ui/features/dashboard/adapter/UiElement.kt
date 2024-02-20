@@ -21,6 +21,7 @@ sealed class UiElement(
 ) {
 
   data class StoryRow(
+    val title: String,
     val cellType: StorytellerListViewCellType,
     @Dimension(unit = Dimension.DP) val height: Int,
     val theme: UiTheme? = null,
@@ -31,6 +32,7 @@ sealed class UiElement(
   ) : UiElement(categories.toString(), padding)
 
   data class StoryGrid(
+    val title: String,
     val cellType: StorytellerListViewCellType,
     val theme: UiTheme? = null,
     val categories: List<String>,
@@ -41,6 +43,7 @@ sealed class UiElement(
   ) : UiElement(categories.toString(), padding)
 
   data class ClipRow(
+    val title: String,
     val cellType: StorytellerListViewCellType,
     @Dimension(unit = Dimension.DP) val height: Int,
     val theme: UiTheme? = null,
@@ -51,6 +54,7 @@ sealed class UiElement(
   ) : UiElement(collection, padding)
 
   data class ClipGrid(
+    val title: String,
     val cellType: StorytellerListViewCellType,
     val theme: UiTheme? = null,
     val collection: String,

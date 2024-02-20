@@ -4,11 +4,12 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content">
 
-  <TextView
+  <androidx.appcompat.widget.AppCompatTextView
     android:id="@+id/titleTextView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="start"
+    android:paddingStart="24dp"
     android:paddingBottom="16dp"
     android:text="ClipRowView"
     android:textSize="16sp"

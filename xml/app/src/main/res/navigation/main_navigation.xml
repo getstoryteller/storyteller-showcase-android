@@ -19,6 +19,12 @@
   <fragment
     android:id="@+id/main_fragment"
     android:name="com.getstoryteller.storytellershowcaseapp.ui.features.main.MainFragment"
-    tools:layout="@layout/fragment_main" />
+    tools:layout="@layout/fragment_main"/>
+
+  <action
+    android:id="@+id/action_to_login"
+    app:destination="@id/login_fragment"
+    app:launchSingleTop="true"
+    app:popUpTo="@id/main_navigation" />
 
 </navigation>

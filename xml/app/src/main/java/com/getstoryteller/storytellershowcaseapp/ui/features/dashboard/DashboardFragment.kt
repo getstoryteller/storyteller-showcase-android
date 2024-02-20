@@ -10,8 +10,11 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import com.getstoryteller.storytellershowcaseapp.MainNavigationDirections
 import com.getstoryteller.storytellershowcaseapp.databinding.FragmentDashboardBinding
+import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.DashboardContract.Effect.Logout
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.MultipleListsAdapter
+import com.getstoryteller.storytellershowcaseapp.ui.features.getMainActivityNavigator
 import com.getstoryteller.storytellershowcaseapp.ui.utils.observeOnState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,6 +25,8 @@ class DashboardFragment : Fragment() {
   private val binding get() = nullableBinding!!
 
   private val viewModel by viewModels<DashboardViewModel>()
+
+  private val navigation by lazy { getMainActivityNavigator() }
 
   private val demoAdapter: MultipleListsAdapter = MultipleListsAdapter()
 
@@ -42,6 +47,7 @@ class DashboardFragment : Fragment() {
     setViews()
     setInsets()
     observeState()
+    observeEffects()
     viewModel.reload()
   }
 
@@ -55,13 +61,15 @@ class DashboardFragment : Fragment() {
     binding.multipleListsRecycler.apply {
       adapter = demoAdapter
     }
+    binding.logout.setOnClickListener {
+      viewModel.logout()
+    }
   }
 
   private fun setInsets() {
     ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
       val statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-      val navigationBar = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-      binding.multipleListsRecycler.updatePadding(bottom = navigationBar.bottom, top = statusBar.top)
+      binding.root.updatePadding(top = statusBar.top)
       insets
     }
   }
@@ -71,6 +79,18 @@ class DashboardFragment : Fragment() {
       viewModel.state.collect { state ->
         binding.refreshLayout.isRefreshing = state.isLoading
         if (state.data.isNotEmpty()) demoAdapter.data = state.data
+      }
+    }
+  }
+
+  private fun observeEffects() {
+    observeOnState(state = Lifecycle.State.STARTED) {
+      viewModel.effects.collect { effect ->
+        when (effect) {
+          is Logout -> {
+            navigation.navigate(MainNavigationDirections.actionToLogin())
+          }
+        }
       }
     }
   }

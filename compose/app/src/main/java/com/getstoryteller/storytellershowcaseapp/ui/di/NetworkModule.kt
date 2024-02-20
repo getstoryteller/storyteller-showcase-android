@@ -11,6 +11,8 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.InternalAPI
@@ -57,6 +59,9 @@ object NetworkModule {
         )
       }
       buildConfigSpecificSetup.networkModule(this)
+      Logging {
+        level = LogLevel.ALL
+      }
     }
 
   @Provides
