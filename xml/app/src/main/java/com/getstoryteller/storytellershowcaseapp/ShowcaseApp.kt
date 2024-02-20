@@ -29,7 +29,6 @@ class ShowcaseApp : Application() {
 
   companion object {
     internal const val PREFS_NAME = "ShowcaseAppPrefs"
-    const val CLIP_COLLECTION = "rapid-replay"
   }
 
   override fun onCreate() {

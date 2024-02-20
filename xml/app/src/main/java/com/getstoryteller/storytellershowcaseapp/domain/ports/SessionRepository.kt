@@ -7,6 +7,8 @@ interface SessionRepository {
   var team: String?
   var hasAccount: Boolean
   var trackEvents: Boolean
+  var categories: List<String>
+  var collection: String
 
   fun reset()
 }

@@ -42,13 +42,14 @@ class DashboardFragment : Fragment() {
     setViews()
     setInsets()
     observeState()
+    viewModel.reload()
   }
 
   private fun setViews() {
     binding.refreshLayout.apply {
       setProgressViewOffset(true, 100, 200)
       setOnRefreshListener {
-        viewModel.reload(false)
+        viewModel.reload()
       }
     }
     binding.multipleListsRecycler.apply {

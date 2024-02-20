@@ -1,14 +1,18 @@
 package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import com.getstoryteller.storytellershowcaseapp.data.AuthRepositoryImpl
+import com.getstoryteller.storytellershowcaseapp.data.TenantRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCaseImpl
+import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
+import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AuthRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
 import com.getstoryteller.storytellershowcaseapp.remote.api.ApiService
 import dagger.Module
 import dagger.Provides
@@ -25,6 +29,11 @@ object AppModule {
   ): AuthRepository = AuthRepositoryImpl(apiService)
 
   @Provides
+  fun provideTenantRepository(
+    apiService: ApiService,
+  ): TenantRepository = TenantRepositoryImpl(apiService)
+
+  @Provides
   fun provideVerifyCodeUseCase(
     authRepository: AuthRepository,
     sessionRepository: SessionRepository,
@@ -33,5 +42,20 @@ object AppModule {
   ): VerifyCodeUseCase = VerifyCodeUseCaseImpl(authRepository, sessionRepository, storytellerService, amplitudeService)
 
   @Provides
-  fun provideGetDemoDataUseCase(): GetDemoDataUseCase = GetDemoDataUseCaseImpl()
+  fun provideGetDemoDataUseCase(
+    sessionRepository: SessionRepository,
+  ): GetDemoDataUseCase =
+    GetDemoDataUseCaseImpl(
+      sessionRepository,
+    )
+
+  @Provides
+  fun provideGetHomeScreenUseCase(
+    tenantRepository: TenantRepository,
+    sessionRepository: SessionRepository,
+  ): GetHomeScreenUseCase =
+    GetHomeScreenUseCaseImpl(
+      tenantRepository,
+      sessionRepository,
+    )
 }

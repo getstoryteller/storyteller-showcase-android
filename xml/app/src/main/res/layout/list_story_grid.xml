@@ -8,10 +8,11 @@
     android:id="@+id/titleTextView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="start"
     android:paddingBottom="16dp"
     android:text="StoryGridView"
-    android:textSize="16sp" />
+    android:textSize="16sp"
+    android:textStyle="bold" />
 
   <com.storyteller.ui.list.StorytellerStoriesGridView
     android:id="@+id/storytellerGrid"

@@ -14,6 +14,8 @@ class SessionRepositoryImpl @Inject constructor(private val prefs: SharedPrefere
     private const val KEY_TEAM = "KEY_TEAM"
     private const val KEY_HAS_ACCOUNT = "KEY_HAS_ACCOUNT"
     private const val KEY_TRACK_EVENTS = "KEY_TRACK_EVENTS"
+    private const val KEY_CATEGORIES = "KEY_CATEGORIES"
+    private const val KEY_COLLECTION = "KEY_COLLECTION"
   }
 
   override var apiKey: String?
@@ -39,6 +41,14 @@ class SessionRepositoryImpl @Inject constructor(private val prefs: SharedPrefere
   override var trackEvents: Boolean
     get() = prefs.getBoolean(KEY_TRACK_EVENTS, true)
     set(value) = prefs.edit().putBoolean(KEY_TRACK_EVENTS, value).apply()
+
+  override var categories: List<String>
+    get() = prefs.getStringSet(KEY_CATEGORIES, emptySet()).orEmpty().toList()
+    set(value) = prefs.edit().putStringSet(KEY_CATEGORIES, value.toSet()).apply()
+
+  override var collection: String
+    get() = prefs.getString(KEY_COLLECTION, "").orEmpty()
+    set(value) = prefs.edit().putString(KEY_COLLECTION, value).apply()
 
   override fun reset() {
     userId = UUID.randomUUID().toString()

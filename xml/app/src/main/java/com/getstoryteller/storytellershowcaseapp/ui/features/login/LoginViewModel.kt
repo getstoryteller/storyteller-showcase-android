@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.login
 
 import androidx.lifecycle.viewModelScope
+import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.ui.base.BaseViewModel
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
   private val verifyCodeUseCase: VerifyCodeUseCase,
   private val sessionRepository: SessionRepository,
+  private val getHomeScreenUseCase: GetHomeScreenUseCase,
 ) : BaseViewModel<LoginContract.State, LoginContract.Action, LoginContract.Effect>() {
 
   init {
@@ -56,6 +58,7 @@ class LoginViewModel @Inject constructor(
       sendAction { Loading }
       try {
         verifyCodeUseCase.verifyCode(code)
+        getHomeScreenUseCase.getHomeItems()
         sendEffect { NavigateToMainScreen }
       } catch (ex: Exception) {
         sendAction {

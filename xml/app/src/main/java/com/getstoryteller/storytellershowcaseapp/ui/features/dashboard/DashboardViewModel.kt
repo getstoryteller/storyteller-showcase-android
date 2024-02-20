@@ -21,31 +21,26 @@ class DashboardViewModel @Inject constructor(
 
   override fun setInitialState(): State = State()
 
-  init {
-    reload()
-  }
-
   override fun onReduceState(
     action: Action,
-  ): State =
-    when (action) {
-      is Error -> currentState.copy(
-        isError = true,
-        errorMessage = action.message,
-        isLoading = false,
-      )
+  ): State = when (action) {
+    is Error -> currentState.copy(
+      isError = true,
+      errorMessage = action.message,
+      isLoading = false,
+    )
 
-      is Loading -> currentState.copy(
-        isError = false,
-        isLoading = true,
-      )
+    is Loading -> currentState.copy(
+      isError = false,
+      isLoading = true,
+    )
 
-      is Success -> currentState.copy(
-        isError = false,
-        isLoading = false,
-        data = action.data,
-      )
-    }
+    is Success -> currentState.copy(
+      isError = false,
+      isLoading = false,
+      data = action.data,
+    )
+  }
 
   fun reload(
     forceDataReload: Boolean = true,
@@ -61,7 +56,7 @@ class DashboardViewModel @Inject constructor(
   private fun onRemoveStorytellerItem(
     idToRemove: String,
   ) {
-    val uiData = currentState.data.filter { it.id != idToRemove }
+    val uiData = state.value.data.filter { it.id != idToRemove }
     sendAction { Success(uiData) }
   }
 }
