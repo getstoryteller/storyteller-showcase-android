@@ -5,6 +5,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.getstoryteller.storytellershowcaseapp.databinding.ListClipGridBinding
@@ -50,7 +51,10 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) : DemoElement
   ) {
     super.bind(uiElement)
     val storyRow = uiElement as UiElement.StoryRow
-    binding.titleTextView.text = storyRow.title
+    binding.titleTextView.apply {
+      isVisible = storyRow.title.isNotEmpty()
+      text = storyRow.title
+    }
     binding.storytellerRow.run {
       val heightResolved = storyRow.height.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {
@@ -85,7 +89,10 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) : DemoEleme
   ) {
     super.bind(uiElement)
     val storyGrid = uiElement as UiElement.StoryGrid
-    binding.titleTextView.text = storyGrid.title
+    binding.titleTextView.apply {
+      isVisible = storyGrid.title.isNotEmpty()
+      text = storyGrid.title
+    }
     binding.storytellerGrid.run {
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyGrid.categories,
@@ -116,7 +123,10 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) : DemoElement
   ) {
     super.bind(uiElement)
     val clipsGrid = uiElement as UiElement.ClipGrid
-    binding.titleTextView.text = clipsGrid.title
+    binding.titleTextView.apply {
+      isVisible = clipsGrid.title.isNotEmpty()
+      text = clipsGrid.title
+    }
     binding.storytellerClipGrid.run {
       configuration = StorytellerClipsView.ListConfiguration(
         collection = clipsGrid.collection,
@@ -147,7 +157,10 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) : DemoElementVi
   ) {
     super.bind(uiElement)
     val clipsRow = uiElement as UiElement.ClipRow
-    binding.titleTextView.text = clipsRow.title
+    binding.titleTextView.apply {
+      isVisible = clipsRow.title.isNotEmpty()
+      text = clipsRow.title
+    }
     binding.storytellerClipRow.run {
       val heightResolved = clipsRow.height.dpToPx(context)
       updateLayoutParams<ViewGroup.LayoutParams> {

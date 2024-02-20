@@ -18,11 +18,11 @@ class GetHomeScreenUseCaseImpl(
     val categories = result.find { it.title != null }
     val collection = result.find { it.collection.isNullOrEmpty().not() }
     sessionRepository.categories = CategoriesModel(
-      title = categories?.title ?: "Moments",
+      title = categories?.title ?: "",
       categories = categories?.categories.orEmpty(),
     )
     sessionRepository.collection = CollectionModel(
-      title = collection?.title ?: "Moments",
+      title = collection?.title ?: "",
       collection = collection?.collection.orEmpty(),
     )
   }
