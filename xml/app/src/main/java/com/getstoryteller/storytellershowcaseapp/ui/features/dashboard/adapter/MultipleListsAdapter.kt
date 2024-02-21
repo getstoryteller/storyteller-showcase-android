@@ -18,14 +18,18 @@ class MultipleListsAdapter(
     private val supportedTypes = listOf<Class<*>>(
       UiElement.StoryRow::class.java,
       UiElement.StoryGrid::class.java,
+      UiElement.StorySingleton::class.java,
       UiElement.ClipRow::class.java,
       UiElement.ClipGrid::class.java,
+      UiElement.ClipSingleton::class.java,
     )
     private val supportedInflaters = listOf(
       StoryRowViewHolder.Companion::inflate,
       StoryGridViewHolder.Companion::inflate,
+      StorySingletonViewHolder.Companion::inflate,
       ClipRowViewHolder.Companion::inflate,
       ClipGridViewHolder.Companion::inflate,
+      ClipSingletonViewHolder.Companion::inflate,
     )
 
     fun calculateDataDiff(

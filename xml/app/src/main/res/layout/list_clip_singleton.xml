@@ -13,13 +13,13 @@
     android:layout_marginStart="20dp"
     android:textSize="18sp"
     android:textStyle="bold"
-    app:layout_constraintBottom_toTopOf="@id/grid"
+    app:layout_constraintBottom_toTopOf="@id/row"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:text="ClipGridView" />
 
-  <com.storyteller.ui.list.StorytellerStoriesGridView
-    android:id="@+id/grid"
+  <com.storyteller.ui.list.StorytellerClipsGridView
+    android:id="@+id/row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="20dp"

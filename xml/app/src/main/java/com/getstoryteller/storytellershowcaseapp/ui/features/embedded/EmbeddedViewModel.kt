@@ -27,6 +27,6 @@ class EmbeddedViewModel @Inject constructor(
 
   fun loadCollection() {
     val collection = sessionRepository.collection
-    sendAction { Success(collection.collection) }
+    sendAction { Success(collection) }
   }
 }

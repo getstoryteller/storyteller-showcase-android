@@ -1,5 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.remote.entities
 
+import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.UiElement
+import com.storyteller.domain.entities.StorytellerListViewCellType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -62,7 +64,99 @@ data class StorytellerItemApiDto(
   @SerialName("videoType") val videoType: VideoType,
   @SerialName("id") val id: String,
   @SerialName("count") val displayLimit: Int?,
-)
+) {
+  fun toUiElement(): UiElement {
+    val cellType = when (tileType) {
+      TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
+      TileType.ROUND -> StorytellerListViewCellType.ROUND
+    }
+    val height = if (this.tileType == TileType.ROUND) {
+      113
+    } else {
+      when (this.size) {
+        ItemSize.SMALL -> 106
+        ItemSize.MEDIUM -> 330
+        ItemSize.LARGE -> 440
+        ItemSize.REGULAR -> 220
+      }
+    }
+    return when (layout) {
+      LayoutType.ROW -> {
+        when (videoType) {
+          VideoType.STORY -> {
+            UiElement.StoryRow(
+              title = title.orEmpty(),
+              more = moreButtonTitle.orEmpty(),
+              cellType = cellType,
+              categories = categories,
+              forceDataReload = true,
+              height = height,
+            )
+          }
+
+          VideoType.CLIP -> {
+            UiElement.ClipRow(
+              title = title.orEmpty(),
+              more = moreButtonTitle.orEmpty(),
+              cellType = cellType,
+              height = height,
+              collection = collection.orEmpty(),
+              forceDataReload = true,
+            )
+          }
+        }
+      }
+
+      LayoutType.GRID -> {
+        when (videoType) {
+          VideoType.STORY -> {
+            UiElement.StoryGrid(
+              title = title.orEmpty(),
+              more = moreButtonTitle.orEmpty(),
+              cellType = cellType,
+              categories = categories,
+              forceDataReload = true,
+            )
+          }
+
+          VideoType.CLIP -> {
+            UiElement.ClipGrid(
+              title = title.orEmpty(),
+              more = moreButtonTitle.orEmpty(),
+              cellType = cellType,
+              collection = collection.orEmpty(),
+              forceDataReload = true,
+            )
+          }
+        }
+      }
+
+      LayoutType.SINGLETON -> {
+        when (videoType) {
+          VideoType.STORY -> {
+            UiElement.StorySingleton(
+              title = title.orEmpty(),
+              more = moreButtonTitle.orEmpty(),
+              cellType = cellType,
+              categories = categories,
+              forceDataReload = true,
+            )
+          }
+
+          VideoType.CLIP -> {
+            UiElement.ClipSingleton(
+              title = title.orEmpty(),
+              more = moreButtonTitle.orEmpty(),
+              cellType = cellType,
+              collection = collection.orEmpty(),
+              forceDataReload = true,
+            )
+          }
+        }
+      }
+    }
+  }
+}
 
 @kotlinx.serialization.Serializable(with = LayoutTypeSerializer::class)
 enum class LayoutType(val serializedName: String) {

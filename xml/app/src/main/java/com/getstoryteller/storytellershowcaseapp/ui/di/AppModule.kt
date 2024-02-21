@@ -2,8 +2,6 @@ package com.getstoryteller.storytellershowcaseapp.ui.di
 
 import com.getstoryteller.storytellershowcaseapp.data.AuthRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.data.TenantRepositoryImpl
-import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCase
-import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCaseImpl
 import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
@@ -42,14 +40,6 @@ object AppModule {
     storytellerService: StorytellerService,
     amplitudeService: AmplitudeService,
   ): VerifyCodeUseCase = VerifyCodeUseCaseImpl(authRepository, sessionRepository, storytellerService, amplitudeService)
-
-  @Provides
-  fun provideGetDemoDataUseCase(
-    sessionRepository: SessionRepository,
-  ): GetDemoDataUseCase =
-    GetDemoDataUseCaseImpl(
-      sessionRepository,
-    )
 
   @Provides
   fun provideGetHomeScreenUseCase(

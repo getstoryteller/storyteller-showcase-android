@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -69,7 +70,9 @@ class DashboardFragment : Fragment() {
   private fun setInsets() {
     ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
       val statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+      val navigationBar = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
       binding.root.updatePadding(top = statusBar.top)
+      binding.multipleListsRecycler.updatePadding(bottom = navigationBar.bottom)
       insets
     }
   }
@@ -78,6 +81,7 @@ class DashboardFragment : Fragment() {
     observeOnState(state = Lifecycle.State.STARTED) {
       viewModel.state.collect { state ->
         binding.refreshLayout.isRefreshing = state.isLoading
+        binding.emptyState.isVisible = state.data.isEmpty()
         if (state.data.isNotEmpty()) demoAdapter.data = state.data
       }
     }

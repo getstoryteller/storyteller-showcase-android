@@ -1,7 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.dashboard
 
 import androidx.lifecycle.viewModelScope
-import com.getstoryteller.storytellershowcaseapp.domain.GetDemoDataUseCase
+import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.ui.base.BaseViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.DashboardContract.Action
@@ -12,13 +12,12 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.Dashboard
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.DashboardContract.Effect.Logout
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.DashboardContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-  private val getDemoDataUseCase: GetDemoDataUseCase,
+  private val getHomeScreenUseCase: GetHomeScreenUseCase,
   private val logoutUseCaseImpl: LogoutUseCase,
 ) : BaseViewModel<State, Action, Effect>() {
 
@@ -46,13 +45,10 @@ class DashboardViewModel @Inject constructor(
       )
     }
 
-  fun reload(
-    forceDataReload: Boolean = true,
-  ) {
+  fun reload() {
     viewModelScope.launch {
       sendAction { Loading }
-      delay(1_000L)
-      val result = getDemoDataUseCase.getDemoData(forceDataReload, ::onRemoveStorytellerItem)
+      val result = getHomeScreenUseCase.getHomeItems()
       sendAction { Success(result) }
     }
   }

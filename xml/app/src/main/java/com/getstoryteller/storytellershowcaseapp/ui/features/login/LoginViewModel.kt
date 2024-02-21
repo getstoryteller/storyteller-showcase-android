@@ -58,7 +58,6 @@ class LoginViewModel @Inject constructor(
       sendAction { Loading }
       try {
         verifyCodeUseCase.verifyCode(code)
-        getHomeScreenUseCase.getHomeItems()
         sendEffect { NavigateToMainScreen }
       } catch (ex: Exception) {
         sendAction {

@@ -4,63 +4,67 @@ import androidx.annotation.Dimension
 import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.theme.builders.UiTheme
 
-data class UiPadding(
-  @Dimension(unit = Dimension.DP) val startPadding: Int = 0,
-  @Dimension(unit = Dimension.DP) val endPadding: Int = 0,
-  @Dimension(unit = Dimension.DP) val topPadding: Int = 0,
-  @Dimension(unit = Dimension.DP) val bottomPadding: Int = 0,
-) {
-  companion object {
-    val NONE = UiPadding(0, 0, 0, 0)
-  }
-}
-
 sealed class UiElement(
   val id: String,
-  open val padding: UiPadding,
 ) {
+
+  var onFailure: ((String) -> Unit)? = null
 
   data class StoryRow(
     val title: String,
+    val more: String,
     val cellType: StorytellerListViewCellType,
     @Dimension(unit = Dimension.DP) val height: Int,
     val theme: UiTheme? = null,
     val categories: List<String>,
     var forceDataReload: Boolean,
-    val onFailure: (String) -> Unit,
-    override val padding: UiPadding = UiPadding.NONE,
-  ) : UiElement(categories.toString(), padding)
+  ) : UiElement(categories.toString())
 
   data class StoryGrid(
     val title: String,
+    val more: String,
     val cellType: StorytellerListViewCellType,
     val theme: UiTheme? = null,
     val categories: List<String>,
     var forceDataReload: Boolean,
-    val onFailure: (String) -> Unit,
     val displayLimit: Int = 2,
-    override val padding: UiPadding = UiPadding.NONE,
-  ) : UiElement(categories.toString(), padding)
+  ) : UiElement(categories.toString())
 
   data class ClipRow(
     val title: String,
+    val more: String,
     val cellType: StorytellerListViewCellType,
     @Dimension(unit = Dimension.DP) val height: Int,
     val theme: UiTheme? = null,
     val collection: String,
     var forceDataReload: Boolean,
-    val onFailure: (String) -> Unit,
-    override val padding: UiPadding = UiPadding.NONE,
-  ) : UiElement(collection, padding)
+  ) : UiElement(collection)
 
   data class ClipGrid(
     val title: String,
+    val more: String,
     val cellType: StorytellerListViewCellType,
     val theme: UiTheme? = null,
     val collection: String,
     var forceDataReload: Boolean,
-    val onFailure: (String) -> Unit,
     val displayLimit: Int = 4,
-    override val padding: UiPadding = UiPadding.NONE,
-  ) : UiElement(collection, padding)
+  ) : UiElement(collection)
+
+  data class ClipSingleton(
+    val title: String,
+    val more: String,
+    val cellType: StorytellerListViewCellType,
+    val theme: UiTheme? = null,
+    val collection: String,
+    var forceDataReload: Boolean,
+  ) : UiElement(collection)
+
+  data class StorySingleton(
+    val title: String,
+    val more: String,
+    val cellType: StorytellerListViewCellType,
+    val theme: UiTheme? = null,
+    val categories: List<String>,
+    var forceDataReload: Boolean,
+  ) : UiElement(categories.toString())
 }
