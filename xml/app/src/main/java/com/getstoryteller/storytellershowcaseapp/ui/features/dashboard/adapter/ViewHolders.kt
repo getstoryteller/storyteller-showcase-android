@@ -31,6 +31,7 @@ abstract class DemoElementViewHolder(val view: View) : RecyclerView.ViewHolder(v
 
   abstract fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   )
 }
 
@@ -46,6 +47,7 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) : DemoElement
 
   override fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   ) {
     val storyRow = uiElement as UiElement.StoryRow
     binding.title.apply {
@@ -57,9 +59,7 @@ class StoryRowViewHolder(private val binding: ListStoryRowBinding) : DemoElement
       updateLayoutParams<ViewGroup.LayoutParams> {
         height = heightResolved
       }
-      storyRow.onFailure?.also {
-        delegate = StorytellerViewDelegate(storyRow.id, it)
-      }
+      delegate = StorytellerViewDelegate(storyRow.id, onRemoteItemAction)
 
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyRow.categories,
@@ -85,6 +85,7 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) : DemoEleme
 
   override fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   ) {
     val storyGrid = uiElement as UiElement.StoryGrid
     binding.title.apply {
@@ -97,6 +98,8 @@ class StoryGridViewHolder(private val binding: ListStoryGridBinding) : DemoEleme
         cellType = storyGrid.cellType,
         displayLimit = storyGrid.displayLimit,
       )
+
+      delegate = StorytellerViewDelegate(storyGrid.id, onRemoteItemAction)
 
       if (storyGrid.forceDataReload) {
         reloadData()
@@ -118,6 +121,7 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) : DemoElement
 
   override fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   ) {
     val clipsGrid = uiElement as UiElement.ClipGrid
     binding.title.apply {
@@ -130,9 +134,7 @@ class ClipGridViewHolder(private val binding: ListClipGridBinding) : DemoElement
         cellType = clipsGrid.cellType,
         displayLimit = clipsGrid.displayLimit,
       )
-      clipsGrid.onFailure?.also {
-        delegate = StorytellerViewDelegate(clipsGrid.id, it)
-      }
+      delegate = StorytellerViewDelegate(clipsGrid.id, onRemoteItemAction)
       if (clipsGrid.forceDataReload) {
         reloadData()
         clipsGrid.forceDataReload = false
@@ -153,6 +155,7 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) : DemoElementVi
 
   override fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   ) {
     val clipsRow = uiElement as UiElement.ClipRow
     binding.title.apply {
@@ -168,9 +171,7 @@ class ClipRowViewHolder(private val binding: ListClipRowBinding) : DemoElementVi
         collection = clipsRow.collection,
         cellType = clipsRow.cellType,
       )
-      clipsRow.onFailure?.also {
-        delegate = StorytellerViewDelegate(clipsRow.id, it)
-      }
+      delegate = StorytellerViewDelegate(clipsRow.id, onRemoteItemAction)
       if (clipsRow.forceDataReload) {
         reloadData()
         clipsRow.forceDataReload = false
@@ -191,6 +192,7 @@ class StorySingletonViewHolder(private val binding: ListStorySingletonBinding) :
 
   override fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   ) {
     val storyRow = uiElement as UiElement.StorySingleton
     binding.title.apply {
@@ -198,9 +200,7 @@ class StorySingletonViewHolder(private val binding: ListStorySingletonBinding) :
       text = storyRow.title
     }
     binding.row.run {
-      storyRow.onFailure?.also {
-        delegate = StorytellerViewDelegate(storyRow.id, it)
-      }
+      delegate = StorytellerViewDelegate(storyRow.id, onRemoteItemAction)
 
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyRow.categories,
@@ -233,6 +233,7 @@ class ClipSingletonViewHolder(private val binding: ListClipSingletonBinding) : D
 
   override fun bind(
     uiElement: UiElement,
+    onRemoteItemAction: (String) -> Unit,
   ) {
     val clipsRow = uiElement as UiElement.ClipSingleton
     binding.title.apply {
@@ -245,9 +246,7 @@ class ClipSingletonViewHolder(private val binding: ListClipSingletonBinding) : D
         cellType = clipsRow.cellType,
         displayLimit = 1,
       )
-      clipsRow.onFailure?.also {
-        delegate = StorytellerViewDelegate(clipsRow.id, it)
-      }
+      delegate = StorytellerViewDelegate(clipsRow.id, onRemoteItemAction)
       if (clipsRow.forceDataReload) {
         reloadData()
         clipsRow.forceDataReload = false

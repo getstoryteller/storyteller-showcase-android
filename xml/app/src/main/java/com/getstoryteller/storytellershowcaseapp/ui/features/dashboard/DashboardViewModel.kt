@@ -58,7 +58,7 @@ class DashboardViewModel @Inject constructor(
     sendEffect { Logout }
   }
 
-  private fun onRemoveStorytellerItem(
+  fun onRemoveStorytellerItem(
     idToRemove: String,
   ) {
     val uiData = state.value.data.filter { it.id != idToRemove }

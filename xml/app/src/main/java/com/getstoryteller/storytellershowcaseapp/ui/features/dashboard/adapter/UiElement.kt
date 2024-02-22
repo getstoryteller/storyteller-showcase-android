@@ -8,8 +8,6 @@ sealed class UiElement(
   val id: String,
 ) {
 
-  var onFailure: ((String) -> Unit)? = null
-
   data class StoryRow(
     val title: String,
     val more: String,

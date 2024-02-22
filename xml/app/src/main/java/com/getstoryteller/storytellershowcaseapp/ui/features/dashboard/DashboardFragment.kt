@@ -29,7 +29,11 @@ class DashboardFragment : Fragment() {
 
   private val navigation by lazy { getMainActivityNavigator() }
 
-  private val demoAdapter: MultipleListsAdapter = MultipleListsAdapter()
+  private val demoAdapter: MultipleListsAdapter by lazy {
+    MultipleListsAdapter {
+      viewModel.onRemoveStorytellerItem(it)
+    }
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -81,7 +85,7 @@ class DashboardFragment : Fragment() {
     observeOnState(state = Lifecycle.State.STARTED) {
       viewModel.state.collect { state ->
         binding.refreshLayout.isRefreshing = state.isLoading
-        binding.emptyState.isVisible = state.data.isEmpty()
+        binding.emptyState.isVisible = state.data.isEmpty() && state.isLoading.not()
         if (state.data.isNotEmpty()) demoAdapter.data = state.data
       }
     }
