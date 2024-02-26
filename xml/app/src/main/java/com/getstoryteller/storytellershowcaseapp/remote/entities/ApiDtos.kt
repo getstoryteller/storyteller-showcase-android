@@ -116,6 +116,7 @@ data class StorytellerItemApiDto(
               cellType = cellType,
               categories = categories,
               forceDataReload = true,
+              displayLimit = 4,
             )
           }
 
@@ -126,6 +127,7 @@ data class StorytellerItemApiDto(
               cellType = cellType,
               collection = collection.orEmpty(),
               forceDataReload = true,
+              displayLimit = 8,
             )
           }
         }
