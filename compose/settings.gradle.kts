@@ -19,5 +19,5 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Storyteller Showcase App"
+rootProject.name = "Showcase App(Compose)"
 include(":app")
