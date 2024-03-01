@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/main_navigation"
+  app:startDestination="@id/login_fragment">
+
+  <fragment
+    android:id="@+id/login_fragment"
+    android:name="com.getstoryteller.storytellershowcaseapp.ui.features.login.LoginFragment"
+    tools:layout="@layout/fragment_login">
+    <action
+      android:id="@+id/action_login_fragment_to_main_fragment"
+      app:destination="@id/main_fragment"
+      app:launchSingleTop="true"
+      app:popUpTo="@id/main_navigation" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/main_fragment"
+    android:name="com.getstoryteller.storytellershowcaseapp.ui.features.main.MainFragment"
+    tools:layout="@layout/fragment_main"/>
+
+  <action
+    android:id="@+id/action_to_login"
+    app:destination="@id/login_fragment"
+    app:launchSingleTop="true"
+    app:popUpTo="@id/main_navigation" />
+
+</navigation>

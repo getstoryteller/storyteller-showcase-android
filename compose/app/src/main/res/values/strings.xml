@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Showcase(Compose)</string>
+    <string name="label_login_description">Please enter your unique\naccess code to proceed.</string>
+    <string name="label_login_enter_code">Enter Access Code</string>
+    <string name="action_login_verify">Verify</string>
+    <string name="action_login_retry">Retry</string>
+</resources>
