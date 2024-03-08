@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.webkit.WebView
 import com.getstoryteller.storytellershowcaseapp.data.ads.StorytellerAdsManager
 import com.getstoryteller.storytellershowcaseapp.data.amplitude.AmplitudeAnalyticsManager
+import com.getstoryteller.storytellershowcaseapp.ui.utils.largeLog
+import com.getstoryteller.storytellershowcaseapp.ui.utils.printNonNullProperties
 import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.UserActivity.EventType
@@ -52,6 +54,10 @@ class ShowcaseStorytellerDelegate @Inject constructor(
   ) {
     storytellerAdsManager.handleAdEvents(type, data)
     amplitudeAnalyticsManager.handleAnalyticsEvents(type, data)
+    largeLog(
+      "MAIN DELEGATE",
+      "[Showcase] onUserActivityOccurred $type(${type.serializedValue})\n${data.printNonNullProperties()}",
+    )
   }
 
   fun onInterceptNavigation(
