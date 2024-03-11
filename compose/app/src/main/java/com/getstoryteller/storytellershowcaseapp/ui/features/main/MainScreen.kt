@@ -221,8 +221,7 @@ fun MainScreen(
     Box(
       modifier =
       Modifier
-        .fillMaxSize()
-        .padding(bottom = paddingValues.calculateBottomPadding()),
+        .fillMaxSize().padding(bottom = 8.dp),
     ) {
       NavHost(
         navController = navController,
