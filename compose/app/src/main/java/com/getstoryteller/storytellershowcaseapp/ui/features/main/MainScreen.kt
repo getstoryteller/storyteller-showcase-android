@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -218,10 +217,17 @@ fun MainScreen(
       ) { navigationInterceptor }
     },
   ) { paddingValues ->
+    // check home/moments on navController
+    val bottomPadding = if (navController.isCurrentDestination("home/moments")) {
+      paddingValues.calculateBottomPadding()
+    } else {
+      8.dp
+    }
+
     Box(
       modifier =
       Modifier
-        .fillMaxSize().padding(bottom = 8.dp),
+        .fillMaxSize().padding(bottom = bottomPadding),
     ) {
       NavHost(
         navController = navController,
