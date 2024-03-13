@@ -1,3 +1,7 @@
+# Clear old APKs
+rm -f "./app/build/outputs/apk/release/*.apk"
+rm -f "./app/build/outputs/apk/debug/*.apk"
+
 TODAYS_DATE=$(date +%Y%m%d)
 INCREMENT=0
 APK_RELEASE="Showcase-apk-nightly-release-$TODAYS_DATE.apk"
