@@ -1,11 +1,11 @@
 [versions]
-agp = "8.2.2"
+agp = "8.3.0"
 kotlin = "1.9.22"
 activityCompose = "1.8.2"
 amplitude = "3.35.1"
 appcompat = "1.6.1"
-composeBom = "2024.02.01"
-composeBomBeta = "2023.12.00-alpha04" # we need material3 with ptr support
+composeBom = "2024.02.02"
+composeBomBeta = "2024.03.00-alpha01" # we need material3 with ptr support
 composeCompiler = "1.5.10"
 coreKtx = "1.12.0"
 fragmentKtx = "1.6.2"
@@ -18,11 +18,11 @@ ktor = "2.3.8"
 lifecycleViewmodelCompose = "2.7.0"
 material = "1.11.0"
 navigationCompose = "2.7.7"
-gms = "22.6.0"
-runtime = "1.6.2"
+gms = "23.0.0"
+runtime = "1.6.3"
 timber = "5.0.1"
 
-storyteller = "9.10.0"
+storyteller = "9.11.0"
 
 [libraries]
 android-sdk = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }

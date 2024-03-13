@@ -84,7 +84,8 @@ ktlint {
 }
 
 dependencies {
-  implementation(platform(libs.androidx.compose.bom.beta))
+  implementation(platform(libs.androidx.compose.bom))
+//  implementation(platform(libs.androidx.compose.bom.beta))
   implementation(libs.kotlin.reflect)
   implementation(libs.androidx.fragment.ktx)
   implementation(libs.androidx.activity.compose)
