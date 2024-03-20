@@ -1,11 +1,10 @@
 [versions]
-agp = "8.3.0"
+agp = "8.3.1"
 kotlin = "1.9.22"
 activityCompose = "1.8.2"
 amplitude = "3.35.1"
 appcompat = "1.6.1"
 composeBom = "2024.02.02"
-composeBomBeta = "2024.03.00-alpha01" # we need material3 with ptr support
 composeCompiler = "1.5.10"
 coreKtx = "1.12.0"
 fragmentKtx = "1.6.2"
@@ -22,14 +21,13 @@ gms = "23.0.0"
 runtime = "1.6.3"
 timber = "5.0.1"
 
-storyteller = "9.11.0"
+storyteller = "9.12.0"
 
 [libraries]
 android-sdk = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-androidx-compose-bom-beta = { module = "dev.chrisbanes.compose:compose-bom", version.ref = "composeBomBeta" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

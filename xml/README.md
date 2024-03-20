@@ -1,6 +1,6 @@
-# Storyteller Android SDK Main Sample
+# Storyteller Android SDK Showcase XML Sample
 
-This is a Jetpack Compose based sample. The Storyteller SDK is installed via Gradle.
+This is a XML based sample. The Storyteller SDK is installed via Gradle.
 
 ## Prerequisites
 
@@ -13,4 +13,4 @@ This is a Jetpack Compose based sample. The Storyteller SDK is installed via Gra
 
 ## Need Help?
 
-We're always available at [support@getstoryteller.com](mailto:support@getstoryteller.com?Subject=Android%20Sample%20App) to provide help and assistance with integrating the Storyteller SDK into your Android app.
+We're always available at [support@getstoryteller.com](mailto:support@getstoryteller.com?Subject=Android%20Showcase%20App%20XML) to provide help and assistance with integrating the Storyteller SDK into your Android app.

@@ -55,12 +55,8 @@ android {
     }
   }
   buildFeatures {
-    compose = true
     buildConfig = true
     viewBinding = true
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -86,23 +82,12 @@ ktlint {
 }
 
 dependencies {
-  implementation(platform(libs.androidx.compose.bom.beta))
   implementation(libs.androidx.fragment.ktx)
-  implementation(libs.androidx.activity.compose)
-  implementation(libs.androidx.lifecycle.viewmodel.compose)
-  implementation(libs.androidx.navigation.compose)
-  implementation(libs.androidx.runtime)
-  implementation(libs.androidx.runtime.livedata)
-  implementation(libs.androidx.hilt.navigation.compose)
-  implementation(libs.androidx.ui)
-  implementation(libs.androidx.ui.tooling.preview)
-  implementation(libs.androidx.material3)
-  debugImplementation(libs.androidx.ui.tooling)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)
-  implementation(libs.navigation.ui.ktx)
   implementation(libs.navigation.fragment.ktx)
+  implementation(libs.navigation.ui.ktx)
   implementation(libs.androidx.swiperefreshlayout)
 
   // Network, Serialization and Logging
