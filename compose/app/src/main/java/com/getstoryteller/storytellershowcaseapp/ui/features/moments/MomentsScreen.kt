@@ -36,18 +36,18 @@ import kotlinx.coroutines.launch
 @Composable
 fun MomentsScreen(
   modifier: Modifier = Modifier,
-  clipsFragment: StorytellerClipsFragment,
+  clipsFragment: () -> StorytellerClipsFragment,
   sharedViewModel: MainViewModel,
-  onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.(containerId: Int) -> Unit,
-  onSaveInstanceState: FragmentTransaction.(fragment: Fragment) -> Unit,
+  onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.() -> Unit,
   onSetTopBarVisible: (Boolean) -> Unit,
   onMomentsTabLoading: (Boolean) -> Unit,
+  onSaveState: (Fragment) -> Unit,
 ) {
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
 
   LaunchedEffect(reloadDataTrigger) {
     if (reloadDataTrigger == null) return@LaunchedEffect
-    clipsFragment.goBack()
+    clipsFragment().goBack()
   }
 
   LaunchedEffect(Unit) {
@@ -75,7 +75,7 @@ fun MomentsScreen(
     val view = LocalView.current
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(clipsFragment) {
-      clipsFragment.listener =
+      clipsFragment().listener =
         object : StorytellerClipsFragment.Listener {
           override fun onDataLoadStarted() {
             isProgressVisible = true
@@ -97,16 +97,16 @@ fun MomentsScreen(
 
       ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
         val outInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-        clipsFragment.topInset = outInsets.top
-        clipsFragment.bottomInset = outInsets.bottom
+        clipsFragment().topInset = outInsets.top
+        clipsFragment().bottomInset = outInsets.bottom
         WindowInsetsCompat.CONSUMED
       }
     }
 
     StorytellerEmbeddedClips(
       modifier = Modifier.fillMaxSize(),
-      onCommit = onCommit(clipsFragment, "moments-fragment"),
-      onSaveInstanceState = onSaveInstanceState,
+      onCommit = onCommit(clipsFragment(), "moments-fragment"),
+      onSaveState = onSaveState,
     )
 
     if (isProgressVisible) {

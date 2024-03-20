@@ -79,8 +79,8 @@ fun MainScreen(
   onCommit: (
     fragment: Fragment,
     tag: String,
-  ) -> (FragmentTransaction.(containerId: Int) -> Unit),
-  onSaveInstanceState: FragmentTransaction.(fragment: Fragment) -> Unit,
+  ) -> (FragmentTransaction.() -> Unit),
+  onSaveState: (Fragment) -> Unit,
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember { mutableStateOf(PageState.HOME) }
@@ -227,7 +227,8 @@ fun MainScreen(
     Box(
       modifier =
       Modifier
-        .fillMaxSize().padding(bottom = bottomPadding),
+        .fillMaxSize()
+        .padding(bottom = bottomPadding),
     ) {
       NavHost(
         navController = navController,
@@ -282,9 +283,9 @@ fun MainScreen(
           }
           MomentsScreen(
             modifier = Modifier,
-            clipsFragment = clipsFragment,
+            clipsFragment = { clipsFragment },
             onCommit = onCommit,
-            onSaveInstanceState = onSaveInstanceState,
+            onSaveState = onSaveState,
             sharedViewModel = viewModel,
             onSetTopBarVisible = {
               topBarVisible = it

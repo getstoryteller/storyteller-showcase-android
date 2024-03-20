@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.BundleCompat.getSparseParcelableArray
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.Fragment.SavedState
 import androidx.fragment.app.FragmentTransaction
@@ -20,6 +19,7 @@ import com.storyteller.Storyteller
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -34,13 +34,8 @@ class MainActivity : AppCompatActivity() {
   ) {
     super.onCreate(savedInstanceState)
     if (savedInstanceState != null) {
-      savedStateSparseArray = getSparseParcelableArray(
-        // in =
-        savedInstanceState,
-        // key =
+      savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
         SAVED_STATE_CONTAINER_KEY,
-        // clazz =
-        SavedState::class.java,
       ) ?: savedStateSparseArray
     }
 
@@ -63,40 +58,47 @@ class MainActivity : AppCompatActivity() {
           navController = navController,
           viewModel = viewModel,
           onCommit = ::onCommit,
-          onSaveInstanceState = { fragmentSaveState(it) },
+          onSaveState = ::onSaveState,
         )
       }
     }
   }
 
-  private fun FragmentTransaction.fragmentSaveState(
-    fragment: Fragment,
+  override fun onSaveInstanceState(
+    outState: Bundle,
   ) {
-    val currentFragment = supportFragmentManager.findFragmentByTag(fragment.tag)
-    if (currentFragment != null) {
-      val savedState = supportFragmentManager.saveFragmentInstanceState(currentFragment)
-      savedStateSparseArray.put(currentFragment.id, savedState)
-    }
-    remove(fragment)
+    super.onSaveInstanceState(outState)
+    outState.putSparseParcelableArray(SAVED_STATE_CONTAINER_KEY, savedStateSparseArray)
   }
 
   private fun onCommit(
     fragment: Fragment,
     tag: String,
-  ): FragmentTransaction.(containerId: Int) -> Unit =
-    { id ->
-      saveAndRetrieveFragment(id, fragment)
-      replace(id, fragment, tag)
+  ): FragmentTransaction.() -> Unit =
+    {
+      saveAndRetrieveFragment(fragment)
+      replace(SAVED_STATE_FRAGMENT_ID, fragment, tag)
     }
 
-  private fun saveAndRetrieveFragment(
-    id: Int,
+  private fun onSaveState(
     fragment: Fragment,
   ) {
-    fragment.setInitialSavedState(savedStateSparseArray[id])
+    savedStateSparseArray.put(
+      SAVED_STATE_FRAGMENT_ID,
+      supportFragmentManager.saveFragmentInstanceState(fragment),
+    )
+  }
+
+  private fun saveAndRetrieveFragment(
+    fragment: Fragment,
+  ) {
+    fragment.setInitialSavedState(savedStateSparseArray[SAVED_STATE_FRAGMENT_ID])
   }
 
   companion object {
     private const val SAVED_STATE_CONTAINER_KEY = "SAVED_STATE_CONTAINER_KEY"
+
+    // Moments joaat checksum
+    const val SAVED_STATE_FRAGMENT_ID = 96925416
   }
 }
