@@ -1,4 +1,4 @@
-# Storyteller Android Sample App
+# Storyteller Android Showcase App
 
 <a href="https://getstoryteller.com" target="_blank">
   <img alt="Storyteller integration examples for Android, from getstoryteller.com" src="img/readme-cover.png">
@@ -15,15 +15,16 @@
 
 All of the documentation for our Android SDK is [available on our website](https://www.getstoryteller.com/documentation/android/getting-started)
 
-## Sample Apps
+## Showcase Apps
 
-This repo contains the following sample applications:
+This repo contains the following showcase applications:
 
-- [Main Sample](https://github.com/getstoryteller/storyteller-sample-android/tree/main/main)
+- [Compose](https://github.com/getstoryteller/storyteller-sample-android/tree/main/compose)
+- [Simplified XML version](https://github.com/getstoryteller/storyteller-sample-android/tree/main/xml)
 
 ## Other Platforms
 
-Storyteller is also available for [iOS](https://github.com/getstoryteller/storyteller-sample-ios), [React Native](https://github.com/getstoryteller/storyteller-sdk-react-native) and [Web](https://github.com/getstoryteller/storyteller-sample-web).
+Storyteller is also available for [iOS](https://github.com/getstoryteller/storyteller-showcase-ios), [React Native](https://github.com/getstoryteller/storyteller-sdk-react-native) and [Web](https://github.com/getstoryteller/storyteller-sample-web).
 
 ## Need Help?
 
