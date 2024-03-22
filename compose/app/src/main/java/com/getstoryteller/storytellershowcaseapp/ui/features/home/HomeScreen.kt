@@ -41,6 +41,7 @@ fun HomeScreen(
   modifier: Modifier = Modifier,
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   onNavigateToLogin: () -> Unit = {},
+  onLocationChanged: (String) -> Unit,
 ) {
   LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
     config?.let {
@@ -82,6 +83,10 @@ fun HomeScreen(
       },
   ) {
     if (!pageUiState.tabsEnabled) {
+      LaunchedEffect(key1 = Unit) {
+        onLocationChanged("Home")
+      }
+
       LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -112,6 +117,7 @@ fun HomeScreen(
           config = config,
         ),
         onSetNavigationInterceptor = onSetNavigationInterceptor,
+        onLocationChanged = onLocationChanged,
       )
     }
   }

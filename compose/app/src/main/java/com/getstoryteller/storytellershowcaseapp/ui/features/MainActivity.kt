@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.Fragment.SavedState
 import androidx.fragment.app.FragmentTransaction
@@ -48,10 +49,13 @@ class MainActivity : AppCompatActivity() {
     enableEdgeToEdge()
     setContent {
       val navController = rememberNavController()
-      storytellerDelegate.onInterceptNavigation {
-        val uriToPass = Uri.encode(it)
-        navController.navigate("home/link/$uriToPass")
+      LaunchedEffect(Unit) {
+        storytellerDelegate.onInterceptNavigation {
+          val uriToPass = Uri.encode(it)
+          navController.navigate("home/link/$uriToPass")
+        }
       }
+
       ShowcaseAppTheme {
         MainScreen(
           activity = this,
@@ -59,6 +63,7 @@ class MainActivity : AppCompatActivity() {
           viewModel = viewModel,
           onCommit = ::onCommit,
           onSaveState = ::onSaveState,
+          onLocationChanged = { storytellerDelegate.onLocationChanged { it } },
         )
       }
     }

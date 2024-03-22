@@ -42,6 +42,7 @@ fun MomentsScreen(
   onSetTopBarVisible: (Boolean) -> Unit,
   onMomentsTabLoading: (Boolean) -> Unit,
   onSaveState: (Fragment) -> Unit,
+  onLocationChanged: (String) -> Unit,
 ) {
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
 
@@ -52,6 +53,7 @@ fun MomentsScreen(
 
   LaunchedEffect(Unit) {
     onSetTopBarVisible(false)
+    onLocationChanged("Moments")
   }
 
   val momentsReloadTimeout by sharedViewModel.momentsReloadTimeout.collectAsState()

@@ -26,6 +26,7 @@ class ShowcaseStorytellerDelegate @Inject constructor(
 ) : StorytellerDelegate {
   private val storytellerDelegateScope = CoroutineScope(Dispatchers.Main + Job())
   private var navCallback: ((String) -> Unit) = {}
+  private var locationCallback: (() -> String?) = { null }
 
   override fun getAd(
     adRequestInfo: StorytellerAdRequestInfo,
@@ -53,7 +54,11 @@ class ShowcaseStorytellerDelegate @Inject constructor(
     data: UserActivityData,
   ) {
     storytellerAdsManager.handleAdEvents(type, data)
-    amplitudeAnalyticsManager.handleAnalyticsEvents(type, data)
+    amplitudeAnalyticsManager.handleAnalyticsEvents(
+      type = type,
+      data = data,
+      location = locationCallback(),
+    )
     largeLog(
       "MAIN DELEGATE",
       "[Showcase] onUserActivityOccurred $type(${type.serializedValue})\n${data.printNonNullProperties()}",
@@ -64,5 +69,11 @@ class ShowcaseStorytellerDelegate @Inject constructor(
     callback: (String) -> Unit,
   ) {
     navCallback = callback
+  }
+
+  fun onLocationChanged(
+    function: () -> String?,
+  ) {
+    locationCallback = function
   }
 }

@@ -13,11 +13,12 @@ class AmplitudeAnalyticsManager @Inject constructor() {
   fun handleAnalyticsEvents(
     type: UserActivity.EventType,
     data: UserActivityData,
+    location: String?,
   ) {
     when (type) {
       UserActivity.EventType.OPENED_CLIP,
       UserActivity.EventType.OPENED_STORY,
-      -> logAmplitudeEvent(type, data)
+      -> logAmplitudeEvent(type, data, location)
       else -> Unit
     }
   }
@@ -25,6 +26,7 @@ class AmplitudeAnalyticsManager @Inject constructor() {
   private fun logAmplitudeEvent(
     eventType: UserActivity.EventType,
     data: UserActivityData,
+    location: String?,
   ) {
     val eventData =
       mapOf(
@@ -38,6 +40,7 @@ class AmplitudeAnalyticsManager @Inject constructor() {
         "Clip Index" to data.clipIndex,
         "Clip Title" to data.clipTitle,
         "Clip Collection" to data.collection,
+        "Location" to location,
       )
 
     Amplitude.getInstance().logEvent(eventType.name, JSONObject(eventData))

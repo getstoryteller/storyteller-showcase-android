@@ -76,11 +76,9 @@ fun MainScreen(
   activity: Activity,
   navController: NavHostController,
   viewModel: MainViewModel,
-  onCommit: (
-    fragment: Fragment,
-    tag: String,
-  ) -> (FragmentTransaction.() -> Unit),
+  onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.() -> Unit,
   onSaveState: (Fragment) -> Unit,
+  onLocationChanged: (String) -> Unit,
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
   var navigationState by remember { mutableStateOf(PageState.HOME) }
@@ -259,6 +257,7 @@ fun MainScreen(
                 }
               }
             },
+            onLocationChanged = onLocationChanged,
           )
         }
         composable("login") {
@@ -293,6 +292,7 @@ fun MainScreen(
             onMomentsTabLoading = {
               momentsTabLoading = it
             },
+            onLocationChanged = onLocationChanged,
           )
         }
         composable(
@@ -347,6 +347,7 @@ fun MainScreen(
               pageItemUiModel = it,
               navController = navController,
               config = mainPageUiState.config,
+              onLocationChanged = onLocationChanged,
             )
           }
         }
@@ -367,6 +368,7 @@ fun MainScreen(
               pageItemUiModel = it,
               navController = navController,
               config = mainPageUiState.config,
+              onLocationChanged = onLocationChanged,
             )
           }
         }

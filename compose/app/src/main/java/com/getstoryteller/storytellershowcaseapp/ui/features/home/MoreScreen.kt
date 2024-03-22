@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TileType
+import com.getstoryteller.storytellershowcaseapp.remote.entities.VideoType
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
 
@@ -31,6 +32,7 @@ fun MoreScreen(
   pageItemUiModel: PageItemUiModel,
   navController: NavController,
   config: Config?,
+  onLocationChanged: (String) -> Unit,
 ) {
   var isRefreshing by remember(pageItemUiModel) { mutableStateOf(false) }
   val refreshState = rememberStorytellerPullToRefreshState()
@@ -38,6 +40,13 @@ fun MoreScreen(
   if (refreshState.isRefreshing) {
     LaunchedEffect(true) {
       isRefreshing = true
+    }
+  }
+
+  LaunchedEffect(Unit) {
+    when (pageItemUiModel.type) {
+      VideoType.STORY -> onLocationChanged("MoreStories")
+      VideoType.CLIP -> onLocationChanged("MoreClips")
     }
   }
 

@@ -44,6 +44,7 @@ fun TabLayout(
   parentState: TabLayoutUiState,
   sharedViewModel: MainViewModel,
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
+  onLocationChanged: (String) -> Unit,
 ) {
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
   var reloadCurrentTabSignal by remember { mutableIntStateOf(-1) }
@@ -78,6 +79,12 @@ fun TabLayout(
       tabs.forEachIndexed { index, tab ->
         val isSelected by remember(currentPage.value) {
           mutableStateOf(index == currentPage.value)
+        }
+
+        LaunchedEffect(key1 = isSelected) {
+          if (isSelected) {
+            onLocationChanged(tab.name)
+          }
         }
 
         Tab(text = {
