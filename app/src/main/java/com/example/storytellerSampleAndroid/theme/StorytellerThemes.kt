@@ -17,8 +17,8 @@ object StorytellerThemes {
         //font = ResourcesCompat.getFont(context, R.font.your_custom_font)
         primitives.cornerRadius = 4
         lists.row.tileSpacing = 8
-        storyTiles.title.alignment = Gravity.CENTER
-        storyTiles.rectangularTile.chip.alignment = Gravity.START
+        tiles.title.alignment = Gravity.CENTER
+        tiles.rectangularTile.chip.alignment = Gravity.START
         player.showShareButton = true
         buttons.cornerRadius = 4
         instructions.show = true
@@ -33,8 +33,8 @@ object StorytellerThemes {
       //font = ResourcesCompat.getFont(context, R.font.your_custom_font)
       primitives.cornerRadius = 4
       lists.row.tileSpacing = 8
-      storyTiles.title.alignment = Gravity.END
-      storyTiles.rectangularTile.chip.alignment = Gravity.CENTER
+      tiles.title.alignment = Gravity.END
+      tiles.rectangularTile.chip.alignment = Gravity.CENTER
       player.showShareButton = true
       buttons.cornerRadius = 4
       instructions.show = true

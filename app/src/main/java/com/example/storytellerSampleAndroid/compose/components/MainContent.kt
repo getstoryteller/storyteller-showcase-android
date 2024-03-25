@@ -29,18 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.storytellerSampleAndroid.compose.JetpackComposeViewModel
-import com.example.storytellerSampleAndroid.compose.components.items.ChangeUserContainer
 import com.example.storytellerSampleAndroid.compose.components.items.Header
 import com.example.storytellerSampleAndroid.compose.components.items.NavigatedToApp
-import com.example.storytellerSampleAndroid.compose.components.items.ToggleDarkModeContainer
 import com.storyteller.data.StorytellerClipsDataModel
 import com.storyteller.data.StorytellerStoriesDataModel
 import com.storyteller.domain.entities.Error
 import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.StorytellerListViewStyle
 import com.storyteller.ui.compose.components.lists.grid.StorytellerClipsGrid
-import com.storyteller.ui.compose.components.lists.grid.StorytellerStoriesGrid
-import com.storyteller.ui.compose.components.lists.row.StorytellerClipsRow
 import com.storyteller.ui.compose.components.lists.row.StorytellerStoriesRow
 import com.storyteller.ui.list.StorytellerListViewDelegate
 
@@ -194,20 +190,6 @@ fun MainScreen(
                     NavigatedToApp(
                         text = userNavigatedToApp, onUserNavigatedToApp = onUserNavigatedToApp
                     )
-                }
-            }
-
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    ChangeUserContainer(onRefresh, coroutineScope, listState, viewModel)
-                    ToggleDarkModeContainer {
-                        viewModel.toggleDarkMode()
-                    }
                 }
             }
         }

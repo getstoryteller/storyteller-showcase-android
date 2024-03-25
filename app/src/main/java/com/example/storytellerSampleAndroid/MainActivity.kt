@@ -62,8 +62,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
             binding.storytellerRowView.reloadData()
         }
 
-        //setup change user button
-        binding.changeUserButton.setOnClickListener { changeUser() }
         //open activity with advanced sample
         binding.multipleListsButton.setOnClickListener {
             startActivity(Intent(this, MultipleListsActivity::class.java))
@@ -76,10 +74,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
 
         binding.goToAdsScreen.setOnClickListener {
             val intent = Intent(this@MainActivity, AdsActivity::class.java)
-            startActivity(intent)
-        }
-        binding.goToEmbeddedClip.setOnClickListener {
-            val intent = Intent(this@MainActivity, EmbeddedClipActivity::class.java)
             startActivity(intent)
         }
 
@@ -103,30 +97,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), StorytellerDeleg
         if (deepLink != null && Storyteller.isStorytellerDeepLink(deepLink)) {
             Storyteller.openDeepLink(this, deepLink)
         }
-    }
-
-    private fun changeUser() {
-        /*
-        If you use login in your app and wish to allow users to logout and log back in as a new user
-        (or proceed as an anonymous user) then when a user logs out you should call initialize
-        again specifying a new externalId. Note that this will reset the local store of which pages the user has viewed.
-        For more info, see - https://www.getstoryteller.com/documentation/android/users
-        */
-        val freshUserId = UUID.randomUUID().toString()
-        initializeStoryteller(
-            userId = freshUserId,
-            onSuccess =
-            {
-                binding.storytellerRowView.reloadData()
-                Toast.makeText(
-                    this@MainActivity, "New User with Id: $freshUserId", Toast.LENGTH_SHORT
-                ).show()
-                Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
-            },
-            onFailure = {
-                Log.e("Storyteller Sample", "initialize failed $it}")
-            })
-
     }
 
     /*

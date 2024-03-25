@@ -41,7 +41,11 @@ class SampleApp : Application() {
 
 
         initializeStoryteller(onSuccess = {
-            Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUser}")
+            Storyteller.user.setCustomAttribute("name", "John Doe")
+            Storyteller.user.setCustomAttribute("name2", "John Doe2")
+            Storyteller.user.setCustomAttribute("name3", "John Doe3")
+            Storyteller.user.setCustomAttribute("name4", "John Doe4")
+            Log.i("Storyteller Sample", "initialize success ${Storyteller.currentUserId}")
         }, onFailure = { error ->
             Log.i("Storyteller Sample", "initialize failed, error $error")
         })
