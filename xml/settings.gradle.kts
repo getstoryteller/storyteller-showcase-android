@@ -19,5 +19,5 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Showcase App(XML)"
+rootProject.name = "Storyteller Showcase xml"
 include(":app")
