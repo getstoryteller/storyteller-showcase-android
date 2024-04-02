@@ -16,7 +16,7 @@ gms = "22.6.0"
 swiperefreshlayout = "1.1.0"
 timber = "5.0.1"
 
-storyteller = "9.13.0"
+storyteller = "9.13.1"
 
 [libraries]
 android-sdk = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }
