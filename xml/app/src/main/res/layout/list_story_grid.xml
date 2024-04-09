@@ -18,6 +18,19 @@
     app:layout_constraintTop_toTopOf="parent"
     tools:text="ClipGridView" />
 
+  <androidx.appcompat.widget.AppCompatTextView
+    android:id="@+id/more"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:layout_marginEnd="20dp"
+    android:text="More"
+    android:textSize="16sp"
+    app:layout_constraintBottom_toTopOf="@id/grid"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="ClipGridView" />
+
   <com.storyteller.ui.list.StorytellerStoriesGridView
     android:id="@+id/grid"
     android:layout_width="match_parent"

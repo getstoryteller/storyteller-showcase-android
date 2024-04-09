@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.getstoryteller.storytellershowcaseapp.MainNavigationDirections
 import com.getstoryteller.storytellershowcaseapp.databinding.FragmentDashboardBinding
+import com.getstoryteller.storytellershowcaseapp.ui.features.MoreActivity
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.DashboardContract.Effect.Logout
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.MultipleListsAdapter
 import com.getstoryteller.storytellershowcaseapp.ui.features.getMainActivityNavigator
@@ -30,9 +31,14 @@ class DashboardFragment : Fragment() {
   private val navigation by lazy { getMainActivityNavigator() }
 
   private val demoAdapter: MultipleListsAdapter by lazy {
-    MultipleListsAdapter {
-      viewModel.onRemoveStorytellerItem(it)
-    }
+    MultipleListsAdapter(
+      onRemoteItemAction = { id ->
+        viewModel.onRemoveStorytellerItem(id)
+      },
+      onClickMore = { title, categories, collection ->
+        MoreActivity.start(requireContext(), title, categories, collection)
+      },
+    )
   }
 
   override fun onCreateView(
@@ -65,6 +71,7 @@ class DashboardFragment : Fragment() {
     }
     binding.multipleListsRecycler.apply {
       adapter = demoAdapter
+      itemAnimator = null
     }
     binding.logout.setOnClickListener {
       viewModel.logout()

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -26,9 +27,13 @@ import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.StorytellerListViewStyle
 import com.storyteller.domain.entities.theme.builders.UiTheme
 import com.storyteller.ui.compose.components.lists.grid.StorytellerClipsGrid
+import com.storyteller.ui.compose.components.lists.grid.StorytellerGridState
 import com.storyteller.ui.compose.components.lists.grid.StorytellerStoriesGrid
 import com.storyteller.ui.compose.components.lists.row.StorytellerClipsRow
+import com.storyteller.ui.compose.components.lists.row.StorytellerDataState
+import com.storyteller.ui.compose.components.lists.row.StorytellerRowState
 import com.storyteller.ui.compose.components.lists.row.StorytellerStoriesRow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -52,7 +57,7 @@ import kotlinx.serialization.json.Json
 @Composable
 fun StorytellerItem(
   uiModel: PageItemUiModel,
-  isRefreshing: Boolean,
+  state: StorytellerDataState,
   navController: NavController,
   roundTheme: UiTheme?,
   squareTheme: UiTheme?,
@@ -90,7 +95,7 @@ fun StorytellerItem(
     CompositionLocalProvider(
       LocalOverscrollConfiguration provides null,
     ) {
-      StorytellerComposable(uiModel, squareTheme, roundTheme, uiStyle, isRefreshing, isScrollable, onShouldHide)
+      StorytellerComposable(uiModel, squareTheme, roundTheme, uiStyle, isScrollable, state, onShouldHide)
     }
   }
 }
@@ -101,10 +106,12 @@ private fun StorytellerComposable(
   squareTheme: UiTheme?,
   roundTheme: UiTheme?,
   uiStyle: StorytellerListViewStyle,
-  isRefreshing: Boolean,
   isScrollable: Boolean,
+  state: StorytellerDataState,
   onShouldHide: () -> Unit,
 ) {
+  val scope = rememberCoroutineScope()
+
   when (uiModel.type) {
     VideoType.STORY -> {
       when (uiModel.layout) {
@@ -132,7 +139,7 @@ private fun StorytellerComposable(
               },
             ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing,
+            state = state as StorytellerRowState,
           )
         }
 
@@ -160,7 +167,7 @@ private fun StorytellerComposable(
             ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
             isScrollable = isScrollable,
-            isRefreshing = isRefreshing,
+            state = state as StorytellerGridState,
           )
         }
 
@@ -229,9 +236,17 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               },
             ),
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
+            delegate = PageItemStorytellerDelegate(
+              itemId = uiModel.itemId,
+              onShouldHide = onShouldHide,
+              onPlayerDismissed = {
+                scope.launch {
+                  state.reloadData()
+                }
+              },
+            ),
             isScrollable = false,
-            isRefreshing = isRefreshing,
+            state = state as StorytellerGridState,
           )
         }
       }
@@ -263,7 +278,7 @@ private fun StorytellerComposable(
               },
             ),
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing,
+            state = state as StorytellerRowState,
           )
         }
 
@@ -333,8 +348,16 @@ private fun StorytellerComposable(
               },
             ),
             isScrollable = false,
-            delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing,
+            delegate = PageItemStorytellerDelegate(
+              itemId = uiModel.itemId,
+              onShouldHide = onShouldHide,
+              onPlayerDismissed = {
+                scope.launch {
+                  state.reloadData()
+                }
+              },
+            ),
+            state = state as StorytellerGridState,
           )
         }
 
@@ -362,7 +385,7 @@ private fun StorytellerComposable(
             ),
             isScrollable = isScrollable,
             delegate = PageItemStorytellerDelegate(uiModel.itemId, onShouldHide),
-            isRefreshing = isRefreshing,
+            state = state as StorytellerGridState,
           )
         }
       }

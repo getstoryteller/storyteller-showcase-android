@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,8 @@ import com.getstoryteller.storytellershowcaseapp.remote.entities.TileType
 import com.getstoryteller.storytellershowcaseapp.remote.entities.VideoType
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
+import com.storyteller.ui.compose.components.lists.grid.rememberStorytellerGridState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,10 +39,15 @@ fun MoreScreen(
 ) {
   var isRefreshing by remember(pageItemUiModel) { mutableStateOf(false) }
   val refreshState = rememberStorytellerPullToRefreshState()
+  val scope = rememberCoroutineScope()
+  val state = rememberStorytellerGridState()
 
   if (refreshState.isRefreshing) {
     LaunchedEffect(true) {
       isRefreshing = true
+      scope.launch {
+        state.reloadData()
+      }
     }
   }
 
@@ -64,7 +72,6 @@ fun MoreScreen(
         tileType = TileType.RECTANGULAR,
         layout = LayoutType.GRID,
       ),
-      isRefreshing = isRefreshing,
       navController = navController,
       roundTheme = config?.roundTheme,
       squareTheme =
@@ -94,6 +101,7 @@ fun MoreScreen(
       },
       disableHeader = true,
       isScrollable = true,
+      state = state,
       onShouldHide = {
         refreshState.endRefresh()
         isRefreshing = false

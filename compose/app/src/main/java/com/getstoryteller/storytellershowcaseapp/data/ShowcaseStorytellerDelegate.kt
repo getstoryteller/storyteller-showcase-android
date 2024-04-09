@@ -8,6 +8,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.utils.largeLog
 import com.getstoryteller.storytellershowcaseapp.ui.utils.printNonNullProperties
 import com.storyteller.Storyteller
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
+import com.storyteller.domain.entities.Category
 import com.storyteller.domain.entities.UserActivity.EventType
 import com.storyteller.domain.entities.UserActivityData
 import com.storyteller.domain.entities.ads.StorytellerAd
@@ -33,6 +34,11 @@ class ShowcaseStorytellerDelegate @Inject constructor(
     onComplete: (StorytellerAd) -> Unit,
     onError: () -> Unit,
   ) = storytellerAdsManager.handleAds(adRequestInfo, onComplete, onError)
+
+  override fun categoryFollowActionTaken(
+    category: Category,
+    isFollowing: Boolean,
+  ) = Unit
 
   override fun configureWebView(
     view: WebView,
