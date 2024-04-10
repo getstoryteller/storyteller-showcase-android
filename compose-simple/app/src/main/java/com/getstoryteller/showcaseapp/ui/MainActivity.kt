@@ -1,4 +1,4 @@
-package com.getstoryteller.showcaseapp
+package com.getstoryteller.showcaseapp.ui
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -70,8 +70,8 @@ class MainActivity : AppCompatActivity(), StorytellerDelegate {
           Column(modifier = Modifier.fillMaxSize()) {
             StorytellerStoriesRow(
               modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
+                  .fillMaxWidth()
+                  .height(300.dp),
               dataModel = StorytellerStoriesDataModel(
                 categories = listOf(STORY_CATEGORY_ID),
               ),
@@ -81,8 +81,8 @@ class MainActivity : AppCompatActivity(), StorytellerDelegate {
 
             Box(
               modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+                  .weight(1f)
+                  .fillMaxWidth(),
             ) {
               AndroidView(
                 factory = { context ->
