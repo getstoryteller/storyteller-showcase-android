@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
@@ -28,19 +29,18 @@ import com.storyteller.Storyteller
 import com.storyteller.data.StorytellerStoriesDataModel
 import com.storyteller.domain.ads.entities.StorytellerAdRequestInfo
 import com.storyteller.domain.entities.Error
+import com.storyteller.domain.entities.StorytellerListViewCellType
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
 import com.storyteller.domain.entities.ads.StorytellerAd
 import com.storyteller.ui.compose.components.lists.row.StorytellerStoriesRow
 import com.storyteller.ui.list.StorytellerDelegate
 import com.storyteller.ui.list.StorytellerListViewDelegate
-import com.storyteller.ui.pager.StorytellerClipsFragment
 
 class MainActivity : AppCompatActivity(), StorytellerDelegate {
   companion object {
-    val STORY_CATEGORY_ID = "YOUR STORY CATERGORY ID"
+    val STORY_CATEGORY_ID = "euro-top-stories"
     val API_KEY = "YOUR API KEY"
-    val CLIPS_COLLECTION_ID = "YOUR CLIPS COLLECTION ID"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,9 +70,11 @@ class MainActivity : AppCompatActivity(), StorytellerDelegate {
           Column(modifier = Modifier.fillMaxSize()) {
             StorytellerStoriesRow(
               modifier = Modifier
-                  .fillMaxWidth()
-                  .height(300.dp),
+                .fillMaxWidth()
+                .height(250.dp)
+                .padding(vertical = 8.dp),
               dataModel = StorytellerStoriesDataModel(
+                cellType = StorytellerListViewCellType.ROUND,
                 categories = listOf(STORY_CATEGORY_ID),
               ),
               delegate = listViewDelegate,
@@ -81,8 +83,8 @@ class MainActivity : AppCompatActivity(), StorytellerDelegate {
 
             Box(
               modifier = Modifier
-                  .weight(1f)
-                  .fillMaxWidth(),
+                .weight(1f)
+                .fillMaxWidth(),
             ) {
               AndroidView(
                 factory = { context ->
@@ -125,7 +127,7 @@ class MainActivity : AppCompatActivity(), StorytellerDelegate {
 
   private fun navigate(url: String) {
     //convenience methods to test fragment navigation
-    fragmentTest()
+    fragmentTest(url)
     //deeplink or intent
     //startActivity(intentForUrl(url))
   }
@@ -134,13 +136,13 @@ class MainActivity : AppCompatActivity(), StorytellerDelegate {
     data = android.net.Uri.parse(url)
   }
 
-  private fun fragmentTest() {
+  private fun fragmentTest(url: String) {
     supportFragmentManager.beginTransaction()
-      .replace(fragmentContainerViewId, storyClipsFragment())
+      .replace(fragmentContainerViewId, storyClipsFragment(url))
       .commitAllowingStateLoss()
   }
 
-  private fun storyClipsFragment(): Fragment {
-    return StorytellerClipsFragment.create(CLIPS_COLLECTION_ID)
+  private fun storyClipsFragment(url: String): Fragment {
+    return UrlFragment.newInstance(url)
   }
 }
