@@ -46,7 +46,7 @@
         <data
           android:host="storyteller.shar.estori.es"
           android:pathPattern="/go/.*/.*"
-          android:scheme="http" />
+          android:scheme="https" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
