@@ -62,6 +62,7 @@ dependencies {
   implementation(libs.story.teller.sdk)
   implementation(libs.android.x.fragment)
   implementation(libs.androidx.appcompat)
+  implementation("androidx.startup:startup-runtime:1.1.1")
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)

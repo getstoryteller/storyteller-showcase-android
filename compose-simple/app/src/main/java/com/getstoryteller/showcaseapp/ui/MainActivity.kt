@@ -39,8 +39,7 @@ import com.storyteller.ui.list.StorytellerListViewDelegate
 
 class MainActivity : AppCompatActivity(), StorytellerDelegate {
   companion object {
-    val STORY_CATEGORY_ID = "euro-top-stories"
-    val API_KEY = "YOUR API KEY"
+    val STORY_CATEGORY_ID = "category"
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
