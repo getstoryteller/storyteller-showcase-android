@@ -71,11 +71,11 @@ class StoryRowViewHolder(
       updateLayoutParams<ViewGroup.LayoutParams> {
         height = heightResolved
       }
-      delegate = StorytellerViewDelegate(storyRow.id, onRemoteItemAction)
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyRow.categories,
         cellType = storyRow.cellType,
         theme = storyRow.theme,
+        delegate = StorytellerViewDelegate(storyRow.id, onRemoteItemAction),
       )
       if (storyRow.forceDataReload) {
         reloadData()
@@ -122,8 +122,8 @@ class StoryGridViewHolder(
         cellType = storyGrid.cellType,
         displayLimit = storyGrid.displayLimit,
         theme = storyGrid.theme,
+        delegate = StorytellerViewDelegate(storyGrid.id, onRemoteItemAction),
       )
-      delegate = StorytellerViewDelegate(storyGrid.id, onRemoteItemAction)
       if (storyGrid.forceDataReload) {
         reloadData()
         storyGrid.forceDataReload = false
@@ -169,8 +169,8 @@ class ClipGridViewHolder(
         cellType = clipsGrid.cellType,
         displayLimit = clipsGrid.displayLimit,
         theme = clipsGrid.theme,
+        delegate = StorytellerViewDelegate(clipsGrid.id, onRemoteItemAction),
       )
-      delegate = StorytellerViewDelegate(clipsGrid.id, onRemoteItemAction)
       if (clipsGrid.forceDataReload) {
         reloadData()
         clipsGrid.forceDataReload = false
@@ -219,8 +219,8 @@ class ClipRowViewHolder(
         collection = clipsRow.collection,
         cellType = clipsRow.cellType,
         theme = clipsRow.theme,
+        delegate = StorytellerViewDelegate(clipsRow.id, onRemoteItemAction),
       )
-      delegate = StorytellerViewDelegate(clipsRow.id, onRemoteItemAction)
       if (clipsRow.forceDataReload) {
         reloadData()
         clipsRow.forceDataReload = false
@@ -261,7 +261,6 @@ class StorySingletonViewHolder(
     }
     binding.row.run {
       setViewHolderParent(this@StorySingletonViewHolder.parent)
-      delegate = StorytellerViewDelegate(storyRow.id, onRemoteItemAction)
       configuration = StorytellerStoriesView.ListConfiguration(
         categories = storyRow.categories,
         cellType = storyRow.cellType,
@@ -300,6 +299,7 @@ class StorySingletonViewHolder(
             ),
           )
         },
+        delegate = StorytellerViewDelegate(storyRow.id, onRemoteItemAction),
       )
       if (storyRow.forceDataReload) {
         reloadData()
@@ -379,8 +379,8 @@ class ClipSingletonViewHolder(
             ),
           )
         },
+        delegate = StorytellerViewDelegate(clipsRow.id, onRemoteItemAction),
       )
-      delegate = StorytellerViewDelegate(clipsRow.id, onRemoteItemAction)
       if (clipsRow.forceDataReload) {
         reloadData()
         clipsRow.forceDataReload = false
