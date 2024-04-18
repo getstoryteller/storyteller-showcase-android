@@ -15,7 +15,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +30,10 @@ import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.remem
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
+import com.storyteller.ui.compose.components.lists.grid.rememberStorytellerGridState
+import com.storyteller.ui.compose.components.lists.row.StorytellerDataState
+import com.storyteller.ui.compose.components.lists.row.rememberStorytellerRowState
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,17 +49,11 @@ fun HomeScreen(
   onNavigateToLogin: () -> Unit = {},
   onLocationChanged: (String) -> Unit,
 ) {
-  LaunchedEffect(key1 = config?.configId ?: UUID.randomUUID().toString(), block = {
-    config?.let {
-      viewModel.loadHomePage(it)
-    }
-  })
-
+  val scope = rememberCoroutineScope()
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
-
   val pageUiState by viewModel.uiState.collectAsState()
   val loginState by sharedViewModel.loginUiState.collectAsState()
-
+  val innerListStates = remember { mutableStateMapOf<String, StorytellerDataState>() }
   val refreshState = rememberStorytellerPullToRefreshState()
 
   val listState = rememberLazyListState()
@@ -61,6 +61,24 @@ fun HomeScreen(
   var columnHeightPx by remember {
     mutableIntStateOf(0)
   }
+
+  fun reloadData(
+    config: Config?,
+  ) {
+    config?.also(viewModel::loadHomePage)
+    innerListStates.values.forEach { listState ->
+      scope.launch { listState.reloadData() }
+    }
+  }
+
+  LaunchedEffect(
+    key1 = config?.configId ?: UUID.randomUUID().toString(),
+    block = {
+      config?.let {
+        reloadData(it)
+      }
+    },
+  )
   LaunchedEffect(loginState.isLoggedIn, config) {
     if (!loginState.isLoggedIn && config == null) {
       onNavigateToLogin()
@@ -69,7 +87,7 @@ fun HomeScreen(
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
       config?.let {
-        viewModel.loadHomePage(it)
+        reloadData(it)
       }
     }
   }
@@ -95,12 +113,19 @@ fun HomeScreen(
         state = listState,
       ) {
         itemsIndexed(items = listItems) { _, uiModel ->
+          val innerListState = innerListStates.getOrPut(uiModel.itemId) {
+            if (uiModel.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
+              rememberStorytellerRowState()
+            } else {
+              rememberStorytellerGridState()
+            }
+          }
           StorytellerItem(
             uiModel = uiModel,
-            isRefreshing = pageUiState.isRefreshing || isRefreshing,
             navController = navController,
             roundTheme = config?.roundTheme,
             squareTheme = config?.squareTheme,
+            state = innerListState,
           ) {
             viewModel.hideStorytellerItem(uiModel.itemId)
           }

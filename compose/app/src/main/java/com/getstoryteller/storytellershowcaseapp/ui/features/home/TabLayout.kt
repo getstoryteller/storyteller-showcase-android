@@ -137,7 +137,6 @@ fun TabLayout(
         tabViewModel = viewModel,
         sharedViewModel = sharedViewModel,
         rootNavController = rootNavController,
-        isRefreshing = parentState.isRefreshing,
         config = parentState.config,
         onShouldInterceptTopNavigation = { pagerState.currentPage == pageIndex },
         onSetTopNavigationInterceptor = {

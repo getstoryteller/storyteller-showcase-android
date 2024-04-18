@@ -2,6 +2,7 @@ package com.getstoryteller.storytellershowcaseapp.remote.entities
 
 import com.getstoryteller.storytellershowcaseapp.ui.features.dashboard.adapter.UiElement
 import com.storyteller.domain.entities.StorytellerListViewCellType
+import com.storyteller.domain.entities.theme.builders.UiTheme
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -65,10 +66,17 @@ data class StorytellerItemApiDto(
   @SerialName("id") val id: String,
   @SerialName("count") val displayLimit: Int?,
 ) {
-  fun toUiElement(): UiElement {
+  fun toUiElement(
+    roundTheme: UiTheme,
+    squareTheme: UiTheme,
+  ): UiElement {
     val cellType = when (tileType) {
       TileType.RECTANGULAR -> StorytellerListViewCellType.SQUARE
       TileType.ROUND -> StorytellerListViewCellType.ROUND
+    }
+    val theme = when (tileType) {
+      TileType.RECTANGULAR -> squareTheme
+      TileType.ROUND -> roundTheme
     }
     val height = if (this.tileType == TileType.ROUND) {
       113
@@ -91,6 +99,7 @@ data class StorytellerItemApiDto(
               categories = categories,
               forceDataReload = true,
               height = height,
+              theme = theme,
             )
           }
 
@@ -102,6 +111,7 @@ data class StorytellerItemApiDto(
               height = height,
               collection = collection.orEmpty(),
               forceDataReload = true,
+              theme = theme,
             )
           }
         }
@@ -117,6 +127,7 @@ data class StorytellerItemApiDto(
               categories = categories,
               forceDataReload = true,
               displayLimit = 4,
+              theme = theme,
             )
           }
 
@@ -128,6 +139,7 @@ data class StorytellerItemApiDto(
               collection = collection.orEmpty(),
               forceDataReload = true,
               displayLimit = 8,
+              theme = theme,
             )
           }
         }
@@ -142,6 +154,7 @@ data class StorytellerItemApiDto(
               cellType = cellType,
               categories = categories,
               forceDataReload = true,
+              theme = theme,
             )
           }
 
@@ -152,6 +165,7 @@ data class StorytellerItemApiDto(
               cellType = cellType,
               collection = collection.orEmpty(),
               forceDataReload = true,
+              theme = theme,
             )
           }
         }

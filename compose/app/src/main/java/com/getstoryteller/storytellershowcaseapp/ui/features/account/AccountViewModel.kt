@@ -20,6 +20,14 @@ class AccountViewModel @Inject constructor(
 ) : ViewModel() {
   val isLoggedOut = MutableStateFlow(false)
 
+  fun changeUserId(
+    userId: String,
+  ) = viewModelScope.launch {
+    sessionRepository.userId = userId
+    storytellerService.initStoryteller()
+    amplitudeService.init()
+  }
+
   fun logout() {
     viewModelScope.launch {
       logoutUseCase.logout()

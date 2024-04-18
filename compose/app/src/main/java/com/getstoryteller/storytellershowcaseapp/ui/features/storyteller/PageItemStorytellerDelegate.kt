@@ -7,6 +7,7 @@ import timber.log.Timber
 class PageItemStorytellerDelegate(
   private val itemId: String,
   private val onShouldHide: () -> Unit = {},
+  private val onPlayerDismissed: () -> Unit = {},
 ) : StorytellerListViewDelegate {
   override fun onDataLoadComplete(
     success: Boolean,
@@ -29,5 +30,6 @@ class PageItemStorytellerDelegate(
 
   override fun onPlayerDismissed() {
     Timber.i("[$itemId] onPlayerDismissed callback")
+    onPlayerDismissed.invoke()
   }
 }

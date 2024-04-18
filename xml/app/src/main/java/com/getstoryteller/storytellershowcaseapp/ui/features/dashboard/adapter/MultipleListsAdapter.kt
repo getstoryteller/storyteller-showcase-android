@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 class MultipleListsAdapter(
   data: List<UiElement> = listOf(),
   private val onRemoteItemAction: (String) -> Unit,
+  private val onClickMore: (title: String, categories: List<String>, collection: String) -> Unit,
 ) : RecyclerView.Adapter<DemoElementViewHolder>() {
 
   var data: List<UiElement> = data
@@ -73,7 +74,7 @@ class MultipleListsAdapter(
     position: Int,
   ) {
     val element = data[position]
-    holder.bind(element, onRemoteItemAction)
+    holder.bind(element, onRemoteItemAction, onClickMore)
     return
   }
 

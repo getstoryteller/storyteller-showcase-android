@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -29,10 +30,14 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
+import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
+import com.storyteller.ui.compose.components.lists.grid.rememberStorytellerGridState
+import com.storyteller.ui.compose.components.lists.row.StorytellerDataState
+import com.storyteller.ui.compose.components.lists.row.rememberStorytellerRowState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -43,21 +48,23 @@ fun TabScreen(
   tabViewModel: TabViewModel,
   sharedViewModel: MainViewModel,
   rootNavController: NavController,
-  isRefreshing: Boolean,
   config: Config?,
   onSetTopNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   onShouldInterceptTopNavigation: () -> Boolean = { false },
   onSetBottomNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   setParentBottomNavigationInterceptor: () -> Unit = {},
 ) {
-  LaunchedEffect(key1 = tabId, block = {
-    tabViewModel.loadTab(tabId)
-  })
+  LaunchedEffect(
+    key1 = tabId,
+    block = {
+      tabViewModel.loadTab(tabId)
+    },
+  )
 
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
 
   val pageUiState by tabViewModel.uiState.collectAsState()
-
+  val innerListStates = remember { mutableStateMapOf<String, StorytellerDataState>() }
   val refreshState = rememberStorytellerPullToRefreshState()
   val listState = rememberLazyListState()
   val scope = rememberCoroutineScope()
@@ -66,9 +73,16 @@ fun TabScreen(
     mutableIntStateOf(0)
   }
 
+  fun reloadData() {
+    tabViewModel.onRefresh()
+    innerListStates.values.forEach { listState ->
+      scope.launch { listState.reloadData() }
+    }
+  }
+
   if (refreshState.isRefreshing) {
     LaunchedEffect(Unit) {
-      tabViewModel.onRefresh()
+      reloadData()
     }
   }
 
@@ -98,7 +112,7 @@ fun TabScreen(
 
   LaunchedEffect(reloadDataTrigger) {
     reloadDataTrigger?.let {
-      tabViewModel.onRefresh()
+      reloadData()
       scope.launch {
         listState.scrollToItem(0)
       }
@@ -115,7 +129,7 @@ fun TabScreen(
           },
           onIntercepted = {
             listState.animateScrollToItem(0)
-            tabViewModel.onRefresh()
+            reloadData()
           },
         ),
       )
@@ -136,7 +150,7 @@ fun TabScreen(
           },
           onIntercepted = {
             listState.animateScrollToItem(0)
-            tabViewModel.onRefresh()
+            reloadData()
           },
         ),
       )
@@ -163,12 +177,19 @@ fun TabScreen(
       state = listState,
     ) {
       itemsIndexed(items = listItems) { _, uiModel ->
+        val innerListState = innerListStates.getOrPut(uiModel.itemId) {
+          if (uiModel.layout == ROW) {
+            rememberStorytellerRowState()
+          } else {
+            rememberStorytellerGridState()
+          }
+        }
         StorytellerItem(
           uiModel = uiModel,
-          isRefreshing = pageUiState.isRefreshing || isRefreshing,
           navController = rootNavController,
           roundTheme = config?.roundTheme,
           squareTheme = config?.squareTheme,
+          state = innerListState,
         ) {
           tabViewModel.hideStorytellerItem(uiModel.itemId)
         }
