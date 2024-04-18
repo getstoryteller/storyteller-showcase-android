@@ -2,6 +2,7 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,21 +11,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
@@ -36,6 +44,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.utils.copyToClipboard
 import com.getstoryteller.storytellershowcaseapp.ui.utils.formatterApplicationVersion
 import com.getstoryteller.storytellershowcaseapp.ui.utils.toast
+import com.storyteller.Storyteller
 import com.storyteller.ui.pager.StorytellerClipsFragment
 
 // This view demonstrates how to pass User Attributes to the Storyteller SDK
@@ -60,6 +69,7 @@ fun AccountScreen(
 ) {
   val context = LocalContext.current
   val isLoggedOut by viewModel.isLoggedOut.collectAsState()
+  var isEditingUserId by remember { mutableStateOf(false) }
   LaunchedEffect(isLoggedOut) {
     if (isLoggedOut) {
       onLogout()
@@ -79,44 +89,96 @@ fun AccountScreen(
       config?.let {
         SettingsSection("PERSONALISATION")
         if (it.teams.isNotEmpty()) {
-          SettingsRow(text = "Favorite Team", arrowVisible = true, onClick = {
-            navController.navigate("account/${OptionSelectType.FAVORITE_TEAM.name}")
-          })
+          SettingsRow(
+            text = "Favorite Team",
+            arrowVisible = true,
+            onClick = {
+              navController.navigate("account/${OptionSelectType.FAVORITE_TEAM.name}")
+            },
+          )
         }
         if (it.languages.isNotEmpty()) {
-          SettingsRow(text = "Language", arrowVisible = true, onClick = {
-            navController.navigate("account/${OptionSelectType.LANGUAGE.name}")
-          })
+          SettingsRow(
+            text = "Language",
+            arrowVisible = true,
+            onClick = {
+              navController.navigate("account/${OptionSelectType.LANGUAGE.name}")
+            },
+          )
         }
-        SettingsRow(text = "Has Account", arrowVisible = true, onClick = {
-          navController.navigate("account/${OptionSelectType.HAS_ACCOUNT.name}")
-        })
+        SettingsRow(
+          text = "Has Account",
+          arrowVisible = true,
+          onClick = {
+            navController.navigate("account/${OptionSelectType.HAS_ACCOUNT.name}")
+          },
+        )
+      }
+      SettingsSection(text = "USER")
+      SettingsRow(
+        text = "ID",
+        onClick = {
+          isEditingUserId = true
+        },
+      ) {
+        Text(
+          text = Storyteller.currentUserId.orEmpty(),
+          modifier = Modifier.padding(end = 16.dp),
+          color = LocalStorytellerColorsPalette.current.subtitle,
+          fontSize = 14.sp,
+          overflow = TextOverflow.Ellipsis,
+        )
+        if (isEditingUserId) {
+          ChangeUserIdDialog(
+            onDismiss = { isEditingUserId = false },
+            onConfirm = {
+              isEditingUserId = false
+              viewModel.changeUserId()
+              context.toast("User ID changed")
+              navController.navigateUp()
+            },
+          )
+        }
       }
       SettingsSection(text = "SETTINGS")
-      SettingsRow(text = "Allow Event Tracking", arrowVisible = true, onClick = {
-        navController.navigate("account/${OptionSelectType.EVENT_TRACKING.name}")
-      })
-      SettingsRow(text = "Reset", onClick = {
-        viewModel.reset()
-        sharedViewModel.refreshMainPage()
-        navController.navigateUp()
-        context.toast("Reset successful")
-      })
-      SettingsRow(text = "Log Out", color = colorResource(id = R.color.error), onClick = {
-        // remove the moments fragment to avoid glitches when logging out and in with a new code
-        val fmgr = (context as? FragmentActivity)?.supportFragmentManager
-        val existingFragment = fmgr?.findFragmentByTag("moments") as? StorytellerClipsFragment
-        if (existingFragment != null) {
-          fmgr.beginTransaction().remove(existingFragment).commit()
-        }
-        navController.navigate("home")
-        viewModel.logout()
-      })
+      SettingsRow(
+        text = "Allow Event Tracking",
+        arrowVisible = true,
+        onClick = {
+          navController.navigate("account/${OptionSelectType.EVENT_TRACKING.name}")
+        },
+      )
+      SettingsRow(
+        text = "Reset",
+        onClick = {
+          viewModel.reset()
+          sharedViewModel.refreshMainPage()
+          navController.navigateUp()
+          context.toast("Reset successful")
+        },
+      )
+      SettingsRow(
+        text = "Log Out",
+        color = colorResource(id = R.color.error),
+        onClick = {
+          // remove the moments fragment to avoid glitches when logging out and in with a new code
+          val fmgr = (context as? FragmentActivity)?.supportFragmentManager
+          val existingFragment = fmgr?.findFragmentByTag("moments") as? StorytellerClipsFragment
+          if (existingFragment != null) {
+            fmgr.beginTransaction().remove(existingFragment).commit()
+          }
+          navController.navigate("home")
+          viewModel.logout()
+        },
+      )
       SettingsSection(text = "APP INFO")
-      SettingsRow(text = "Version", onClick = {
-        context.copyToClipboard(context.formatterApplicationVersion)
-        context.toast("App version copied to clipboard")
-      }) {
+      SettingsRow(
+        text = "Version",
+        onClick = {
+          context.copyToClipboard(context.formatterApplicationVersion)
+          context.toast("App version copied to clipboard")
+        },
+      ) {
         Text(
           text = context.formatterApplicationVersion,
           modifier = Modifier.padding(end = 16.dp),
@@ -137,6 +199,46 @@ private fun SettingsSection(
     color = MaterialTheme.colorScheme.onSurface,
     fontSize = 12.sp,
     fontWeight = FontWeight.W400,
+  )
+}
+
+@Composable
+fun ChangeUserIdDialog(
+  modifier: Modifier = Modifier,
+  onDismiss: () -> Unit,
+  onConfirm: () -> Unit,
+) {
+  AlertDialog(
+    icon = {
+      Icon(Icons.Filled.AccountCircle, contentDescription = "User ID")
+    },
+    title = {
+      Text(text = "Change User ID")
+    },
+    text = {
+      Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "Randomize User ID?", style = MaterialTheme.typography.bodyMedium)
+      }
+    },
+    onDismissRequest = onDismiss,
+    confirmButton = {
+      TextButton(
+        onClick = {
+          onConfirm()
+        },
+      ) {
+        Text("Confirm")
+      }
+    },
+    dismissButton = {
+      TextButton(
+        onClick = {
+          onDismiss()
+        },
+      ) {
+        Text("Dismiss")
+      }
+    },
   )
 }
 
