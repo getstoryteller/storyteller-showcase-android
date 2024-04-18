@@ -24,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -74,7 +76,14 @@ fun AccountScreen(
       navController.navigate("home")
     }
   }
-  val currentUserId = viewModel.currentUserId.collectAsState()
+  var currentUserId by remember { mutableStateOf(Storyteller.currentUserId.orEmpty()) }
+
+  navController.addOnDestinationChangedListener { _, destination, _ ->
+    if (destination.route != "home/account" && currentUserId != Storyteller.currentUserId.orEmpty()) {
+      viewModel.changeUserId(currentUserId)
+      context.toast("User ID changed to $currentUserId")
+    }
+  }
   Surface(
     modifier =
     modifier
@@ -123,11 +132,9 @@ fun AccountScreen(
       ) {
         Box(modifier = Modifier.weight(4f)) {
           TextField(
-            value = currentUserId.value,
+            value = currentUserId,
             onValueChange = {
-              viewModel.changeUserId(it) {
-                context.toast("User ID changed successfully")
-              }
+              currentUserId = it
             },
             modifier = Modifier.padding(end = 16.dp),
             textStyle = TextStyle(
