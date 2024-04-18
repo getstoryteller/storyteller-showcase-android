@@ -6,8 +6,12 @@ import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
+import com.storyteller.Storyteller
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -20,13 +24,22 @@ class AccountViewModel @Inject constructor(
   private val amplitudeService: AmplitudeService,
 ) : ViewModel() {
   val isLoggedOut = MutableStateFlow(false)
+  private var debounceJob: Job? = null
+  val currentUserId = MutableStateFlow(Storyteller.currentUserId.orEmpty())
 
   fun changeUserId(
     userId: String = UUID.randomUUID().toString(),
+    function: () -> Unit = {},
   ) {
-    sessionRepository.userId = userId
-    storytellerService.initStoryteller()
-    amplitudeService.init()
+    currentUserId.update { userId }
+    debounceJob?.cancel()
+    debounceJob = viewModelScope.launch {
+      delay(300L)
+      sessionRepository.userId = userId
+      storytellerService.initStoryteller()
+      amplitudeService.init()
+      function()
+    }
   }
 
   fun logout() {
