@@ -9,7 +9,6 @@ import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +21,7 @@ class AccountViewModel @Inject constructor(
   val isLoggedOut = MutableStateFlow(false)
 
   fun changeUserId(
-    userId: String = UUID.randomUUID().toString(),
+    userId: String,
   ) = viewModelScope.launch {
     sessionRepository.userId = userId
     storytellerService.initStoryteller()

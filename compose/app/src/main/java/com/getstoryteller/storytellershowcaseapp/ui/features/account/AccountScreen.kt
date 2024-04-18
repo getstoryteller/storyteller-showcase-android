@@ -82,6 +82,7 @@ fun AccountScreen(
     if (destination.route != "home/account" && currentUserId != Storyteller.currentUserId.orEmpty()) {
       viewModel.changeUserId(currentUserId)
       context.toast("User ID changed to $currentUserId")
+      sharedViewModel.refreshMainPage()
     }
   }
   Surface(
