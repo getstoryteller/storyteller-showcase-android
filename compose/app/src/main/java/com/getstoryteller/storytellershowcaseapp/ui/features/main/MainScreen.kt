@@ -401,7 +401,6 @@ fun MainScreen(
 enum class PageState {
   HOME,
   ACCOUNT,
-  USERID,
   MORE,
   LINK,
   LOGIN,
