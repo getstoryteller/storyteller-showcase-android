@@ -6,6 +6,7 @@ import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
+import com.storyteller.Storyteller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,6 +24,11 @@ class AccountViewModel @Inject constructor(
   fun changeUserId(
     userId: String,
   ) = viewModelScope.launch {
+    Storyteller.eventTrackingOptions = Storyteller.StorytellerEventTrackingOptions(
+      enablePersonalization = true,
+      enableStorytellerTracking = true,
+      enableUserActivityTracking = true,
+    )
     sessionRepository.userId = userId
     storytellerService.initStoryteller()
     amplitudeService.init()

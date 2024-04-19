@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
@@ -123,6 +124,14 @@ fun AccountScreen(
           },
         )
       }
+      SettingsSection(text = "Analytics")
+      SettingsRow(
+        text = "User Privacy Preferences",
+        arrowVisible = true,
+        onClick = {
+          navController.navigate("account/analytics")
+        },
+      )
       SettingsSection(text = "USER")
       SettingsRow(
         text = "ID",
@@ -141,6 +150,7 @@ fun AccountScreen(
             textStyle = TextStyle(
               color = LocalStorytellerColorsPalette.current.subtitle,
               fontSize = 14.sp,
+              textAlign = TextAlign.End,
             ),
             colors = TextFieldDefaults.textFieldColors(
               cursorColor = Color.Black,

@@ -42,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.getstoryteller.storytellershowcaseapp.R
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.AccountScreen
+import com.getstoryteller.storytellershowcaseapp.ui.features.account.AnalyticsOptionScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectType
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.HomeScreen
@@ -53,6 +54,8 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.ac
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountOptionsScreenExitTransition
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountScreenEnterTransition
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountScreenExitTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.analyticsScreenEnterTransition
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.analyticsScreenExitTransition
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.homeScreenEnterTransition
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.homeScreenExitTransition
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.linkScreenEnterTransition
@@ -328,6 +331,17 @@ fun MainScreen(
             sharedViewModel = viewModel,
             optionSelectType = option,
             config = mainPageUiState.config!!,
+          )
+        }
+        composable(
+          "account/analytics",
+          enterTransition = analyticsScreenEnterTransition(),
+          exitTransition = analyticsScreenExitTransition(),
+        ) {
+          navigationState = PageState.ACCOUNT
+          title = "Analytics"
+          AnalyticsOptionScreen(
+            modifier = topPaddingEnabledModifier,
           )
         }
         composable(
