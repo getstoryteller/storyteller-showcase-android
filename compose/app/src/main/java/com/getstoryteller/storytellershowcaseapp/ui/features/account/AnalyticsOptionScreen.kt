@@ -1,7 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.account
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +12,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,12 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.getstoryteller.storytellershowcaseapp.ui.components.TabRowDefaults.Divider
-import com.storyteller.Storyteller
 
 @Composable
 fun AnalyticsOptionScreen(
   modifier: Modifier = Modifier,
+  accountViewModel: AccountViewModel,
 ) {
+  val state = accountViewModel.analyticsUiState.collectAsState().value
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -45,13 +44,6 @@ fun AnalyticsOptionScreen(
         .background(color = MaterialTheme.colorScheme.tertiaryContainer),
     ) {
       val options = listOf("Allow personalization", "Allow storyteller tracking", "Allow user activity tracking")
-      val toggles = remember {
-        mutableStateListOf(
-          Storyteller.eventTrackingOptions.enablePersonalization,
-          Storyteller.eventTrackingOptions.enableStorytellerTracking,
-          Storyteller.eventTrackingOptions.enableUserActivityTracking,
-        )
-      }
       options.forEachIndexed { index, option ->
         Row(
           modifier = Modifier
@@ -61,14 +53,13 @@ fun AnalyticsOptionScreen(
         ) {
           Text(option, modifier = Modifier.weight(1f))
           Switch(
-            checked = toggles[index],
+            checked = when (index) {
+              0 -> state.first
+              1 -> state.second
+              else -> state.third
+            },
             onCheckedChange = { newValue ->
-              toggles[index] = newValue
-              Storyteller.eventTrackingOptions = Storyteller.StorytellerEventTrackingOptions(
-                enablePersonalization = toggles[0],
-                enableStorytellerTracking = toggles[1],
-                enableUserActivityTracking = toggles[2],
-              )
+              accountViewModel.updateAnalyticsOption(index, newValue)
             },
             colors = SwitchDefaults.colors(
               uncheckedThumbColor = Color.White,

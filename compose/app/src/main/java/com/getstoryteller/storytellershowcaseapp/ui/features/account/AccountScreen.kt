@@ -80,7 +80,7 @@ fun AccountScreen(
   var currentUserId by remember { mutableStateOf(Storyteller.currentUserId.orEmpty()) }
 
   navController.addOnDestinationChangedListener { _, destination, _ ->
-    if (destination.route != "home/account" && currentUserId != Storyteller.currentUserId.orEmpty()) {
+    if ((destination.route == "home") && currentUserId != Storyteller.currentUserId.orEmpty()) {
       viewModel.changeUserId(currentUserId)
       context.toast("User ID changed to $currentUserId")
       sharedViewModel.refreshMainPage()

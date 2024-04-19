@@ -7,6 +7,9 @@ interface SessionRepository {
   var team: String?
   var hasAccount: Boolean
   var trackEvents: Boolean
+  var allowPersonalization: Boolean
+  var allowStoryTellerTracking: Boolean
+  var allowUserActivityTracking: Boolean
 
   fun reset()
 }

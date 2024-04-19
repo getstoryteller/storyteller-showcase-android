@@ -2,6 +2,7 @@ package com.getstoryteller.storytellershowcaseapp.data
 
 import android.content.SharedPreferences
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.storyteller.Storyteller
 import java.util.UUID
 import javax.inject.Inject
 
@@ -14,6 +15,9 @@ class SessionRepositoryImpl @Inject constructor(private val prefs: SharedPrefere
     private const val KEY_TEAM = "KEY_TEAM"
     private const val KEY_HAS_ACCOUNT = "KEY_HAS_ACCOUNT"
     private const val KEY_TRACK_EVENTS = "KEY_TRACK_EVENTS"
+    private const val KEY_ALLOW_PERSONALIZATION = "KEY_ALLOW_PERSONALIZATION"
+    private const val KEY_ALLOW_STORYTELLER_TRACKING = "KEY_ALLOW_STORYTELLER_TRACKING"
+    private const val KEY_ALLOW_USER_ACTIVITY_TRACKING = "KEY_ALLOW_USER_ACTIVITY_TRACKING"
   }
 
   override var apiKey: String?
@@ -40,11 +44,44 @@ class SessionRepositoryImpl @Inject constructor(private val prefs: SharedPrefere
     get() = prefs.getBoolean(KEY_TRACK_EVENTS, true)
     set(value) = prefs.edit().putBoolean(KEY_TRACK_EVENTS, value).apply()
 
+  override var allowPersonalization: Boolean
+    get() = prefs.getBoolean(KEY_ALLOW_PERSONALIZATION, true)
+    set(value) = prefs.edit().putBoolean(KEY_ALLOW_PERSONALIZATION, value).apply().also {
+      setAnalyticsOptions(personalization = value)
+    }
+
+  override var allowStoryTellerTracking: Boolean
+    get() = prefs.getBoolean(KEY_ALLOW_STORYTELLER_TRACKING, true)
+    set(value) = prefs.edit().putBoolean(KEY_ALLOW_STORYTELLER_TRACKING, value).apply().also {
+      setAnalyticsOptions(storyTeller = value)
+    }
+
+  override var allowUserActivityTracking: Boolean
+    get() = prefs.getBoolean(KEY_ALLOW_USER_ACTIVITY_TRACKING, true)
+    set(value) = prefs.edit().putBoolean(KEY_ALLOW_USER_ACTIVITY_TRACKING, value).apply().also {
+      setAnalyticsOptions(userActivity = value)
+    }
+
   override fun reset() {
     userId = UUID.randomUUID().toString()
     trackEvents = true
     hasAccount = false
     language = null
     team = null
+    allowPersonalization = true
+    allowStoryTellerTracking = true
+    allowUserActivityTracking = true
+  }
+
+  private fun setAnalyticsOptions(
+    personalization: Boolean = Storyteller.eventTrackingOptions.enablePersonalization,
+    storyTeller: Boolean = Storyteller.eventTrackingOptions.enableStorytellerTracking,
+    userActivity: Boolean = Storyteller.eventTrackingOptions.enableUserActivityTracking,
+  ) {
+    Storyteller.eventTrackingOptions = Storyteller.StorytellerEventTrackingOptions(
+      enablePersonalization = personalization,
+      enableStorytellerTracking = storyTeller,
+      enableUserActivityTracking = userActivity,
+    )
   }
 }

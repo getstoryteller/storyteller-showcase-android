@@ -342,6 +342,7 @@ fun MainScreen(
           title = "Analytics"
           AnalyticsOptionScreen(
             modifier = topPaddingEnabledModifier,
+            accountViewModel = hiltViewModel(),
           )
         }
         composable(

@@ -9,6 +9,7 @@ import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import com.storyteller.Storyteller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,17 +22,26 @@ class AccountViewModel @Inject constructor(
 ) : ViewModel() {
   val isLoggedOut = MutableStateFlow(false)
 
+  private val _analyticsUiState = MutableStateFlow(
+    Triple(
+      sessionRepository.allowPersonalization,
+      sessionRepository.allowStoryTellerTracking,
+      sessionRepository.allowUserActivityTracking,
+    ),
+  )
+  val analyticsUiState = _analyticsUiState.asStateFlow()
+
+  private val _currentUserId = MutableStateFlow(sessionRepository.userId ?: Storyteller.currentUserId ?: "")
+  val currentUserId = _currentUserId.asStateFlow()
+
   fun changeUserId(
     userId: String,
   ) = viewModelScope.launch {
-    Storyteller.eventTrackingOptions = Storyteller.StorytellerEventTrackingOptions(
-      enablePersonalization = true,
-      enableStorytellerTracking = true,
-      enableUserActivityTracking = true,
-    )
     sessionRepository.userId = userId
     storytellerService.initStoryteller()
     amplitudeService.init()
+    updateAnalyticsOption()
+    _currentUserId.value = userId
   }
 
   fun logout() {
@@ -45,5 +55,26 @@ class AccountViewModel @Inject constructor(
     sessionRepository.reset()
     storytellerService.initStoryteller()
     amplitudeService.init()
+  }
+
+  fun updateAnalyticsOption(
+    index: Int = -1,
+    newValue: Boolean = true,
+  ) {
+    when (index) {
+      0 -> sessionRepository.allowPersonalization = newValue
+      1 -> sessionRepository.allowStoryTellerTracking = newValue
+      2 -> sessionRepository.allowUserActivityTracking = newValue
+      -1 -> {
+        sessionRepository.allowPersonalization = newValue
+        sessionRepository.allowStoryTellerTracking = newValue
+        sessionRepository.allowUserActivityTracking = newValue
+      }
+    }
+    _analyticsUiState.value = Triple(
+      sessionRepository.allowPersonalization,
+      sessionRepository.allowStoryTellerTracking,
+      sessionRepository.allowUserActivityTracking,
+    )
   }
 }
