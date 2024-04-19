@@ -31,9 +31,6 @@ class AccountViewModel @Inject constructor(
   )
   val analyticsUiState = _analyticsUiState.asStateFlow()
 
-  private val _currentUserId = MutableStateFlow(sessionRepository.userId ?: Storyteller.currentUserId ?: "")
-  val currentUserId = _currentUserId.asStateFlow()
-
   fun changeUserId(
     userId: String,
   ) = viewModelScope.launch {
@@ -41,7 +38,6 @@ class AccountViewModel @Inject constructor(
     storytellerService.initStoryteller()
     amplitudeService.init()
     updateAnalyticsOption()
-    _currentUserId.value = userId
   }
 
   fun logout() {
