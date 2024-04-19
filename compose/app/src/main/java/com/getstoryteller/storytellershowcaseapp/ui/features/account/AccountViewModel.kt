@@ -6,7 +6,6 @@ import com.getstoryteller.storytellershowcaseapp.domain.LogoutUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
-import com.storyteller.Storyteller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

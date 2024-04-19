@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -79,12 +80,17 @@ fun AccountScreen(
   }
   var currentUserId by remember { mutableStateOf(Storyteller.currentUserId.orEmpty()) }
 
-  navController.addOnDestinationChangedListener { _, destination, _ ->
-    if ((destination.route != "home/account") && currentUserId != Storyteller.currentUserId.orEmpty()) {
-      viewModel.changeUserId(currentUserId)
-      context.toast("User ID changed to $currentUserId")
-      sharedViewModel.refreshMainPage()
-      currentUserId = Storyteller.currentUserId.orEmpty()
+  DisposableEffect(navController) {
+    val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+      if ((destination.route != "home/account") && currentUserId != Storyteller.currentUserId.orEmpty()) {
+        viewModel.changeUserId(currentUserId)
+        context.toast("User ID changed to $currentUserId")
+        sharedViewModel.refreshMainPage()
+      }
+    }
+    navController.addOnDestinationChangedListener(listener)
+    onDispose {
+      navController.removeOnDestinationChangedListener(listener)
     }
   }
   Surface(
