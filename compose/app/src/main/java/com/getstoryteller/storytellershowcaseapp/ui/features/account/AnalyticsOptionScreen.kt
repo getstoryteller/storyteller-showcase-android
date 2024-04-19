@@ -18,7 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.getstoryteller.storytellershowcaseapp.ui.components.TabRowDefaults.Divider
 import com.storyteller.Storyteller
 
@@ -26,13 +28,20 @@ import com.storyteller.Storyteller
 fun AnalyticsOptionScreen(
   modifier: Modifier = Modifier,
 ) {
-  Box(
+  Column(
     modifier = Modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.surface),
+      .fillMaxSize()
+      .background(color = MaterialTheme.colorScheme.surface),
   ) {
+    Text(
+      text = "TRACKING OPTIONS",
+      modifier = modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+      color = MaterialTheme.colorScheme.onSurface,
+      fontSize = 12.sp,
+      fontWeight = FontWeight.W400,
+    )
     Column(
-      modifier = modifier
+      modifier = Modifier
         .background(color = MaterialTheme.colorScheme.tertiaryContainer),
     ) {
       val options = listOf("Allow personalization", "Allow storyteller tracking", "Allow user activity tracking")
@@ -46,8 +55,8 @@ fun AnalyticsOptionScreen(
       options.forEachIndexed { index, option ->
         Row(
           modifier = Modifier
-              .fillMaxWidth()
-              .padding(vertical = 8.dp, horizontal = 16.dp),
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
           Text(option, modifier = Modifier.weight(1f))
@@ -70,9 +79,9 @@ fun AnalyticsOptionScreen(
         if (index < options.size - 1) {
           Divider(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .align(Alignment.CenterHorizontally)
-                .height(1.dp),
+              .fillMaxWidth(0.9f)
+              .align(Alignment.CenterHorizontally)
+              .height(1.dp),
           )
         }
       }
