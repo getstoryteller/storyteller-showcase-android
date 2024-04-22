@@ -54,9 +54,9 @@ fun AnalyticsOptionScreen(
           Text(option, modifier = Modifier.weight(1f))
           Switch(
             checked = when (index) {
-              0 -> state.first
-              1 -> state.second
-              else -> state.third
+              0 -> state.allowPersonalization
+              1 -> state.allowStoryTellerTracking
+              else -> state.allowUserActivityTracking
             },
             onCheckedChange = { newValue ->
               accountViewModel.updateAnalyticsOption(index, newValue)

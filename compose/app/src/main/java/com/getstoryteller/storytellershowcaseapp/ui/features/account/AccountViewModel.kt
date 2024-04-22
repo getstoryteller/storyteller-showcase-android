@@ -22,7 +22,7 @@ class AccountViewModel @Inject constructor(
   val isLoggedOut = MutableStateFlow(false)
 
   private val _analyticsUiState = MutableStateFlow(
-    Triple(
+    Analytics(
       sessionRepository.allowPersonalization,
       sessionRepository.allowStoryTellerTracking,
       sessionRepository.allowUserActivityTracking,
@@ -66,10 +66,16 @@ class AccountViewModel @Inject constructor(
         sessionRepository.allowUserActivityTracking = newValue
       }
     }
-    _analyticsUiState.value = Triple(
+    _analyticsUiState.value = Analytics(
       sessionRepository.allowPersonalization,
       sessionRepository.allowStoryTellerTracking,
       sessionRepository.allowUserActivityTracking,
     )
   }
+
+  data class Analytics(
+    val allowPersonalization: Boolean,
+    val allowStoryTellerTracking: Boolean,
+    val allowUserActivityTracking: Boolean,
+  )
 }
