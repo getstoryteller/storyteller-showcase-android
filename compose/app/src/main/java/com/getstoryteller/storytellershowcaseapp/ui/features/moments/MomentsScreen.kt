@@ -48,7 +48,7 @@ fun MomentsScreen(
 
   LaunchedEffect(reloadDataTrigger) {
     if (reloadDataTrigger == null) return@LaunchedEffect
-    clipsFragment().goBack()
+    clipsFragment().reloadData()
   }
 
   LaunchedEffect(Unit) {
