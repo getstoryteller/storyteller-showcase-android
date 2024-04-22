@@ -8,6 +8,7 @@ import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,12 +21,22 @@ class AccountViewModel @Inject constructor(
 ) : ViewModel() {
   val isLoggedOut = MutableStateFlow(false)
 
+  private val _analyticsUiState = MutableStateFlow(
+    Analytics(
+      sessionRepository.allowPersonalization,
+      sessionRepository.allowStoryTellerTracking,
+      sessionRepository.allowUserActivityTracking,
+    ),
+  )
+  val analyticsUiState = _analyticsUiState.asStateFlow()
+
   fun changeUserId(
     userId: String,
   ) = viewModelScope.launch {
     sessionRepository.userId = userId
     storytellerService.initStoryteller()
     amplitudeService.init()
+    updateAnalyticsOption()
   }
 
   fun logout() {
@@ -40,4 +51,31 @@ class AccountViewModel @Inject constructor(
     storytellerService.initStoryteller()
     amplitudeService.init()
   }
+
+  fun updateAnalyticsOption(
+    index: Int = -1,
+    newValue: Boolean = true,
+  ) {
+    when (index) {
+      0 -> sessionRepository.allowPersonalization = newValue
+      1 -> sessionRepository.allowStoryTellerTracking = newValue
+      2 -> sessionRepository.allowUserActivityTracking = newValue
+      -1 -> {
+        sessionRepository.allowPersonalization = newValue
+        sessionRepository.allowStoryTellerTracking = newValue
+        sessionRepository.allowUserActivityTracking = newValue
+      }
+    }
+    _analyticsUiState.value = Analytics(
+      sessionRepository.allowPersonalization,
+      sessionRepository.allowStoryTellerTracking,
+      sessionRepository.allowUserActivityTracking,
+    )
+  }
+
+  data class Analytics(
+    val allowPersonalization: Boolean,
+    val allowStoryTellerTracking: Boolean,
+    val allowUserActivityTracking: Boolean,
+  )
 }

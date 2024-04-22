@@ -141,4 +141,10 @@ object Transitions {
 
   fun accountOptionsScreenEnterTransition(): AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? =
     { slideIntoContainer(towards = Left, animationSpec = tween(700)) }
+
+  fun analyticsScreenExitTransition(): AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? =
+    { slideOutOfContainer(towards = Right, animationSpec = tween(700)) }
+
+  fun analyticsScreenEnterTransition(): AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? =
+    { slideIntoContainer(towards = Left, animationSpec = tween(700)) }
 }

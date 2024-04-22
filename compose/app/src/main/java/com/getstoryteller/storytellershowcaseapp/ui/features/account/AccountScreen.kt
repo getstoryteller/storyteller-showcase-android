@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
@@ -78,11 +80,17 @@ fun AccountScreen(
   }
   var currentUserId by remember { mutableStateOf(Storyteller.currentUserId.orEmpty()) }
 
-  navController.addOnDestinationChangedListener { _, destination, _ ->
-    if (destination.route != "home/account" && currentUserId != Storyteller.currentUserId.orEmpty()) {
-      viewModel.changeUserId(currentUserId)
-      context.toast("User ID changed to $currentUserId")
-      sharedViewModel.refreshMainPage()
+  DisposableEffect(navController) {
+    val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+      if ((destination.route != "home/account") && currentUserId != Storyteller.currentUserId.orEmpty()) {
+        viewModel.changeUserId(currentUserId)
+        context.toast("User ID changed to $currentUserId")
+        sharedViewModel.refreshMainPage()
+      }
+    }
+    navController.addOnDestinationChangedListener(listener)
+    onDispose {
+      navController.removeOnDestinationChangedListener(listener)
     }
   }
   Surface(
@@ -123,6 +131,14 @@ fun AccountScreen(
           },
         )
       }
+      SettingsSection(text = "Analytics")
+      SettingsRow(
+        text = "User Privacy Preferences",
+        arrowVisible = true,
+        onClick = {
+          navController.navigate("account/analytics")
+        },
+      )
       SettingsSection(text = "USER")
       SettingsRow(
         text = "ID",
@@ -141,6 +157,7 @@ fun AccountScreen(
             textStyle = TextStyle(
               color = LocalStorytellerColorsPalette.current.subtitle,
               fontSize = 14.sp,
+              textAlign = TextAlign.End,
             ),
             colors = TextFieldDefaults.textFieldColors(
               cursorColor = Color.Black,
