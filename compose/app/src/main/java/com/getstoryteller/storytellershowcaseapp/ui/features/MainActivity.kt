@@ -97,7 +97,9 @@ class MainActivity : AppCompatActivity() {
   private fun saveAndRetrieveFragment(
     fragment: Fragment,
   ) {
-    fragment.setInitialSavedState(savedStateSparseArray[SAVED_STATE_FRAGMENT_ID])
+    if (!fragment.isAdded) {
+      fragment.setInitialSavedState(savedStateSparseArray[SAVED_STATE_FRAGMENT_ID])
+    }
   }
 
   companion object {
