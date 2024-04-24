@@ -78,6 +78,13 @@ fun HomeScreen(
       scope.launch { listState.reloadData() }
     }
   }
+  LaunchedEffect(key1 = pageUiState.isRefreshing) {
+    if (pageUiState.isRefreshing) {
+      refreshState.startRefresh()
+    } else {
+      refreshState.endRefresh()
+    }
+  }
 
   LaunchedEffect(
     key1 = config?.configId ?: UUID.randomUUID().toString(),
@@ -85,7 +92,6 @@ fun HomeScreen(
       config?.let {
         reloadData(it)
       }
-      refreshState.endRefresh()
     },
   )
   LaunchedEffect(loginState.isLoggedIn, config) {
