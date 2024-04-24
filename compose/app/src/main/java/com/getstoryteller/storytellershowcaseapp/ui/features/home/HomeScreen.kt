@@ -85,6 +85,7 @@ fun HomeScreen(
       config?.let {
         reloadData(it)
       }
+      refreshState.endRefresh()
     },
   )
   LaunchedEffect(loginState.isLoggedIn, config) {
