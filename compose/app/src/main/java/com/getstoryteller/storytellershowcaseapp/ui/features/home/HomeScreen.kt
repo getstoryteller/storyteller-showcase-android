@@ -66,7 +66,6 @@ fun HomeScreen(
     LaunchedEffect(true) {
       scope.launch {
         sharedViewModel.refreshMainPage()
-        sharedViewModel.triggerMomentsReloadData()
       }
     }
   }
