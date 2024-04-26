@@ -26,6 +26,7 @@ import com.getstoryteller.storytellershowcaseapp.remote.entities.VideoType
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
 import com.storyteller.ui.compose.components.lists.grid.rememberStorytellerGridState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,6 +49,8 @@ fun MoreScreen(
       scope.launch {
         state.reloadData()
       }
+      delay(500L) // there is no direct way to know when the data is loaded
+      refreshState.endRefresh()
     }
   }
 
