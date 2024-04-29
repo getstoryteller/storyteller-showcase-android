@@ -102,6 +102,10 @@ fun MoreScreen(
       disableHeader = true,
       isScrollable = true,
       state = state,
+      onDataLoadComplete = {
+        refreshState.endRefresh()
+        isRefreshing = false
+      },
       onShouldHide = {
         refreshState.endRefresh()
         isRefreshing = false
