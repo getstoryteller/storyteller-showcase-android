@@ -97,14 +97,14 @@ fun StorytellerItem(
       LocalOverscrollConfiguration provides null,
     ) {
       StorytellerComposable(
-        uiModel,
-        squareTheme,
-        roundTheme,
-        uiStyle,
-        isScrollable,
-        state,
-        onDataLoadComplete,
-        onShouldHide,
+        uiModel = uiModel,
+        squareTheme = squareTheme,
+        roundTheme = roundTheme,
+        uiStyle = uiStyle,
+        isScrollable = isScrollable,
+        state = state,
+        onDataLoadComplete = onDataLoadComplete,
+        onShouldHide = onShouldHide,
       )
     }
   }
