@@ -8,6 +8,7 @@ class PageItemStorytellerDelegate(
   private val itemId: String,
   private val onShouldHide: () -> Unit = {},
   private val onPlayerDismissed: () -> Unit = {},
+  private val onDataLoadComplete: () -> Unit = {},
 ) : StorytellerListViewDelegate {
   override fun onDataLoadComplete(
     success: Boolean,
@@ -22,6 +23,7 @@ class PageItemStorytellerDelegate(
       Timber.i("[$itemId] onDataLoadComplete: calling onShouldHide because $becauseMessage")
       onShouldHide()
     }
+    onDataLoadComplete()
   }
 
   override fun onDataLoadStarted() {
