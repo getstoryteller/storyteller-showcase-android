@@ -15,7 +15,7 @@ do
 done
 
 if [ "$1" == "zip" ]; then
-    ./gradlew :app:assembleDebug :app:assembleRelease
+    ./gradlew clean :app:assembleDebug :app:assembleRelease
     cp "./app/build/outputs/apk/release/app-release.apk" "./$APK_RELEASE"
     cp "./app/build/outputs/apk/debug/app-debug.apk" "./$APK_DEBUG"
     zip "./$ZIP_NAME" "./$APK_RELEASE" "./$APK_DEBUG"
@@ -23,6 +23,6 @@ if [ "$1" == "zip" ]; then
     rm "./$APK_DEBUG"
     open .
 else
-    ./gradlew :app:assembleRelease installRelease
+    ./gradlew clean :app:assembleRelease installRelease
     adb shell am start -n "com.getstoryteller.storytellershowcaseapp/com.getstoryteller.storytellershowcaseapp.ui.features.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 fi
