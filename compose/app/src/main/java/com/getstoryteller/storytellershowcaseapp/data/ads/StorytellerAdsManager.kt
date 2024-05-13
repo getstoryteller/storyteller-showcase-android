@@ -25,11 +25,11 @@ class StorytellerAdsManager @Inject constructor(
   ) {
     when (adRequestInfo) {
       is StorytellerAdRequestInfo.ClipsAdRequestInfo -> {
-        storytellerClipsAdsManager.handleAds(adRequestInfo, onComplete, onError)
+        storytellerClipsAdsManager.handleAds(adRequestInfo, onComplete, onError, true)
       }
 
       is StorytellerAdRequestInfo.StoriesAdRequestInfo -> {
-        storytellerStoryAdsManager.handleAds(adRequestInfo, onComplete, onError)
+        storytellerStoryAdsManager.handleAds(adRequestInfo, onComplete, onError, false)
       }
     }
   }

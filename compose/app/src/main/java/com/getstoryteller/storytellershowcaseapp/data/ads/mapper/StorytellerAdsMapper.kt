@@ -12,6 +12,7 @@ class StorytellerAdsMapper @Inject constructor() {
   fun map(
     ad: NativeCustomFormatAd,
     adKey: String,
+    isClip: Boolean,
   ): StorytellerAd? {
     val advertiserName = ad.getText(AdConstants.ADVERTISER_NAME)?.toString()
     val creativeType = ad.getText(AdConstants.CREATIVE_TYPE)?.toString()
@@ -51,7 +52,7 @@ class StorytellerAdsMapper @Inject constructor() {
         },
         trackingPixels = trackingPixels,
       )
-    } else if (creativeType == AdConstants.VIDEO && video != null) {
+    } else if (creativeType == AdConstants.VIDEO && video != null || isClip && video != null) {
       StorytellerAd.createVideoAd(
         id = adKey,
         advertiserName = advertiserName,

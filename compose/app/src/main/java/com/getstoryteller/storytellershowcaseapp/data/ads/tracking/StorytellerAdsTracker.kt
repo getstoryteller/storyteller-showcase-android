@@ -35,7 +35,7 @@ class StorytellerAdsTracker @Inject constructor() {
     adView: View,
   ) {
     storytellerScope.launch(Dispatchers.Main) {
-      nativeAd.displayOpenMeasurement.apply {
+      nativeAd?.displayOpenMeasurement?.apply {
         setView(adView)
         start()
       }
@@ -47,7 +47,7 @@ class StorytellerAdsTracker @Inject constructor() {
     adView: View,
   ) {
     storytellerScope.launch(Dispatchers.Main) {
-      nativeAd.displayOpenMeasurement.setView(adView)
+      nativeAd?.displayOpenMeasurement?.setView(adView)
     }
   }
 

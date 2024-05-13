@@ -36,6 +36,7 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
     adRequestInfo: KVP,
     onComplete: (StorytellerAd) -> Unit,
     onError: () -> Unit,
+    isClip: Boolean
   ) {
     val customMap = storytellerKVPProvider.getKVPs(adRequestInfo)
 
@@ -44,11 +45,12 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
       formatId = googleAdInfo.templateId,
       customMap = customMap,
       onAdDataLoaded = { ad ->
+
         val creativeId = ad.getText(AdConstants.CREATIVE_ID)?.toString()
         if (creativeId != null) {
           val clipsNativeAd = StorytellerNativeAd(adRequestInfo.itemInfo, ad)
           nativeAds[creativeId] = clipsNativeAd
-          val storytellerAd = storytellerAdsMapper.map(ad, creativeId)
+          val storytellerAd = storytellerAdsMapper.map(ad, creativeId, isClip)
           try {
             if (storytellerAd != null) {
               onComplete(storytellerAd)
