@@ -36,7 +36,7 @@ abstract class StorytellerNativeAdsManager<KVP : StorytellerAdRequestInfo>(
     adRequestInfo: KVP,
     onComplete: (StorytellerAd) -> Unit,
     onError: () -> Unit,
-    isClip: Boolean
+    isClip: Boolean,
   ) {
     val customMap = storytellerKVPProvider.getKVPs(adRequestInfo)
 
