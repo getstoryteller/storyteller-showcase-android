@@ -235,9 +235,8 @@ fun MainScreen(
         navController = navController,
         startDestination = "home",
       ) {
-        val paddingEnabledModifier = Modifier.padding(
-          top = paddingValues.calculateTopPadding(),
-          bottom = paddingValues.calculateBottomPadding(),
+        val topPaddingEnabledModifier = Modifier.padding(
+          top = paddingValues.calculateTopPadding()
         )
         composable(
           "home",
@@ -247,7 +246,7 @@ fun MainScreen(
           navigationState = PageState.HOME
           topBarVisible = true
           HomeScreen(
-            modifier = paddingEnabledModifier,
+            modifier = topPaddingEnabledModifier.padding(bottom = paddingValues.calculateBottomPadding()),
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
@@ -268,7 +267,7 @@ fun MainScreen(
         }
         composable("login") {
           navigationState = PageState.LOGIN
-          LoginScreen(modifier = paddingEnabledModifier, viewModel = viewModel) {
+          LoginScreen(modifier = topPaddingEnabledModifier, viewModel = viewModel) {
             navController.navigate("home") {
               popUpTo("home") {
                 inclusive = true
@@ -309,7 +308,7 @@ fun MainScreen(
           navigationState = PageState.ACCOUNT
           title = "Account"
           AccountScreen(
-            modifier = paddingEnabledModifier,
+            modifier = topPaddingEnabledModifier,
             navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
@@ -328,7 +327,7 @@ fun MainScreen(
           val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
           title = option.title
           OptionSelectScreen(
-            modifier = paddingEnabledModifier,
+            modifier = topPaddingEnabledModifier,
             navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
@@ -344,7 +343,7 @@ fun MainScreen(
           navigationState = PageState.ACCOUNT
           title = "Analytics"
           AnalyticsOptionScreen(
-            modifier = paddingEnabledModifier,
+            modifier = topPaddingEnabledModifier,
             accountViewModel = hiltViewModel(),
           )
         }
@@ -361,7 +360,7 @@ fun MainScreen(
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
-              modifier = paddingEnabledModifier,
+              modifier = topPaddingEnabledModifier,
               pageItemUiModel = it,
               navController = navController,
               config = mainPageUiState.config,
@@ -382,7 +381,7 @@ fun MainScreen(
             navigationState = PageState.MORE
             title = it.title
             MoreScreen(
-              modifier = paddingEnabledModifier,
+              modifier = topPaddingEnabledModifier,
               pageItemUiModel = it,
               navController = navController,
               config = mainPageUiState.config,
