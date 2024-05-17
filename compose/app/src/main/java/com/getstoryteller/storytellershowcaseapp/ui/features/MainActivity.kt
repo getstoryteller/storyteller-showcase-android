@@ -20,7 +20,6 @@ import com.storyteller.Storyteller
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -28,18 +27,11 @@ class MainActivity : AppCompatActivity() {
   lateinit var storytellerDelegate: ShowcaseStorytellerDelegate
 
   private val viewModel: MainViewModel by viewModels()
-  private var savedStateSparseArray = SparseArray<SavedState>()
 
   override fun onCreate(
     savedInstanceState: Bundle?,
   ) {
     super.onCreate(savedInstanceState)
-    if (savedInstanceState != null) {
-      savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
-        SAVED_STATE_CONTAINER_KEY,
-      ) ?: savedStateSparseArray
-    }
-
     viewModel.setup()
 
     val intentData = intent?.data?.toString()
@@ -61,51 +53,9 @@ class MainActivity : AppCompatActivity() {
           activity = this,
           navController = navController,
           viewModel = viewModel,
-          onCommit = ::onCommit,
-          onSaveState = ::onSaveState,
           onLocationChanged = { storytellerDelegate.onLocationChanged { it } },
         )
       }
     }
-  }
-
-  override fun onSaveInstanceState(
-    outState: Bundle,
-  ) {
-    super.onSaveInstanceState(outState)
-    outState.putSparseParcelableArray(SAVED_STATE_CONTAINER_KEY, savedStateSparseArray)
-  }
-
-  private fun onCommit(
-    fragment: Fragment,
-    tag: String,
-  ): FragmentTransaction.() -> Unit =
-    {
-      saveAndRetrieveFragment(fragment)
-      replace(SAVED_STATE_FRAGMENT_ID, fragment, tag)
-    }
-
-  private fun onSaveState(
-    fragment: Fragment,
-  ) {
-    savedStateSparseArray.put(
-      SAVED_STATE_FRAGMENT_ID,
-      supportFragmentManager.saveFragmentInstanceState(fragment),
-    )
-  }
-
-  private fun saveAndRetrieveFragment(
-    fragment: Fragment,
-  ) {
-    if (!fragment.isAdded) {
-      fragment.setInitialSavedState(savedStateSparseArray[SAVED_STATE_FRAGMENT_ID])
-    }
-  }
-
-  companion object {
-    private const val SAVED_STATE_CONTAINER_KEY = "SAVED_STATE_CONTAINER_KEY"
-
-    // Moments joaat checksum
-    const val SAVED_STATE_FRAGMENT_ID = 96925416
   }
 }

@@ -69,7 +69,6 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigati
 import com.getstoryteller.storytellershowcaseapp.ui.features.moments.MomentsScreen
 import com.getstoryteller.storytellershowcaseapp.ui.utils.isCurrentDestination
 import com.storyteller.Storyteller
-import com.storyteller.ui.pager.StorytellerClipsFragment
 import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,8 +78,6 @@ fun MainScreen(
   activity: Activity,
   navController: NavHostController,
   viewModel: MainViewModel,
-  onCommit: (fragment: Fragment, tag: String) -> FragmentTransaction.() -> Unit,
-  onSaveState: (Fragment) -> Unit,
   onLocationChanged: (String) -> Unit,
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
@@ -89,12 +86,6 @@ fun MainScreen(
   var momentsTabLoading by remember { mutableStateOf(false) }
   val collection by remember(mainPageUiState.config) {
     mutableStateOf(mainPageUiState.config?.topLevelCollectionId ?: "")
-  }
-
-  val clipsFragment by remember(mainPageUiState.config) {
-    mutableStateOf(
-      StorytellerClipsFragment.create(collection),
-    )
   }
 
   var topBarVisible by remember {
@@ -285,9 +276,7 @@ fun MainScreen(
           }
           MomentsScreen(
             modifier = Modifier,
-            clipsFragment = { clipsFragment },
-            onCommit = onCommit,
-            onSaveState = onSaveState,
+            collection = collection,
             sharedViewModel = viewModel,
             onSetTopBarVisible = {
               topBarVisible = it
