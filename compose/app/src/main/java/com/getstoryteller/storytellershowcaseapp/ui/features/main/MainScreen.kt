@@ -235,7 +235,7 @@ fun MainScreen(
           navigationState = PageState.HOME
           topBarVisible = true
           HomeScreen(
-            modifier = topPaddingEnabledModifier,
+            modifier = topPaddingEnabledModifier.padding(bottom = paddingValues.calculateBottomPadding()),
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             config = mainPageUiState.config,
