@@ -2,15 +2,11 @@ package com.getstoryteller.storytellershowcaseapp.ui.features
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.SparseArray
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.Fragment.SavedState
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.compose.rememberNavController
 import com.getstoryteller.storytellershowcaseapp.data.ShowcaseStorytellerDelegate
 import com.getstoryteller.storytellershowcaseapp.ui.ShowcaseAppTheme

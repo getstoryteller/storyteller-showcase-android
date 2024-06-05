@@ -19,8 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.domain.entities.Error
 import com.storyteller.ui.compose.embedded.StorytellerEmbeddedClips
@@ -92,7 +90,7 @@ fun MomentsScreen(
     val embeddedClipsState = rememberStorytellerEmbeddedClipsState(
       collectionId = collection,
       topLevelBack = false,
-      clipId = null
+      clipId = null,
     )
 
     LaunchedEffect(Unit) {
