@@ -143,22 +143,23 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         state = listState,
       ) {
-        itemsIndexed(items = listItems) { _, uiModel ->
-          val innerListState = innerListStates.getOrPut(uiModel.itemId) {
-            if (uiModel.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
+        itemsIndexed(items = listItems) { _, item ->
+          if (item.isHidden) return@itemsIndexed
+          val innerListState = innerListStates.getOrPut(item.itemId) {
+            if (item.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
               rememberStorytellerRowState()
             } else {
               rememberStorytellerGridState()
             }
           }
           StorytellerItem(
-            uiModel = uiModel,
+            uiModel = item,
             navController = navController,
             roundTheme = config?.roundTheme,
             squareTheme = config?.squareTheme,
             state = innerListState,
           ) {
-            viewModel.hideStorytellerItem(uiModel.itemId)
+            viewModel.hideStorytellerItem(item.itemId)
           }
         }
       }

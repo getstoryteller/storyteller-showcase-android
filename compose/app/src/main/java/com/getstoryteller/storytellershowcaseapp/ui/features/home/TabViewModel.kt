@@ -46,7 +46,7 @@ class TabViewModel @Inject constructor(
       _uiState.update {
         TabPageUiState(
           isRefreshing = false,
-          tabItems = items,
+          tabs = items,
         )
       }
     }
@@ -59,16 +59,15 @@ class TabViewModel @Inject constructor(
     }
 
   fun onRefresh() {
-    refreshJob =
-      viewModelScope.launch {
-        _uiState.update {
-          it.copy(isRefreshing = true)
-        }
-        delay(1000)
-        _uiState.update {
-          it.copy(isRefreshing = false)
-        }
+    refreshJob = viewModelScope.launch {
+      _uiState.update {
+        it.copy(isRefreshing = true)
       }
+      delay(1000)
+      _uiState.update {
+        it.copy(isRefreshing = false)
+      }
+    }
   }
 
   fun hideStorytellerItem(
@@ -76,8 +75,13 @@ class TabViewModel @Inject constructor(
   ) {
     viewModelScope.launch {
       _uiState.update {
+        val item = it.tabs.firstOrNull { it.itemId == itemId } ?: return@update it
+        val newItem = item.copy(isHidden = true)
         it.copy(
-          tabItems = it.tabItems.filter { item -> item.itemId != itemId },
+          tabs = it.tabs.toMutableSet().apply {
+            remove(item)
+            add(newItem)
+          },
         )
       }
     }
@@ -91,5 +95,5 @@ class TabViewModel @Inject constructor(
 
 data class TabPageUiState(
   val isRefreshing: Boolean = false,
-  val tabItems: List<PageItemUiModel> = emptyList(),
+  val tabs: Set<PageItemUiModel> = emptySet(),
 )

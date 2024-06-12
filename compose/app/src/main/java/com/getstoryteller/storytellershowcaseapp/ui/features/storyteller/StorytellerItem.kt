@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -64,7 +65,7 @@ fun StorytellerItem(
   disableHeader: Boolean = false,
   isScrollable: Boolean = false,
   onDataLoadComplete: () -> Unit = {},
-  onShouldHide: () -> Unit = {},
+  onShouldHide: (String) -> Unit = {},
 ) {
   Column(
     modifier =
@@ -119,9 +120,30 @@ private fun StorytellerComposable(
   isScrollable: Boolean,
   state: StorytellerDataState,
   onDataLoadComplete: () -> Unit,
-  onShouldHide: () -> Unit,
+  onShouldHide: (String) -> Unit,
 ) {
   val scope = rememberCoroutineScope()
+
+  val delegate = remember(uiModel.itemId) {
+    PageItemStorytellerDelegate(
+      uiModel = uiModel,
+      onShouldHide = onShouldHide,
+      onDataLoadComplete = onDataLoadComplete,
+    )
+  }
+
+  val singletonDelegate = remember(uiModel.itemId) {
+    PageItemStorytellerDelegate(
+      uiModel = uiModel,
+      onShouldHide = onShouldHide,
+      onPlayerDismissed = {
+        scope.launch {
+          state.reloadData()
+        }
+      },
+      onDataLoadComplete = onDataLoadComplete,
+    )
+  }
 
   when (uiModel.type) {
     VideoType.STORY -> {
@@ -149,11 +171,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               },
             ),
-            delegate = PageItemStorytellerDelegate(
-              itemId = uiModel.itemId,
-              onShouldHide = onShouldHide,
-              onDataLoadComplete = onDataLoadComplete,
-            ),
+            delegate = delegate,
             state = state as StorytellerRowState,
           )
         }
@@ -180,11 +198,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               },
             ),
-            delegate = PageItemStorytellerDelegate(
-              itemId = uiModel.itemId,
-              onShouldHide = onShouldHide,
-              onDataLoadComplete = onDataLoadComplete,
-            ),
+            delegate = delegate,
             isScrollable = isScrollable,
             state = state as StorytellerGridState,
           )
@@ -257,16 +271,7 @@ private fun StorytellerComposable(
             ),
             isScrollable = false,
             state = state as StorytellerGridState,
-            delegate = PageItemStorytellerDelegate(
-              itemId = uiModel.itemId,
-              onShouldHide = onShouldHide,
-              onPlayerDismissed = {
-                scope.launch {
-                  state.reloadData()
-                }
-              },
-              onDataLoadComplete = onDataLoadComplete,
-            ),
+            delegate = singletonDelegate,
           )
         }
       }
@@ -297,11 +302,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               },
             ),
-            delegate = PageItemStorytellerDelegate(
-              itemId = uiModel.itemId,
-              onShouldHide = onShouldHide,
-              onDataLoadComplete = onDataLoadComplete,
-            ),
+            delegate = delegate,
             state = state as StorytellerRowState,
           )
         }
@@ -371,16 +372,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               },
             ),
-            delegate = PageItemStorytellerDelegate(
-              itemId = uiModel.itemId,
-              onShouldHide = onShouldHide,
-              onPlayerDismissed = {
-                scope.launch {
-                  state.reloadData()
-                }
-              },
-              onDataLoadComplete = onDataLoadComplete,
-            ),
+            delegate = singletonDelegate,
             isScrollable = false,
             state = state as StorytellerGridState,
           )
@@ -408,11 +400,7 @@ private fun StorytellerComposable(
                 TileType.ROUND -> StorytellerListViewCellType.ROUND
               },
             ),
-            delegate = PageItemStorytellerDelegate(
-              itemId = uiModel.itemId,
-              onShouldHide = onShouldHide,
-              onDataLoadComplete = onDataLoadComplete,
-            ),
+            delegate = delegate,
             isScrollable = isScrollable,
             state = state as StorytellerGridState,
           )

@@ -82,4 +82,5 @@ data class PageItemUiModel(
   val displayLimit: Int,
   val collectionId: String?,
   val size: ItemSize,
+  val isHidden: Boolean = false,
 )
