@@ -82,6 +82,7 @@ fun MainScreen(
   var navigationState by remember { mutableStateOf(PageState.HOME) }
   var title by remember { mutableStateOf("") }
   var momentsTabLoading by remember { mutableStateOf(false) }
+  var homeTabLoading by remember { mutableStateOf(false) }
   val collection by remember(mainPageUiState.config) {
     mutableStateOf(mainPageUiState.config?.topLevelCollectionId ?: "")
   }
@@ -200,7 +201,8 @@ fun MainScreen(
         onSetNavigationState = {
           navigationState = it
         },
-        isSelectedTabLoading = momentsTabLoading,
+        momentsTabLoading = momentsTabLoading,
+        homeTabLoading = homeTabLoading,
         onTriggerMomentReload = {
           viewModel.triggerMomentsReloadData()
         },
@@ -250,6 +252,7 @@ fun MainScreen(
               }
             },
             onLocationChanged = onLocationChanged,
+            isHomeRefreshing = { homeTabLoading = it },
           )
         }
         composable("login") {

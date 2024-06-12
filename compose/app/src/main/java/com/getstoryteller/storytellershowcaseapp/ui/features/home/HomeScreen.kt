@@ -49,6 +49,7 @@ fun HomeScreen(
   onSetNavigationInterceptor: (NavigationInterceptor) -> Unit = {},
   onNavigateToLogin: () -> Unit = {},
   onLocationChanged: (String) -> Unit,
+  isHomeRefreshing: (Boolean) -> Unit,
 ) {
   val scope = rememberCoroutineScope()
   val reloadDataTrigger by sharedViewModel.reloadHomeTrigger.observeAsState()
@@ -79,6 +80,7 @@ fun HomeScreen(
     }
   }
   LaunchedEffect(key1 = pageUiState.isRefreshing) {
+    isHomeRefreshing(pageUiState.isRefreshing)
     if (pageUiState.isRefreshing) {
       refreshState.startRefresh()
     } else {

@@ -35,7 +35,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomNavigationBar(
   navController: NavHostController,
-  isSelectedTabLoading: Boolean,
+  momentsTabLoading: Boolean,
+  homeTabLoading: Boolean,
   onSetTopBarVisible: (Boolean) -> Unit,
   navigationState: PageState,
   onSetNavigationState: (PageState) -> Unit,
@@ -59,7 +60,7 @@ fun BottomNavigationBar(
         ),
         interactionSource = remember { MutableInteractionSource() },
         icon = {
-          if (isSelectedTabLoading && homeSelected) {
+          if (homeTabLoading && homeSelected) {
             CircularProgressIndicator(
               modifier = Modifier.size(24.dp),
               color = MaterialTheme.colorScheme.primary,
@@ -107,7 +108,7 @@ fun BottomNavigationBar(
           indicatorColor = Color.Transparent,
         ),
         icon = {
-          if (isSelectedTabLoading && !homeSelected) {
+          if (momentsTabLoading && !homeSelected) {
             CircularProgressIndicator(
               modifier = Modifier.size(24.dp),
               color = MaterialTheme.colorScheme.primary,
