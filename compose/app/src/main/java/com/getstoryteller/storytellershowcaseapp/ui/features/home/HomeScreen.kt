@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.home
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,12 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
+import com.getstoryteller.storytellershowcaseapp.ui.features.DeeplinkHandler
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.popUpTo
 import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.StorytellerItem
 import com.storyteller.ui.compose.components.lists.grid.rememberStorytellerGridState
 import com.storyteller.ui.compose.components.lists.row.StorytellerDataState
@@ -42,6 +46,7 @@ import java.util.UUID
 fun HomeScreen(
   viewModel: HomeViewModel,
   sharedViewModel: MainViewModel,
+  deepLinkData: String?,
   config: Config?,
   navController: NavController,
   isRefreshing: Boolean,
@@ -57,6 +62,7 @@ fun HomeScreen(
   val loginState by sharedViewModel.loginUiState.collectAsState()
   val innerListStates = remember { mutableStateMapOf<String, StorytellerDataState>() }
   val refreshState = rememberStorytellerPullToRefreshState()
+  val context = LocalContext.current
 
   val listState = rememberLazyListState()
   val listItems = pageUiState.homeItems
@@ -68,6 +74,15 @@ fun HomeScreen(
       scope.launch {
         sharedViewModel.refreshMainPage()
       }
+    }
+  }
+
+  LaunchedEffect(pageUiState.homeItems) {
+    if (pageUiState.homeItems.isEmpty() || deepLinkData == null) return@LaunchedEffect
+    if (sharedViewModel.handledDeepLink == deepLinkData) return@LaunchedEffect
+    DeeplinkHandler.handleDeepLink(context as Activity, deeplink = deepLinkData) { destination ->
+      sharedViewModel.handleDeeplink(deepLinkData)
+      navController.popUpTo(destination)
     }
   }
 

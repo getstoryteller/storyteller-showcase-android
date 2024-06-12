@@ -70,14 +70,9 @@ fun BottomNavigationBar(
             Icon(
               painter = painterResource(id = R.drawable.ic_home),
               contentDescription = null,
-              tint = MaterialTheme.colorScheme.onSurface,
+              tint = if (homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             )
           }
-          Icon(
-            painter = painterResource(id = R.drawable.ic_home),
-            contentDescription = null,
-            tint = if (homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-          )
         },
         label = {
           Text(

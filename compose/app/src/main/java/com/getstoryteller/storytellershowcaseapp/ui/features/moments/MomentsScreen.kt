@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
 fun MomentsScreen(
   modifier: Modifier = Modifier,
   collection: String,
+  startClip: String?,
   sharedViewModel: MainViewModel,
   onSetTopBarVisible: (Boolean) -> Unit,
   onMomentsTabLoading: (Boolean) -> Unit,
@@ -92,8 +94,8 @@ fun MomentsScreen(
 
     val embeddedClipsState = rememberStorytellerEmbeddedClipsState(
       collectionId = collection,
+      clipId = startClip,
       topLevelBack = false,
-      clipId = null,
     )
 
     LaunchedEffect(Unit) {
@@ -105,7 +107,10 @@ fun MomentsScreen(
       embeddedClipsState.reloadData()
     }
 
-    StorytellerEmbeddedClips(state = embeddedClipsState)
+    StorytellerEmbeddedClips(
+      modifier = Modifier.navigationBarsPadding(),
+      state = embeddedClipsState,
+    )
 
     if (isProgressVisible) {
       val isDarkTheme = isSystemInDarkTheme()

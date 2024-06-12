@@ -76,6 +76,7 @@ fun MainScreen(
   activity: Activity,
   navController: NavHostController,
   viewModel: MainViewModel,
+  deepLinkData: String?,
   onLocationChanged: (String) -> Unit,
 ) {
   val mainPageUiState by viewModel.uiState.collectAsState()
@@ -238,6 +239,7 @@ fun MainScreen(
             modifier = topPaddingEnabledModifier.padding(bottom = paddingValues.calculateBottomPadding()),
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
+            deepLinkData = deepLinkData,
             config = mainPageUiState.config,
             navController = navController,
             isRefreshing = mainPageUiState.isHomeRefreshing,
@@ -266,18 +268,30 @@ fun MainScreen(
           }
         }
         composable(
-          "home/moments",
+          route = "home/moments?clipId={clipId}",
+          arguments = listOf(
+            navArgument("clipId") {
+              type = NavType.StringType
+              nullable = true
+              defaultValue = null
+            },
+          ),
           enterTransition = momentsScreenEnterTransition(),
           exitTransition = momentsScreenExitTransition(),
-        ) {
+        ) { backStackEntry ->
           navigationState = PageState.HOME
           topBarVisible = false
+          val clipId = remember(backStackEntry.arguments) {
+            backStackEntry.arguments?.getString("clipId", null)
+          }
+
           LaunchedEffect(Unit) {
             navigationInterceptor = NavigationInterceptor.None
           }
           MomentsScreen(
             modifier = Modifier,
             collection = collection,
+            startClip = clipId,
             sharedViewModel = viewModel,
             onSetTopBarVisible = {
               topBarVisible = it

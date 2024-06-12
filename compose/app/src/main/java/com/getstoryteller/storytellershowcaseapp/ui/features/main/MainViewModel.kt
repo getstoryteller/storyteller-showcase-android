@@ -147,6 +147,13 @@ class MainViewModel @Inject constructor(
     momentsDisposedAt.value = null
     super.onCleared()
   }
+
+  var handledDeepLink: String? = null
+  fun handleDeeplink(
+    deepLinkData: String?,
+  ) {
+    handledDeepLink = deepLinkData
+  }
 }
 
 data class MainPageUiState(

@@ -58,6 +58,17 @@
           android:host="open"
           android:scheme="storytellerstories" />
       </intent-filter>
+      <intent-filter
+        android:label="Showcase Links">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="moments"
+          android:scheme="showcase" />
+      </intent-filter>
     </activity>
 
     <meta-data

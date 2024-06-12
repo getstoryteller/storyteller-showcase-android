@@ -12,7 +12,6 @@ import com.getstoryteller.storytellershowcaseapp.data.ShowcaseStorytellerDelegat
 import com.getstoryteller.storytellershowcaseapp.ui.ShowcaseAppTheme
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
-import com.storyteller.Storyteller
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,11 +28,8 @@ class MainActivity : AppCompatActivity() {
   ) {
     super.onCreate(savedInstanceState)
     viewModel.setup()
-
-    val intentData = intent?.data?.toString()
-    if (intentData != null && Storyteller.isStorytellerDeepLink(intentData)) {
-      Storyteller.openDeepLink(this, intentData)
-    }
+    val deepLinkData = intent?.data?.toString()
+    viewModel.handleDeeplink(null)
     enableEdgeToEdge()
     setContent {
       val navController = rememberNavController()
@@ -49,6 +45,7 @@ class MainActivity : AppCompatActivity() {
           activity = this,
           navController = navController,
           viewModel = viewModel,
+          deepLinkData = deepLinkData,
           onLocationChanged = { storytellerDelegate.onLocationChanged { it } },
         )
       }
