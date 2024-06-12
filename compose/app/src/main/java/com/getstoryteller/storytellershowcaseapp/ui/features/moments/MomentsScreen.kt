@@ -1,10 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.moments
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +43,7 @@ fun MomentsScreen(
   onLocationChanged: (String) -> Unit,
 ) {
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
+  val uiState by sharedViewModel.uiState.collectAsState()
 
   LaunchedEffect(Unit) {
     onSetTopBarVisible(false)
@@ -105,12 +108,21 @@ fun MomentsScreen(
     StorytellerEmbeddedClips(state = embeddedClipsState)
 
     if (isProgressVisible) {
+      val isDarkTheme = isSystemInDarkTheme()
+      val progressColor = if (isDarkTheme) {
+        uiState.config?.squareTheme?.dark
+      } else {
+        uiState.config?.squareTheme?.light
+      }?.colors?.primary?.let {
+        Color(it)
+      } ?: MaterialTheme.colorScheme.primary
+
       CircularProgressIndicator(
-        modifier =
-        Modifier
+        modifier = Modifier
           .padding(16.dp)
           .background(color = Color.Transparent)
           .align(Alignment.Center),
+        color = progressColor,
       )
     }
   }
