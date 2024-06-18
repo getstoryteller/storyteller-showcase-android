@@ -22,6 +22,7 @@ android {
     versionName = "1.0.0"
     buildConfigField("String", "API_BASE_URL", "\"${property("API_BASE_URL")}\"")
     buildConfigField("String", "AMPLITUDE_API_KEY", "\"${property("AMPLITUDE_API_KEY")}\"")
+    buildConfigField("String", "SHOWCASE_ACCESS_CODES", "\"${property("SHOWCASE_ACCESS_CODES")}\"")
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 

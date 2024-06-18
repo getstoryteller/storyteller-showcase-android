@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 
@@ -14,6 +16,9 @@ fun LoginScreen(
   onLoggedIn: () -> Unit,
 ) {
   Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-    LoginDialog(viewModel, onLoggedIn)
+    LoginDialog(
+      viewModel = viewModel,
+      onLoggedIn = onLoggedIn,
+    )
   }
 }

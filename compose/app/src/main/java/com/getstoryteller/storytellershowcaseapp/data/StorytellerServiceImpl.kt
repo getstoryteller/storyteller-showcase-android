@@ -1,5 +1,6 @@
 package com.getstoryteller.storytellershowcaseapp.data
 
+import com.getstoryteller.storytellershowcaseapp.BuildConfig
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
 import com.storyteller.Storyteller
@@ -60,6 +61,7 @@ class StorytellerServiceImpl @Inject constructor(
     // functions is visible in the AccountScreen.kt class
 
     if (sessionRepository.trackEvents) {
+      BuildConfig.SHOWCASE_ACCESS_CODES
       Storyteller.enableEventTracking()
     } else {
       Storyteller.disableEventTracking()
