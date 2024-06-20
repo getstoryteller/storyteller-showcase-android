@@ -66,7 +66,7 @@ fun TabScreen(
 
   val pageUiState by tabViewModel.uiState.collectAsState()
   val itemIds = remember(pageUiState) { pageUiState.tabs.map { it.itemId } }
-  val reloadStates = remember(itemIds) { mutableStateMapOf<String, Boolean>() }
+  val reloadStates = remember(itemIds) { mutableStateMapOf<String, Any?>() }
 
   val innerListStates = remember { mutableStateMapOf<String, StorytellerDataState>() }
   val refreshState = rememberStorytellerPullToRefreshState()
@@ -81,10 +81,10 @@ fun TabScreen(
   ) {
     tabViewModel.onRefresh()
     if (itemId != null) {
-      reloadStates[itemId] = true
+      reloadStates[itemId] = Any()
     } else {
       reloadStates.forEach { (t, _) ->
-        reloadStates[t] = true
+        reloadStates[t] = Any()
       }
     }
   }
@@ -97,7 +97,7 @@ fun TabScreen(
 
   LaunchedEffect(itemIds) {
     (itemIds - reloadStates.keys).forEach {
-      reloadStates[it] = false
+      reloadStates[it] = null
     }
   }
 
@@ -173,7 +173,6 @@ fun TabScreen(
       onSetTopNavigationInterceptor(NavigationInterceptor.None)
     }
   }
-
   Box(
     modifier =
     Modifier
@@ -191,35 +190,36 @@ fun TabScreen(
       horizontalAlignment = Alignment.CenterHorizontally,
       state = listState,
     ) {
-      itemsIndexed(items = items) { _, item ->
+      itemsIndexed(items = items, key = { i, item -> item.itemId }) { _, item ->
         if (item.isHidden && !reloadStates.keys.contains(item.itemId)) return@itemsIndexed
-        val innerListState = innerListStates.getOrPut(item.itemId) {
-          if (item.layout == ROW) {
-            rememberStorytellerRowState(item.itemId)
-          } else {
-            rememberStorytellerGridState(item.itemId)
-          }
+        val rowState = rememberStorytellerRowState(item.itemId)
+        val gridState = rememberStorytellerGridState(item.itemId)
+
+        val state = remember(item.itemId) {
+          innerListStates.getOrPut(item.itemId) { if (item.layout == ROW) rowState else gridState }
         }
-        val reloadState = reloadStates[item.itemId] ?: false
+        val reloadState = reloadStates[item.itemId]
         LaunchedEffect(reloadState) {
-          if (reloadState) {
-            Timber.d("Reloading item $item")
-            innerListState.reloadData()
+          if (reloadState != null) {
+            val tag = if (item.categories.isNotEmpty()) item.categories.first() else item.collectionId
+            Timber.d("[$tag] Reloading item $item")
+            state.reloadData()
           }
         }
+
         StorytellerItem(
           uiModel = item,
           navController = rootNavController,
           roundTheme = config?.roundTheme,
           squareTheme = config?.squareTheme,
-          state = innerListState,
+          state = state,
           onDataLoadComplete = {
-            reloadStates[item.itemId] = false
+            reloadStates[item.itemId] = null
             Timber.d("Data loaded for item $item")
           },
           onShouldHide = {
             Timber.d("Hiding item $item, because of $it")
-            reloadStates[item.itemId] = false
+            reloadStates[item.itemId] = null
             tabViewModel.hideStorytellerItem(item.itemId)
           },
         )

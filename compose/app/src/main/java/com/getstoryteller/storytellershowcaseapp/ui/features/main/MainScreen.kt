@@ -289,7 +289,6 @@ fun MainScreen(
             navigationInterceptor = NavigationInterceptor.None
           }
           MomentsScreen(
-            modifier = Modifier,
             collection = collection,
             startClip = clipId,
             sharedViewModel = viewModel,
