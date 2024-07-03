@@ -78,9 +78,10 @@ class TabViewModel @Inject constructor(
         val item = it.tabs.firstOrNull { it.itemId == itemId } ?: return@update it
         val newItem = item.copy(isHidden = true)
         it.copy(
-          tabs = it.tabs.toMutableSet().apply {
-            remove(item)
-            add(newItem)
+          tabs = it.tabs.toMutableList().apply {
+            val index = indexOf(item)
+            removeAt(index)
+            add(index, newItem)
           },
         )
       }
@@ -95,5 +96,5 @@ class TabViewModel @Inject constructor(
 
 data class TabPageUiState(
   val isRefreshing: Boolean = false,
-  val tabs: Set<PageItemUiModel> = emptySet(),
+  val tabs: List<PageItemUiModel> = emptyList(),
 )

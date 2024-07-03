@@ -238,6 +238,7 @@ fun AccessCodes(
     BuildConfig.SHOWCASE_ACCESS_CODES.split(",").map { it.trim() }
   }
 
+  if (accessCodes.isEmpty()) return
   FlowRow {
     accessCodes.forEach { code ->
       AccessCodeChip(

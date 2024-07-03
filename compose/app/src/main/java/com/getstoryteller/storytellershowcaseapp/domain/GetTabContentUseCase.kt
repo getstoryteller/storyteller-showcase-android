@@ -6,7 +6,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiMode
 interface GetTabContentUseCase {
   suspend fun getTabContent(
     tabId: String,
-  ): Set<PageItemUiModel>
+  ): List<PageItemUiModel>
 }
 
 class GetTabContentUseCaseImpl(private val tenantRepository: TenantRepository) :
@@ -27,5 +27,5 @@ class GetTabContentUseCaseImpl(private val tenantRepository: TenantRepository) :
         tileType = it.tileType,
         size = it.size,
       )
-    }.toSet()
+    }
 }
