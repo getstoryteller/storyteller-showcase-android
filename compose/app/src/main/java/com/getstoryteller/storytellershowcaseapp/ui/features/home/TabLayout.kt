@@ -115,7 +115,7 @@ fun TabLayout(
     HorizontalPager(
       state = pagerState,
       // This needs to be zero or nav interception will not work
-      beyondBoundsPageCount = 0,
+      beyondViewportPageCount = 0,
       key = { tabs[it].name },
     ) { pageIndex ->
       val tabValue = remember(tabs.hashCode(), pageIndex) { tabs[pageIndex].value }
