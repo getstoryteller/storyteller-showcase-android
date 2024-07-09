@@ -5,6 +5,7 @@ import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -236,7 +237,7 @@ fun MainScreen(
           navigationState = PageState.HOME
           topBarVisible = true
           HomeScreen(
-            modifier = topPaddingEnabledModifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            modifier = topPaddingEnabledModifier.navigationBarsPadding(),
             viewModel = hiltViewModel(key = mainPageUiState.config?.configId ?: "home"),
             sharedViewModel = viewModel,
             deepLinkData = deepLinkData,
