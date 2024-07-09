@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.getstoryteller.storytellershowcaseapp.ui.features.main.KeepScreenOn
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.domain.entities.Error
 import com.storyteller.ui.compose.embedded.StorytellerEmbeddedClips
@@ -43,6 +44,7 @@ fun MomentsScreen(
   onMomentsTabLoading: (Boolean) -> Unit,
   onLocationChanged: (String) -> Unit,
 ) {
+  KeepScreenOn()
   val reloadDataTrigger by sharedViewModel.reloadMomentsDataTrigger.collectAsState(null)
   val uiState by sharedViewModel.uiState.collectAsState()
 
