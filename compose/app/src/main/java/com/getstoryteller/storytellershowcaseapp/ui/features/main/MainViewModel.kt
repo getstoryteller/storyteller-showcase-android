@@ -8,6 +8,7 @@ import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.ui.features.account.EVENT_TRACKING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -153,6 +154,19 @@ class MainViewModel @Inject constructor(
     deepLinkData: String?,
   ) {
     handledDeepLink = deepLinkData
+  }
+
+  fun getOptionTitle(
+    option: String,
+  ): String {
+    if (option == EVENT_TRACKING) {
+      return "Allow Event Tracking"
+    }
+    return config?.let {
+      it.attributes.keys.find { key ->
+        key.urlName == option
+      }?.title ?: ""
+    } ?: ""
   }
 }
 

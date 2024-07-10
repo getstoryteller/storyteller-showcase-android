@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.StorytellerService
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeValueDto
+import com.storyteller.Storyteller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,101 +27,114 @@ class OptionSelectViewModel @Inject constructor(
   private val _reloadMainScreen = MutableLiveData<String?>()
   val reloadMainScreen: LiveData<String?> = _reloadMainScreen
 
+  private val eventTrackingDto = AttributeDto(
+    title = "Allow Event Tracking",
+    urlName = "allow_event_tracking",
+    sortOrder = 0,
+    allowMultiple = false,
+    nullable = false,
+    defaultValue = "no",
+    type = "event_tracking",
+    isFollowable = false,
+  )
+
+  private val eventTrackingOptions = listOf(
+    AttributeValueDto(
+      title = "Yes",
+      urlName = "yes",
+      sortOrder = 0,
+    ),
+    AttributeValueDto(
+      title = "No",
+      urlName = "no",
+      sortOrder = 1,
+    ),
+  )
+
   fun setupOptionType(
     config: Config,
-    optionSelectType: OptionSelectType,
+    optionUrlName: String,
   ) {
-    when (optionSelectType) {
-      OptionSelectType.LANGUAGE -> {
-        _uiState.value =
-          OptionSelectUIModel(
-            title = "Language",
-            selectedOption = sessionRepository.language,
-            type = OptionSelectType.LANGUAGE,
-            options =
-            config.languages.map {
-              KeyValueUiModel(
-                key = it.key,
-                value = it.value,
-              )
-            }.toMutableList().apply {
-              add(0, KeyValueUiModel(null, "Not Set"))
-            },
-          )
-      }
-
-      OptionSelectType.FAVORITE_TEAM -> {
-        _uiState.value =
-          OptionSelectUIModel(
-            title = "Favorite Team",
-            type = OptionSelectType.FAVORITE_TEAM,
-            selectedOption = sessionRepository.team,
-            options =
-            config.teams.map {
-              KeyValueUiModel(
-                key = it.key,
-                value = it.value,
-              )
-            }.toMutableList().apply {
-              add(0, KeyValueUiModel(null, "Not Set"))
-            },
-          )
-      }
-
-      OptionSelectType.HAS_ACCOUNT -> {
-        _uiState.value =
-          OptionSelectUIModel(
-            title = "Favorite Team",
-            type = OptionSelectType.HAS_ACCOUNT,
-            selectedOption = if (sessionRepository.hasAccount) "yes" else "no",
-            options =
-            listOf(
-              KeyValueUiModel(
-                key = "no",
-                value = "No",
-              ),
-              KeyValueUiModel(
-                key = "yes",
-                value = "Yes",
-              ),
-            ),
-          )
-      }
-
-      OptionSelectType.EVENT_TRACKING -> {
-        _uiState.value =
-          OptionSelectUIModel(
-            title = "Allow Event Tracking",
-            type = OptionSelectType.EVENT_TRACKING,
-            selectedOption = if (sessionRepository.trackEvents) "yes" else "no",
-            options =
-            listOf(
-              KeyValueUiModel(
-                key = "no",
-                value = "No",
-              ),
-              KeyValueUiModel(
-                key = "yes",
-                value = "Yes",
-              ),
-            ),
-          )
-      }
+    val attribute = config.attributes.keys.find { it.urlName == optionUrlName } ?: eventTrackingDto
+    val storedAttributes = sessionRepository.attributes
+    val keyValues = config.attributes[attribute] ?: eventTrackingOptions
+    val selectedOption = storedAttributes[attribute.urlName] ?: attribute.defaultValue ?: ""
+    val selectedOptions = if (attribute.allowMultiple) {
+      selectedOption.split(",")
+    } else {
+      emptyList()
     }
+    _uiState.value = OptionSelectUIModel(
+      title = attribute.title,
+      type = attribute.urlName,
+      allowMultiple = attribute.allowMultiple,
+      isFollowable = attribute.isFollowable,
+      selectedOption = selectedOption,
+      selectedOptions = selectedOptions,
+      options = keyValues.map {
+        KeyValueUiModel(
+          key = it.title,
+          value = it.urlName,
+        )
+      },
+    )
   }
 
   fun selectOption(
-    key: String?,
+    value: String?,
   ) {
-    _uiState.update { it.copy(selectedOption = key) }
-    when (_uiState.value.type) {
-      OptionSelectType.HAS_ACCOUNT -> sessionRepository.hasAccount = key == "yes"
-      OptionSelectType.LANGUAGE -> sessionRepository.language = key
-      OptionSelectType.FAVORITE_TEAM -> sessionRepository.team = key
-      OptionSelectType.EVENT_TRACKING -> sessionRepository.trackEvents = key == "yes"
+    val isEventTracking = _uiState.value.type == eventTrackingDto.type
+    if (isEventTracking) {
+      _uiState.update { it.copy(selectedOption = value) }
+      sessionRepository.trackEvents = value == "yes"
+      storytellerService.updateCustomAttributes()
+      _reloadMainScreen.value = value
+      return
     }
+    val isFollowable = _uiState.value.isFollowable
+    if (isFollowable) {
+      val previouslySelected = _uiState.value.selectedOption
+      previouslySelected?.let {
+        Storyteller.user.removeFollowedCategory(previouslySelected)
+      }
+      Storyteller.user.addFollowedCategory(value ?: "")
+    }
+    _uiState.update { it.copy(selectedOption = value) }
+    val storedAttributes = sessionRepository.attributes.toMutableMap()
+    val type = _uiState.value.type
+    storedAttributes[type] = value
+    sessionRepository.attributes = storedAttributes
     storytellerService.updateCustomAttributes()
-    _reloadMainScreen.value = key
+    _reloadMainScreen.value = value
+  }
+
+  fun selectOptionMultiple(
+    value: String,
+    selected: Boolean,
+  ) {
+    val isFollowable = _uiState.value.isFollowable
+    val selectedOptions = _uiState.value.selectedOptions.toMutableList()
+    if (isFollowable) {
+      selectedOptions.forEach {
+        Storyteller.user.removeFollowedCategory(it)
+      }
+    }
+    if (selected) {
+      selectedOptions.add(value)
+    } else {
+      selectedOptions.remove(value)
+    }
+    if (isFollowable) {
+      Storyteller.user.addFollowedCategories(selectedOptions)
+    }
+    _uiState.update { it.copy(selectedOptions = selectedOptions) }
+    val storedAttributes = sessionRepository.attributes.toMutableMap()
+    val type = _uiState.value.type
+    val newSelectedOptions = selectedOptions.joinToString(",")
+    storedAttributes[type] = newSelectedOptions
+    sessionRepository.attributes = storedAttributes
+    storytellerService.updateCustomAttributes()
+    _reloadMainScreen.value = newSelectedOptions
   }
 
   fun onReloadingDone() {
@@ -128,8 +144,11 @@ class OptionSelectViewModel @Inject constructor(
 
 data class OptionSelectUIModel(
   val title: String = "",
-  val type: OptionSelectType = OptionSelectType.HAS_ACCOUNT,
+  val type: String = "",
+  val allowMultiple: Boolean = false,
+  val isFollowable: Boolean = false,
   val selectedOption: String? = null,
+  val selectedOptions: List<String> = emptyList(),
   val options: List<KeyValueUiModel> = listOf(),
 )
 

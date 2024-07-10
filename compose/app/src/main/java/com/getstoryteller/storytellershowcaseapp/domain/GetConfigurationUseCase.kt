@@ -1,10 +1,11 @@
 package com.getstoryteller.storytellershowcaseapp.domain
 
-import android.content.Context
 import android.view.Gravity
 import androidx.compose.runtime.Stable
+import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
-import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
 import com.storyteller.domain.entities.theme.builders.UiTheme
 import com.storyteller.domain.entities.theme.builders.buildTheme
@@ -18,12 +19,18 @@ interface GetConfigurationUseCase {
 
 class GetConfigurationUseCaseImpl(
   private val tenantRepository: TenantRepository,
-  private val context: Context,
+  private val sessionRepository: SessionRepository,
 ) : GetConfigurationUseCase {
   override suspend fun getConfiguration(): Config {
     val settings = tenantRepository.getTenantSettings()
-    val languages = tenantRepository.getLanguages()
-    val teams = tenantRepository.getTeams()
+    val attributes = tenantRepository.getAttributes()
+
+    // If attributes are empty, we set them to the default values
+    if (sessionRepository.attributes.isEmpty()) {
+      val attributesMap = attributes.map { it.key.urlName to it.key.defaultValue }.toMap()
+      sessionRepository.attributes = attributesMap
+    }
+
     val tabs =
       if (settings.tabsEnabled) {
         tenantRepository.getTabs()
@@ -34,8 +41,7 @@ class GetConfigurationUseCaseImpl(
       configId = UUID.randomUUID().toString(),
       topLevelCollectionId = settings.topLevelClipsCollection,
       tabsEnabled = settings.tabsEnabled,
-      languages = languages,
-      teams = teams,
+      attributes = attributes,
       tabs = tabs,
       roundTheme = roundTheme,
       squareTheme = squareTheme,
@@ -144,8 +150,7 @@ data class Config(
   val configId: String,
   val topLevelCollectionId: String?,
   val tabsEnabled: Boolean,
-  val languages: List<KeyValueDto>,
-  val teams: List<KeyValueDto>,
+  val attributes: Map<AttributeDto, List<AttributeValueDto>>,
   val tabs: List<TabDto>,
   val roundTheme: UiTheme,
   val squareTheme: UiTheme,

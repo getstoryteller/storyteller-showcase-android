@@ -1,6 +1,5 @@
 package com.getstoryteller.storytellershowcaseapp.ui.di
 
-import android.content.Context
 import com.getstoryteller.storytellershowcaseapp.data.AuthRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.data.TenantRepositoryImpl
 import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCase
@@ -25,7 +24,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 // This is a standard Hilt Module that configures the application layer
 
@@ -70,8 +68,8 @@ object AppModule {
   @Provides
   fun provideGetConfigUseCase(
     tenantRepository: TenantRepository,
-    @ApplicationContext context: Context,
-  ): GetConfigurationUseCase = GetConfigurationUseCaseImpl(tenantRepository, context)
+    sessionRepository: SessionRepository,
+  ): GetConfigurationUseCase = GetConfigurationUseCaseImpl(tenantRepository, sessionRepository)
 
   @Provides
   fun provideGetTabContentUseCase(

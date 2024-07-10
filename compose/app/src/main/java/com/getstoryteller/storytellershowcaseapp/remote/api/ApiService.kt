@@ -1,6 +1,8 @@
 package com.getstoryteller.storytellershowcaseapp.remote.api
 
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.ResponseApiDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.ResponseApiListDto
@@ -60,4 +62,19 @@ class ApiService @Inject constructor(
   suspend fun getHomeItems(): ResponseApiListDto<StorytellerItemApiDto> =
     client.get("home?apiKey=${sessionRepository.apiKey}")
       .body<ResponseApiListDto<StorytellerItemApiDto>>()
+
+  private suspend fun getAttributes(): ResponseApiListDto<AttributeDto> =
+    client.get("v3/attributes?apiKey=${sessionRepository.apiKey}")
+      .body()
+
+  private suspend fun getAttributeValues(
+    urlName: String,
+  ): ResponseApiListDto<AttributeValueDto> =
+    client.get("v3/attributes/$urlName/values?apiKey=${sessionRepository.apiKey}")
+      .body()
+
+  suspend fun getAttributesAndValues(): Map<AttributeDto, List<AttributeValueDto>> {
+    val attributes = getAttributes().data
+    return attributes.associateWith { getAttributeValues(it.urlName).data }
+  }
 }

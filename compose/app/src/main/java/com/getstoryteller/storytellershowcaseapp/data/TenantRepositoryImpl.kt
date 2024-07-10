@@ -2,6 +2,8 @@ package com.getstoryteller.storytellershowcaseapp.data
 
 import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
 import com.getstoryteller.storytellershowcaseapp.remote.api.ApiService
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.StorytellerItemApiDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
@@ -48,5 +50,9 @@ class TenantRepositoryImpl(
   override suspend fun getHomePage(): List<StorytellerItemApiDto> {
     return apiService.getHomeItems()
       .data
+  }
+
+  override suspend fun getAttributes(): Map<AttributeDto, List<AttributeValueDto>> {
+    return apiService.getAttributesAndValues()
   }
 }

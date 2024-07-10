@@ -2,7 +2,6 @@ package com.getstoryteller.storytellershowcaseapp.ui.features.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -32,25 +32,29 @@ fun OptionSelectScreen(
   navController: NavController,
   viewModel: OptionSelectViewModel,
   sharedViewModel: MainViewModel,
-  optionSelectType: OptionSelectType,
+  optionUrlName: String,
   config: Config,
 ) {
-  val isDarkTheme = isSystemInDarkTheme()
-  LaunchedEffect(key1 = optionSelectType.name, block = {
-    viewModel.setupOptionType(config, optionSelectType)
-  })
+  LaunchedEffect(
+    key1 = optionUrlName,
+    block = {
+      viewModel.setupOptionType(config, optionUrlName)
+    },
+  )
 
   val reload by viewModel.reloadMainScreen.observeAsState()
 
+  val uiState by viewModel.uiState.collectAsState()
+
   LaunchedEffect(reload) {
     reload?.let {
-      navController.navigateUp()
+      if (!uiState.allowMultiple) {
+        navController.navigateUp()
+      }
       sharedViewModel.refreshMainPage()
       viewModel.onReloadingDone()
     }
   }
-
-  val uiState by viewModel.uiState.collectAsState()
 
   LazyColumn(
     modifier =
@@ -68,25 +72,33 @@ fun OptionSelectScreen(
           .height(56.dp)
           .background(color = MaterialTheme.colorScheme.tertiaryContainer)
           .clickable {
-            viewModel.selectOption(model.key)
+            viewModel.selectOption(model.value)
           },
         verticalAlignment = Alignment.CenterVertically,
       ) {
-        RadioButton(selected = uiState.selectedOption == model.key, onClick = {
-          viewModel.selectOption(model.key)
-        })
+        if (!uiState.allowMultiple) {
+          RadioButton(
+            selected = uiState.selectedOption == model.value,
+            onClick = {
+              viewModel.selectOption(model.value)
+            },
+          )
+        } else {
+          val optionChecked = uiState.selectedOptions.contains(model.value)
+          Checkbox(
+            checked = optionChecked,
+            onCheckedChange = { checked ->
+              viewModel.selectOptionMultiple(model.value, checked)
+            },
+          )
+        }
         Text(
           color = MaterialTheme.colorScheme.onBackground,
-          text = model.value,
+          text = model.key ?: "Not set",
         )
       }
     }
   }
 }
 
-enum class OptionSelectType(val title: String) {
-  HAS_ACCOUNT("Has Account"),
-  LANGUAGE("Language"),
-  FAVORITE_TEAM("Favorite Team"),
-  EVENT_TRACKING("Allow Event Tracking"),
-}
+const val EVENT_TRACKING = "event_tracking"

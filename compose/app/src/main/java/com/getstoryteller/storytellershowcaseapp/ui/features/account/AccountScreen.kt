@@ -105,31 +105,15 @@ fun AccountScreen(
     ) {
       config?.let {
         SettingsSection("PERSONALISATION")
-        if (it.teams.isNotEmpty()) {
+        it.attributes.entries.forEach { (attributeDto) ->
           SettingsRow(
-            text = "Favorite Team",
+            text = attributeDto.title,
             arrowVisible = true,
             onClick = {
-              navController.navigate("account/${OptionSelectType.FAVORITE_TEAM.name}")
+              navController.navigate("account/${attributeDto.urlName}")
             },
           )
         }
-        if (it.languages.isNotEmpty()) {
-          SettingsRow(
-            text = "Language",
-            arrowVisible = true,
-            onClick = {
-              navController.navigate("account/${OptionSelectType.LANGUAGE.name}")
-            },
-          )
-        }
-        SettingsRow(
-          text = "Has Account",
-          arrowVisible = true,
-          onClick = {
-            navController.navigate("account/${OptionSelectType.HAS_ACCOUNT.name}")
-          },
-        )
       }
       SettingsSection(text = "Analytics")
       SettingsRow(
@@ -174,7 +158,7 @@ fun AccountScreen(
         text = "Allow Event Tracking",
         arrowVisible = true,
         onClick = {
-          navController.navigate("account/${OptionSelectType.EVENT_TRACKING.name}")
+          navController.navigate("account/$EVENT_TRACKING")
         },
       )
       SettingsRow(

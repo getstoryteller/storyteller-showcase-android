@@ -64,6 +64,25 @@ data class StorytellerItemApiDto(
   @SerialName("count") val displayLimit: Int?,
 )
 
+@kotlinx.serialization.Serializable
+data class AttributeDto(
+  @SerialName("title") val title: String,
+  @SerialName("urlName") val urlName: String,
+  @SerialName("sortOrder") val sortOrder: Int,
+  @SerialName("allowMultiple") val allowMultiple: Boolean,
+  @SerialName("nullable") val nullable: Boolean,
+  @SerialName("defaultValue") val defaultValue: String? = null,
+  @SerialName("type") val type: String,
+  @SerialName("isFollowable") val isFollowable: Boolean,
+)
+
+@kotlinx.serialization.Serializable
+data class AttributeValueDto(
+  @SerialName("title") val title: String,
+  @SerialName("urlName") val urlName: String,
+  @SerialName("sortOrder") val sortOrder: Int,
+)
+
 @kotlinx.serialization.Serializable(with = LayoutTypeSerializer::class)
 enum class LayoutType(val serializedName: String) {
   ROW("row"),

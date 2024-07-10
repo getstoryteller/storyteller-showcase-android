@@ -46,14 +46,8 @@ class StorytellerServiceImpl @Inject constructor(
   // documentation here https://www.getstoryteller.com/documentation/android/custom-attributes
 
   override fun updateCustomAttributes() {
-    sessionRepository.language?.let {
-      Storyteller.user.setCustomAttribute(LANGUAGE_ATTRIBUTE_KEY, it)
-    } ?: Storyteller.user.removeCustomAttribute(LANGUAGE_ATTRIBUTE_KEY)
-    sessionRepository.team?.let {
-      Storyteller.user.setCustomAttribute(FAV_TEAM_ATTRIBUTE_KEY, it)
-    } ?: Storyteller.user.removeCustomAttribute(FAV_TEAM_ATTRIBUTE_KEY)
-    sessionRepository.hasAccount.let {
-      Storyteller.user.setCustomAttribute(HAS_ACCOUNT_ATTRIBUTE_KEY, if (it) "yes" else "no")
+    sessionRepository.attributes.entries.forEach {
+      Storyteller.user.setCustomAttribute(it.key, it.value)
     }
 
     // The code here shows to enable and disable event tracking for

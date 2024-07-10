@@ -1,5 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.domain.ports
 
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeDto
+import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.StorytellerItemApiDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
@@ -19,4 +21,6 @@ interface TenantRepository {
   ): List<StorytellerItemApiDto>
 
   suspend fun getHomePage(): List<StorytellerItemApiDto>
+
+  suspend fun getAttributes(): Map<AttributeDto, List<AttributeValueDto>>
 }

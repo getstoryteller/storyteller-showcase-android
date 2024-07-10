@@ -48,7 +48,6 @@ import com.getstoryteller.storytellershowcaseapp.R
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.AccountScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.AnalyticsOptionScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectScreen
-import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectType
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.HomeScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.MoreScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
@@ -331,14 +330,14 @@ fun MainScreen(
           exitTransition = accountOptionsScreenExitTransition(),
         ) {
           navigationState = PageState.ACCOUNT
-          val option = OptionSelectType.valueOf(it.arguments?.getString("option")!!)
-          title = option.title
+          val option = it.arguments?.getString("option")!!
+          title = viewModel.getOptionTitle(option)
           OptionSelectScreen(
             modifier = topPaddingEnabledModifier,
             navController = navController,
             viewModel = hiltViewModel(),
             sharedViewModel = viewModel,
-            optionSelectType = option,
+            optionUrlName = option,
             config = mainPageUiState.config!!,
           )
         }
