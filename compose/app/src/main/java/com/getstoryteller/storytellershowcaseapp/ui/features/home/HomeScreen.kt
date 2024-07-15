@@ -144,22 +144,29 @@ fun HomeScreen(
         state = listState,
       ) {
         itemsIndexed(items = listItems) { _, item ->
-          if (item.isHidden) return@itemsIndexed
-          val innerListState = innerListStates.getOrPut(item.itemId) {
-            if (item.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
-              rememberStorytellerRowState()
-            } else {
-              rememberStorytellerGridState()
+          when (item) {
+            is VideoItemUiModel -> {
+              if (item.isHidden) return@itemsIndexed
+              val innerListState = innerListStates.getOrPut(item.itemId) {
+                if (item.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
+                  rememberStorytellerRowState()
+                } else {
+                  rememberStorytellerGridState()
+                }
+              }
+              StorytellerItem(
+                uiModel = item,
+                navController = navController,
+                roundTheme = config?.roundTheme,
+                squareTheme = config?.squareTheme,
+                state = innerListState,
+              ) {
+                viewModel.hideStorytellerItem(item.itemId)
+              }
             }
-          }
-          StorytellerItem(
-            uiModel = item,
-            navController = navController,
-            roundTheme = config?.roundTheme,
-            squareTheme = config?.squareTheme,
-            state = innerListState,
-          ) {
-            viewModel.hideStorytellerItem(item.itemId)
+            is ImageItemUiModel -> {
+              ImageActionItem(uiModel = item)
+            }
           }
         }
       }

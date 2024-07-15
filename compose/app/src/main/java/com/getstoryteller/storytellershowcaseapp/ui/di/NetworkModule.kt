@@ -34,10 +34,12 @@ object NetworkModule {
       install(ContentNegotiation) {
         json(
           json = Json {
+            classDiscriminator = "type"
             prettyPrint = true
             isLenient = true
             ignoreUnknownKeys = true
             explicitNulls = false
+            encodeDefaults = true
           },
         )
       }

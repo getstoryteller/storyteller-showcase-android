@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.domain.GetHomeScreenUseCase
+import com.getstoryteller.storytellershowcaseapp.remote.entities.Action
 import com.getstoryteller.storytellershowcaseapp.remote.entities.ItemSize
 import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
@@ -71,8 +72,12 @@ data class HomePageUiState(
 )
 
 @Serializable
-data class PageItemUiModel(
-  val itemId: String,
+sealed class PageItemUiModel(
+  open val itemId: String,
+)
+
+data class VideoItemUiModel(
+  override val itemId: String,
   val type: VideoType,
   val layout: LayoutType,
   val tileType: TileType,
@@ -83,4 +88,14 @@ data class PageItemUiModel(
   val collectionId: String?,
   val size: ItemSize,
   val isHidden: Boolean = false,
-)
+) : PageItemUiModel(itemId)
+
+data class ImageItemUiModel(
+  override val itemId: String,
+  val title: String,
+  val url: String,
+  val darkModeUrl: String,
+  val width: Int,
+  val height: Int,
+  val action: Action? = null,
+) : PageItemUiModel(itemId)

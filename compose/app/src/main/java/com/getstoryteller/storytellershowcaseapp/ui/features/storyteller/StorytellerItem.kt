@@ -21,7 +21,7 @@ import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TileType
 import com.getstoryteller.storytellershowcaseapp.remote.entities.VideoType
 import com.getstoryteller.storytellershowcaseapp.ui.components.ListHeader
-import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
+import com.getstoryteller.storytellershowcaseapp.ui.features.home.VideoItemUiModel
 import com.storyteller.data.StorytellerClipsDataModel
 import com.storyteller.data.StorytellerStoriesDataModel
 import com.storyteller.domain.entities.StorytellerListViewCellType
@@ -57,7 +57,7 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StorytellerItem(
-  uiModel: PageItemUiModel,
+  uiModel: VideoItemUiModel,
   state: StorytellerDataState,
   navController: NavController,
   roundTheme: UiTheme?,
@@ -113,7 +113,7 @@ fun StorytellerItem(
 
 @Composable
 private fun StorytellerComposable(
-  uiModel: PageItemUiModel,
+  uiModel: VideoItemUiModel,
   squareTheme: UiTheme?,
   roundTheme: UiTheme?,
   uiStyle: StorytellerListViewStyle,
@@ -410,7 +410,7 @@ private fun StorytellerComposable(
   }
 }
 
-fun PageItemUiModel.getRowHeight(): Dp {
+fun VideoItemUiModel.getRowHeight(): Dp {
   if (this.tileType == TileType.ROUND) {
     return 113.dp
   }

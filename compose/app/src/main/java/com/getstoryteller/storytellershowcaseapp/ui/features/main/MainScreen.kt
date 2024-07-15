@@ -50,7 +50,7 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.account.AnalyticsOp
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.OptionSelectScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.HomeScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.home.MoreScreen
-import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
+import com.getstoryteller.storytellershowcaseapp.ui.features.home.VideoItemUiModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.link.LinkScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.login.LoginScreen
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.Transitions.accountOptionsScreenEnterTransition
@@ -358,7 +358,7 @@ fun MainScreen(
           enterTransition = moreScreenEnterTransition(),
           exitTransition = moreScreenExitTransition(),
         ) { backStackEntry ->
-          val uiModel: PageItemUiModel? =
+          val uiModel: VideoItemUiModel? =
             Json.decodeFromString(
               backStackEntry.arguments?.getString("model")!!,
             )
@@ -379,7 +379,7 @@ fun MainScreen(
           enterTransition = moreScreenEnterTransition(),
           exitTransition = moreScreenExitTransition(),
         ) { backStackEntry ->
-          val uiModel: PageItemUiModel? =
+          val uiModel: VideoItemUiModel? =
             Json.decodeFromString(
               backStackEntry.arguments?.getString("model")!!,
             )

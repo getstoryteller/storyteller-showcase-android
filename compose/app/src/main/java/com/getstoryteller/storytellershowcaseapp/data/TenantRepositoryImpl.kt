@@ -4,7 +4,6 @@ import com.getstoryteller.storytellershowcaseapp.domain.ports.TenantRepository
 import com.getstoryteller.storytellershowcaseapp.remote.api.ApiService
 import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.AttributeValueDto
-import com.getstoryteller.storytellershowcaseapp.remote.entities.KeyValueDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.StorytellerItemApiDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TabDto
 import com.getstoryteller.storytellershowcaseapp.remote.entities.TenantSettingsDto
@@ -23,16 +22,6 @@ class TenantRepositoryImpl(
           tabsEnabled = it.tabsEnabled,
         )
       }
-  }
-
-  override suspend fun getLanguages(): List<KeyValueDto> {
-    return apiService.getLanguages()
-      .data
-  }
-
-  override suspend fun getTeams(): List<KeyValueDto> {
-    return apiService.getTeams()
-      .data
   }
 
   override suspend fun getTabs(): List<TabDto> {

@@ -102,6 +102,7 @@ dependencies {
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)
+  implementation(libs.coil.compose)
 
   // Network, Serialization and Logging
   implementation(libs.ktor.client.core)

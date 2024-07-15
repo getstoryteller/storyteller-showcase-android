@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MoreScreen(
   modifier: Modifier = Modifier,
-  pageItemUiModel: PageItemUiModel,
+  pageItemUiModel: VideoItemUiModel,
   navController: NavController,
   config: Config?,
   onLocationChanged: (String) -> Unit,

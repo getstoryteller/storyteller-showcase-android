@@ -7,6 +7,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonClassDiscriminator
 
 // These model classes are used for communication with the sample external API
 // The communication with this API is implemented in the ApiService.kt class
@@ -49,19 +50,59 @@ data class TenantSettingsDto(
   val tabsEnabled: Boolean,
 )
 
+@JsonClassDiscriminator("type")
 @kotlinx.serialization.Serializable
-data class StorytellerItemApiDto(
-  @SerialName("categories") val categories: List<String>,
-  @SerialName("collection") val collection: String?,
-  @SerialName("title") val title: String?,
-  @SerialName("moreButtonTitle") val moreButtonTitle: String?,
-  @SerialName("layout") val layout: LayoutType,
-  @SerialName("size") val size: ItemSize,
-  @SerialName("sortOrder") val sortOrder: Int,
-  @SerialName("tileType") val tileType: TileType,
-  @SerialName("videoType") val videoType: VideoType,
-  @SerialName("id") val id: String,
-  @SerialName("count") val displayLimit: Int?,
+sealed class StorytellerItemApiDto {
+  @kotlinx.serialization.Serializable
+  @SerialName("image")
+  data class ImageData(
+    val sortOrder: Int,
+    val data: ItemDataDto.Image,
+  ) : StorytellerItemApiDto()
+
+  @kotlinx.serialization.Serializable
+  @SerialName("verticalVideoList")
+  data class VerticalVideoListData(
+    val sortOrder: Int,
+    val data: ItemDataDto.VerticalVideList,
+  ) : StorytellerItemApiDto()
+}
+
+@kotlinx.serialization.Serializable
+sealed class ItemDataDto {
+  @kotlinx.serialization.Serializable
+  data class Image(
+    val id: String,
+    val title: String,
+    val url: String,
+    val darkModeUrl: String,
+    val sortOrder: Int,
+    val width: Int,
+    val height: Int,
+    val action: Action? = null,
+  ) : ItemDataDto()
+
+  @kotlinx.serialization.Serializable
+  @SerialName("verticalVideoList")
+  data class VerticalVideList(
+    val categories: List<String>,
+    val count: Int? = null,
+    val layout: LayoutType,
+    val moreButtonTitle: String? = null,
+    val size: ItemSize,
+    val sortOrder: Int,
+    val tileType: TileType,
+    val title: String? = null,
+    val videoType: VideoType,
+    val id: String,
+    val collection: String? = null,
+  ) : ItemDataDto()
+}
+
+@kotlinx.serialization.Serializable
+data class Action(
+  val type: String,
+  val url: String,
 )
 
 @kotlinx.serialization.Serializable

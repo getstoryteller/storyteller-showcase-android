@@ -1,12 +1,12 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.storyteller
 
-import com.getstoryteller.storytellershowcaseapp.ui.features.home.PageItemUiModel
+import com.getstoryteller.storytellershowcaseapp.ui.features.home.VideoItemUiModel
 import com.storyteller.domain.entities.Error
 import com.storyteller.ui.list.StorytellerListViewDelegate
 import timber.log.Timber
 
 class PageItemStorytellerDelegate(
-  private val uiModel: PageItemUiModel,
+  private val uiModel: VideoItemUiModel,
   private val onShouldHide: (String) -> Unit = {},
   private val onPlayerDismissed: () -> Unit = {},
   private val onDataLoadComplete: () -> Unit = {},

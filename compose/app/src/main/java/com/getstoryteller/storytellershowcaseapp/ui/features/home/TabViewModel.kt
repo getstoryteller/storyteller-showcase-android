@@ -75,7 +75,8 @@ class TabViewModel @Inject constructor(
   ) {
     viewModelScope.launch {
       _uiState.update {
-        val item = it.tabs.firstOrNull { it.itemId == itemId } ?: return@update it
+        val item = it.tabs.filterIsInstance<VideoItemUiModel>()
+          .firstOrNull { it.itemId == itemId } ?: return@update it
         val newItem = item.copy(isHidden = true)
         it.copy(
           tabs = it.tabs.toMutableList().apply {
