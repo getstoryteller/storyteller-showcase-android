@@ -9,6 +9,7 @@ import com.getstoryteller.storytellershowcaseapp.domain.GetConfigurationUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.VerifyCodeUseCase
 import com.getstoryteller.storytellershowcaseapp.domain.ports.SessionRepository
 import com.getstoryteller.storytellershowcaseapp.ui.features.account.EVENT_TRACKING
+import com.storyteller.Storyteller
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,6 +76,7 @@ class MainViewModel @Inject constructor(
     if (sessionRepository.apiKey != null) {
       viewModelScope.launch {
         config = getConfigurationUseCase.getConfiguration()
+        Storyteller.theme = config?.squareTheme
         _uiState.emit(MainPageUiState(config = config))
       }
     }
