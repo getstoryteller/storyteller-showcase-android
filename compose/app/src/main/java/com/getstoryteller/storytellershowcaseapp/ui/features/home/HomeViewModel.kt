@@ -72,10 +72,11 @@ data class HomePageUiState(
 )
 
 @Serializable
-sealed class PageItemUiModel(
-  open val itemId: String,
-)
+sealed class PageItemUiModel {
+  abstract val itemId: String
+}
 
+@Serializable
 data class VideoItemUiModel(
   override val itemId: String,
   val type: VideoType,
@@ -88,8 +89,9 @@ data class VideoItemUiModel(
   val collectionId: String?,
   val size: ItemSize,
   val isHidden: Boolean = false,
-) : PageItemUiModel(itemId)
+) : PageItemUiModel()
 
+@Serializable
 data class ImageItemUiModel(
   override val itemId: String,
   val title: String,
@@ -98,4 +100,4 @@ data class ImageItemUiModel(
   val width: Int,
   val height: Int,
   val action: Action? = null,
-) : PageItemUiModel(itemId)
+) : PageItemUiModel()
