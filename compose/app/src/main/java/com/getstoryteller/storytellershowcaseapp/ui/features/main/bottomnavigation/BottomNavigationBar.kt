@@ -37,6 +37,7 @@ fun BottomNavigationBar(
   navController: NavHostController,
   momentsTabLoading: Boolean,
   homeTabLoading: Boolean,
+  isMainScreenLoading: Boolean,
   onSetTopBarVisible: (Boolean) -> Unit,
   navigationState: PageState,
   onSetNavigationState: (PageState) -> Unit,
@@ -123,6 +124,7 @@ fun BottomNavigationBar(
             color = if (!homeSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
           )
         },
+        enabled = !isMainScreenLoading,
         selected = navBackStackEntry?.destination?.route == "home/moments",
         onClick = {
           val interceptor =

@@ -209,6 +209,7 @@ fun MainScreen(
         },
         momentsTabLoading = momentsTabLoading,
         homeTabLoading = homeTabLoading,
+        isMainScreenLoading = mainPageUiState.isMainScreenLoading,
         onTriggerMomentReload = {
           viewModel.triggerMomentsReloadData()
         },
