@@ -15,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -30,6 +32,8 @@ import com.getstoryteller.storytellershowcaseapp.R
 import com.getstoryteller.storytellershowcaseapp.ui.LocalStorytellerColorsPalette
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.PageState
 import com.getstoryteller.storytellershowcaseapp.ui.utils.borderTop
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -53,6 +57,7 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val homeSelected = navBackStackEntry?.destination?.route == "home"
     val coroutineScope = rememberCoroutineScope()
+    var lastClickTime by remember { mutableStateOf(0L) }
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
       NavigationBarItem(
         colors =
@@ -83,18 +88,25 @@ fun BottomNavigationBar(
         },
         selected = navBackStackEntry?.destination?.route == "home",
         onClick = {
-          val interceptor = onSetNavigationInterceptor()
-          if (interceptor is NavigationInterceptor.TargetRoute &&
-            homeSelected && interceptor.shouldIntercept()
+          debounceClick(
+            coroutineScope = coroutineScope,
+            lastClickTime = lastClickTime,
+            debounceTime = 300L,
+            onUpdateLastClickTime = { lastClickTime = it },
           ) {
-            coroutineScope.launch {
-              interceptor.onIntercepted()
+            val interceptor = onSetNavigationInterceptor()
+            if (interceptor is NavigationInterceptor.TargetRoute &&
+              homeSelected && interceptor.shouldIntercept()
+            ) {
+              coroutineScope.launch {
+                interceptor.onIntercepted()
+              }
+              return@debounceClick
             }
-            return@NavigationBarItem
+            onSetNavigationState(PageState.HOME)
+            onSetTopBarVisible(true)
+            navController.popUpTo("home")
           }
-          onSetNavigationState(PageState.HOME)
-          onSetTopBarVisible(true)
-          navController.popUpTo("home")
         },
       )
 
@@ -127,24 +139,31 @@ fun BottomNavigationBar(
         enabled = !isMainScreenLoading,
         selected = navBackStackEntry?.destination?.route == "home/moments",
         onClick = {
-          val interceptor =
-            NavigationInterceptor.TargetRoute(
-              targetRoute = "home/moments",
-              shouldIntercept = { true },
-              onIntercepted = {
-                onTriggerMomentReload()
-              },
-            )
+          debounceClick(
+            coroutineScope = coroutineScope,
+            lastClickTime = lastClickTime,
+            debounceTime = 300L,
+            onUpdateLastClickTime = { lastClickTime = it },
+          ) {
+            val interceptor =
+              NavigationInterceptor.TargetRoute(
+                targetRoute = "home/moments",
+                shouldIntercept = { true },
+                onIntercepted = {
+                  onTriggerMomentReload()
+                },
+              )
 
-          if (!homeSelected && interceptor.shouldIntercept()) {
-            coroutineScope.launch {
-              interceptor.onIntercepted()
+            if (!homeSelected && interceptor.shouldIntercept()) {
+              coroutineScope.launch {
+                interceptor.onIntercepted()
+              }
+              return@debounceClick
             }
-            return@NavigationBarItem
+            onSetNavigationState(PageState.HOME)
+            onSetTopBarVisible(false)
+            navController.popUpTo("home/moments")
           }
-          onSetNavigationState(PageState.HOME)
-          onSetTopBarVisible(false)
-          navController.popUpTo("home/moments")
         },
       )
     }
@@ -166,4 +185,21 @@ fun NavController.popUpTo(
     saveState = true
   }
   restoreState = true
+}
+
+inline fun debounceClick(
+  coroutineScope: CoroutineScope,
+  lastClickTime: Long,
+  debounceTime: Long,
+  crossinline onUpdateLastClickTime: (Long) -> Unit,
+  crossinline action: () -> Unit,
+) {
+  val currentTime = System.currentTimeMillis()
+  if (currentTime - lastClickTime > debounceTime) {
+    onUpdateLastClickTime(currentTime)
+    coroutineScope.launch {
+      delay(debounceTime) // Ensure debounce delay
+      action()
+    }
+  }
 }
