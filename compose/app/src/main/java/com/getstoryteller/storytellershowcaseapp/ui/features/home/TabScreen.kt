@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
 import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW
+import com.getstoryteller.storytellershowcaseapp.ui.components.NoContent
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.bottomnavigation.NavigationInterceptor
@@ -183,51 +184,55 @@ fun TabScreen(
         columnHeightPx = it.size.height
       },
   ) {
-    LazyColumn(
-      modifier = Modifier.fillMaxWidth(),
-      verticalArrangement = Arrangement.spacedBy(12.dp),
-      contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      state = listState,
-    ) {
-      items(items = items) { item ->
-        when (item) {
-          is VideoItemUiModel -> {
-            if (item.isHidden && !reloadStates.keys.contains(item.itemId)) return@items
-            val rowState = rememberStorytellerRowState(item.itemId)
-            val gridState = rememberStorytellerGridState(item.itemId)
+    if (pageUiState.noContentAvailable) {
+      NoContent()
+    } else {
+      LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = listState,
+      ) {
+        items(items = items) { item ->
+          when (item) {
+            is VideoItemUiModel -> {
+              if (item.isHidden && !reloadStates.keys.contains(item.itemId)) return@items
+              val rowState = rememberStorytellerRowState(item.itemId)
+              val gridState = rememberStorytellerGridState(item.itemId)
 
-            val state = remember(item.itemId) {
-              innerListStates.getOrPut(item.itemId) { if (item.layout == ROW) rowState else gridState }
-            }
-            val reloadState = reloadStates[item.itemId]
-            LaunchedEffect(reloadState) {
-              if (reloadState != null) {
-                val tag = if (item.categories.isNotEmpty()) item.categories.first() else item.collectionId
-                Timber.d("[$tag] Reloading item $item")
-                state.reloadData()
+              val state = remember(item.itemId) {
+                innerListStates.getOrPut(item.itemId) { if (item.layout == ROW) rowState else gridState }
               }
-            }
+              val reloadState = reloadStates[item.itemId]
+              LaunchedEffect(reloadState) {
+                if (reloadState != null) {
+                  val tag = if (item.categories.isNotEmpty()) item.categories.first() else item.collectionId
+                  Timber.d("[$tag] Reloading item $item")
+                  state.reloadData()
+                }
+              }
 
-            StorytellerItem(
-              uiModel = item,
-              navController = rootNavController,
-              roundTheme = config?.roundTheme,
-              squareTheme = config?.squareTheme,
-              state = state,
-              onDataLoadComplete = {
-                reloadStates[item.itemId] = null
-                Timber.d("Data loaded for item $item")
-              },
-              onShouldHide = {
-                Timber.d("Hiding item $item, because of $it")
-                reloadStates[item.itemId] = null
-                tabViewModel.hideStorytellerItem(item.itemId)
-              },
-            )
-          }
-          is ImageItemUiModel -> {
-            ImageActionItem(uiModel = item)
+              StorytellerItem(
+                uiModel = item,
+                navController = rootNavController,
+                roundTheme = config?.roundTheme,
+                squareTheme = config?.squareTheme,
+                state = state,
+                onDataLoadComplete = {
+                  reloadStates[item.itemId] = null
+                  Timber.d("Data loaded for item $item")
+                },
+                onShouldHide = {
+                  Timber.d("Hiding item $item, because of $it")
+                  reloadStates[item.itemId] = null
+                  tabViewModel.hideStorytellerItem(item.itemId)
+                },
+              )
+            }
+            is ImageItemUiModel -> {
+              ImageActionItem(uiModel = item)
+            }
           }
         }
       }

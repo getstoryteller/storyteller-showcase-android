@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
+import com.getstoryteller.storytellershowcaseapp.ui.components.NoContent
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.DeeplinkHandler
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
@@ -132,61 +133,70 @@ fun HomeScreen(
         columnHeightPx = it.size.height
       },
   ) {
-    if (!pageUiState.tabsEnabled) {
-      LaunchedEffect(key1 = Unit) {
-        onLocationChanged("Home")
-      }
-      LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(top = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        state = listState,
-      ) {
-        itemsIndexed(items = listItems) { _, item ->
-          when (item) {
-            is VideoItemUiModel -> {
-              if (item.isHidden) return@itemsIndexed
-              val innerListState = innerListStates.getOrPut(item.itemId) {
-                if (item.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
-                  rememberStorytellerRowState()
-                } else {
-                  rememberStorytellerGridState()
-                }
-              }
-              StorytellerItem(
-                uiModel = item,
-                navController = navController,
-                roundTheme = config?.roundTheme,
-                squareTheme = config?.squareTheme,
-                state = innerListState,
-              ) {
-                viewModel.hideStorytellerItem(item.itemId)
-              }
-            }
-            is ImageItemUiModel -> {
-              ImageActionItem(uiModel = item)
-            }
-          }
-        }
-      }
+    if (pageUiState.noContentAvailable) {
+      NoContent()
       PullToRefreshContainer(
         modifier = Modifier.align(Alignment.TopCenter),
         state = refreshState,
       )
     } else {
-      TabLayout(
-        rootNavController = navController,
-        sharedViewModel = sharedViewModel,
-        parentState =
-        TabLayoutUiState(
-          tabs = pageUiState.tabs,
-          isRefreshing = pageUiState.isRefreshing || isRefreshing,
-          config = config,
-        ),
-        onSetNavigationInterceptor = onSetNavigationInterceptor,
-        onLocationChanged = onLocationChanged,
-      )
+      if (!pageUiState.tabsEnabled) {
+        LaunchedEffect(key1 = Unit) {
+          onLocationChanged("Home")
+        }
+        LazyColumn(
+          modifier = Modifier.fillMaxWidth(),
+          verticalArrangement = Arrangement.spacedBy(12.dp),
+          contentPadding = PaddingValues(top = 12.dp),
+          horizontalAlignment = Alignment.CenterHorizontally,
+          state = listState,
+        ) {
+          itemsIndexed(items = listItems) { _, item ->
+            when (item) {
+              is VideoItemUiModel -> {
+                if (item.isHidden) return@itemsIndexed
+                val innerListState = innerListStates.getOrPut(item.itemId) {
+                  if (item.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
+                    rememberStorytellerRowState()
+                  } else {
+                    rememberStorytellerGridState()
+                  }
+                }
+                StorytellerItem(
+                  uiModel = item,
+                  navController = navController,
+                  roundTheme = config?.roundTheme,
+                  squareTheme = config?.squareTheme,
+                  state = innerListState,
+                ) {
+                  viewModel.hideStorytellerItem(item.itemId)
+                }
+              }
+
+              is ImageItemUiModel -> {
+                ImageActionItem(uiModel = item)
+              }
+            }
+          }
+        }
+        PullToRefreshContainer(
+          modifier = Modifier.align(Alignment.TopCenter),
+          state = refreshState,
+        )
+      } else {
+        TabLayout(
+          rootNavController = navController,
+          sharedViewModel = sharedViewModel,
+          parentState =
+          TabLayoutUiState(
+            tabs = pageUiState.tabs,
+            isRefreshing = pageUiState.isRefreshing || isRefreshing,
+            config = config,
+          ),
+          onSetNavigationInterceptor = onSetNavigationInterceptor,
+          onLocationChanged = onLocationChanged,
+        )
+      }
     }
   }
 }

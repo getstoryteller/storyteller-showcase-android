@@ -75,9 +75,19 @@ class MainViewModel @Inject constructor(
     _uiState.update { it.copy(isMainScreenLoading = true) }
     if (sessionRepository.apiKey != null) {
       viewModelScope.launch {
-        config = getConfigurationUseCase.getConfiguration()
-        Storyteller.theme = config?.squareTheme
-        _uiState.emit(MainPageUiState(config = config))
+        try {
+          config = getConfigurationUseCase.getConfiguration()
+          Storyteller.theme = config?.squareTheme
+          _uiState.emit(MainPageUiState(config = config))
+        } catch (ex: Exception) {
+          _loginUiState.update {
+            it.copy(
+              isLoggedIn = false,
+              loginState = LoginState.Error("An error occurred while trying to log in"),
+            )
+          }
+          _uiState.update { it.copy(isMainScreenLoading = false) }
+        }
       }
     }
   }

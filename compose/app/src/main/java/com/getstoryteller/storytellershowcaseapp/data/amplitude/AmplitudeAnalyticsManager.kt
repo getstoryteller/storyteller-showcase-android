@@ -1,15 +1,16 @@
 package com.getstoryteller.storytellershowcaseapp.data.amplitude
 
-import com.amplitude.api.Amplitude
+import com.getstoryteller.storytellershowcaseapp.domain.ports.AmplitudeService
 import com.storyteller.domain.entities.UserActivity
 import com.storyteller.domain.entities.UserActivityData
-import org.json.JSONObject
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AmplitudeAnalyticsManager @Inject constructor() {
+class AmplitudeAnalyticsManager @Inject constructor(
+  private val amplitudeService: AmplitudeService,
+) {
   fun handleAnalyticsEvents(
     type: UserActivity.EventType,
     data: UserActivityData,
@@ -43,7 +44,7 @@ class AmplitudeAnalyticsManager @Inject constructor() {
         "Location" to location,
       )
 
-    Amplitude.getInstance().logEvent(eventType.name, JSONObject(eventData))
+    amplitudeService.track(eventType.name, eventData)
     Timber.d("Amplitude event logged: $eventType with data: $eventData")
   }
 }

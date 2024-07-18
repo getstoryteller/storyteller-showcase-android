@@ -40,14 +40,22 @@ class HomeViewModel @Inject constructor(
         it.copy(isRefreshing = true)
       }
 
-      val homeItems = if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
-      _uiState.value =
-        HomePageUiState(
+      try {
+        val homeItems = if (!config.tabsEnabled) getHomeScreenUseCase.getHomeScreen() else listOf()
+        _uiState.value =
+          HomePageUiState(
+            isRefreshing = false,
+            tabsEnabled = config.tabsEnabled,
+            homeItems = homeItems,
+            tabs = config.tabs,
+            noContentAvailable = false,
+          )
+      } catch (ex: Exception) {
+        _uiState.value = HomePageUiState(
           isRefreshing = false,
-          tabsEnabled = config.tabsEnabled,
-          homeItems = homeItems,
-          tabs = config.tabs,
+          noContentAvailable = true,
         )
+      }
     }
   }
 
@@ -69,6 +77,7 @@ data class HomePageUiState(
   val tabsEnabled: Boolean = false,
   val homeItems: List<PageItemUiModel> = emptyList(),
   val tabs: List<TabDto> = emptyList(),
+  val noContentAvailable: Boolean = false,
 )
 
 @Serializable

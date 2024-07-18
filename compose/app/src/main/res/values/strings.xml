@@ -4,4 +4,5 @@
     <string name="label_login_enter_code">Enter Access Code</string>
     <string name="action_login_verify">Verify</string>
     <string name="action_login_retry">Retry</string>
+  <string name="no_content_found">No content found</string>
 </resources>

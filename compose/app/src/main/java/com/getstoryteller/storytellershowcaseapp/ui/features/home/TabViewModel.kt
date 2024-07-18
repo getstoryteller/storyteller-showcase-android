@@ -42,12 +42,22 @@ class TabViewModel @Inject constructor(
     tabId: String,
   ) {
     viewModelScope.launch {
-      val items = getTabContentUseCase.getTabContent(tabId)
-      _uiState.update {
-        TabPageUiState(
-          isRefreshing = false,
-          tabs = items,
-        )
+      try {
+        val items = getTabContentUseCase.getTabContent(tabId)
+        _uiState.update {
+          TabPageUiState(
+            isRefreshing = false,
+            tabs = items,
+            noContentAvailable = items.isEmpty(),
+          )
+        }
+      } catch (e: Exception) {
+        _uiState.value =
+          TabPageUiState(
+            isRefreshing = false,
+            tabs = emptyList(),
+            noContentAvailable = true,
+          )
       }
     }
   }
@@ -97,5 +107,6 @@ class TabViewModel @Inject constructor(
 
 data class TabPageUiState(
   val isRefreshing: Boolean = false,
+  val noContentAvailable: Boolean = false,
   val tabs: List<PageItemUiModel> = emptyList(),
 )
