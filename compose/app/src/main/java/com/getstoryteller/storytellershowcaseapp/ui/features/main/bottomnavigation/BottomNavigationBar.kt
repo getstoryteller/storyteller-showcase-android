@@ -54,6 +54,7 @@ fun BottomNavigationBar(
     tonalElevation = 1.dp,
     containerColor = MaterialTheme.colorScheme.background,
   ) {
+    val debounceTime = 500L
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val homeSelected = navBackStackEntry?.destination?.route == "home"
     val coroutineScope = rememberCoroutineScope()
@@ -91,7 +92,7 @@ fun BottomNavigationBar(
           debounceClick(
             coroutineScope = coroutineScope,
             lastClickTime = lastClickTime,
-            debounceTime = 300L,
+            debounceTime = debounceTime,
             onUpdateLastClickTime = { lastClickTime = it },
           ) {
             val interceptor = onSetNavigationInterceptor()
@@ -142,7 +143,7 @@ fun BottomNavigationBar(
           debounceClick(
             coroutineScope = coroutineScope,
             lastClickTime = lastClickTime,
-            debounceTime = 300L,
+            debounceTime = debounceTime,
             onUpdateLastClickTime = { lastClickTime = it },
           ) {
             val interceptor =

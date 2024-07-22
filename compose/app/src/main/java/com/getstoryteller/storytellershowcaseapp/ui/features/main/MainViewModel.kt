@@ -117,6 +117,7 @@ class MainViewModel @Inject constructor(
       try {
         verifyCodeUseCase.verifyCode(code)
         config = getConfigurationUseCase.getConfiguration()
+        Storyteller.theme = config?.squareTheme
         _loginUiState.value = LoginUiState(isLoggedIn = true, loginState = LoginState.Success)
         viewModelScope.launch {
           _uiState.emit(MainPageUiState(config = config))
