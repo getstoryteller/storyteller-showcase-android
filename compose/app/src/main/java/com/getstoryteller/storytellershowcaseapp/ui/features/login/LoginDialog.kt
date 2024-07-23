@@ -1,6 +1,7 @@
 package com.getstoryteller.storytellershowcaseapp.ui.features.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -21,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -93,6 +95,7 @@ fun LoginDialog(
         modifier =
         Modifier
           .fillMaxWidth()
+          .background(color = MaterialTheme.colorScheme.tertiaryContainer)
           .padding(16.dp),
       ) {
         val focusRequester = remember { FocusRequester() }
@@ -145,7 +148,14 @@ fun LoginDialog(
           singleLine = true,
           isError = loginState is Error,
           placeholder = { Text(text = stringResource(id = R.string.label_login_enter_code)) },
-          // colors = OutlinedTextFieldDefaults.colors(LocalStorytellerColorsPalette.current.background),
+          colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledBorderColor = MaterialTheme.colorScheme.primary,
+          ),
           leadingIcon = {
             Image(
               painter = painterResource(id = R.drawable.ic_key),
@@ -193,9 +203,10 @@ fun LoginDialog(
         Button(
           modifier =
           Modifier
-            .height(48.dp)
+            .height(54.dp)
             .padding(top = 8.dp)
             .fillMaxWidth(),
+          shape = RoundedCornerShape(4.dp),
           colors =
           ButtonDefaults.buttonColors(
             disabledContainerColor = MaterialTheme.colorScheme.primary,
@@ -236,7 +247,7 @@ fun AccessCodes(
 ) {
   val accessCodes = remember {
     BuildConfig.SHOWCASE_ACCESS_CODES.split(",").map { it.trim() }
-  }
+  }.filter { it.isNotEmpty() }
 
   if (accessCodes.isEmpty()) return
   FlowRow {
