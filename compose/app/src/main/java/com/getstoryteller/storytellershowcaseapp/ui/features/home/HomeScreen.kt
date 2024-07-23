@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.getstoryteller.storytellershowcaseapp.domain.Config
+import com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW
 import com.getstoryteller.storytellershowcaseapp.ui.components.NoContent
 import com.getstoryteller.storytellershowcaseapp.ui.components.pullrefresh.rememberStorytellerPullToRefreshState
 import com.getstoryteller.storytellershowcaseapp.ui.features.DeeplinkHandler
@@ -39,7 +40,9 @@ import com.getstoryteller.storytellershowcaseapp.ui.features.storyteller.Storyte
 import com.storyteller.ui.compose.components.lists.grid.rememberStorytellerGridState
 import com.storyteller.ui.compose.components.lists.row.StorytellerDataState
 import com.storyteller.ui.compose.components.lists.row.rememberStorytellerRowState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,6 +65,8 @@ fun HomeScreen(
   val pageUiState by viewModel.uiState.collectAsState()
   val loginState by sharedViewModel.loginUiState.collectAsState()
   val innerListStates = remember { mutableStateMapOf<String, StorytellerDataState>() }
+  val itemIds = remember(pageUiState) { pageUiState.homeItems.map { it.itemId } }
+  val reloadStates = remember(itemIds) { mutableStateMapOf<String, Any?>() }
   val refreshState = rememberStorytellerPullToRefreshState()
   val context = LocalContext.current
 
@@ -100,6 +105,7 @@ fun HomeScreen(
     if (pageUiState.isRefreshing) {
       refreshState.startRefresh()
     } else {
+      delay(1000L)
       refreshState.endRefresh()
     }
   }
@@ -147,30 +153,39 @@ fun HomeScreen(
         LazyColumn(
           modifier = Modifier.fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(12.dp),
-          contentPadding = PaddingValues(top = 12.dp),
+          contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp),
           horizontalAlignment = Alignment.CenterHorizontally,
           state = listState,
         ) {
-          itemsIndexed(items = listItems) { _, item ->
+          items(items = listItems) { item ->
             when (item) {
               is VideoItemUiModel -> {
-                if (item.isHidden) return@itemsIndexed
-                val innerListState = innerListStates.getOrPut(item.itemId) {
-                  if (item.layout == com.getstoryteller.storytellershowcaseapp.remote.entities.LayoutType.ROW) {
-                    rememberStorytellerRowState()
-                  } else {
-                    rememberStorytellerGridState()
+                val rowState = rememberStorytellerRowState(item.itemId)
+                val gridState = rememberStorytellerGridState(item.itemId)
+
+                val state = remember(item.itemId) {
+                  innerListStates.getOrPut(item.itemId) { if (item.layout == ROW) rowState else gridState }
+                }
+
+                val reloadState = reloadStates[item.itemId]
+                LaunchedEffect(reloadState) {
+                  if (reloadState != null) {
+                    val tag = if (item.categories.isNotEmpty()) item.categories.first() else item.collectionId
+                    Timber.d("[$tag] Reloading item $item")
+                    state.reloadData()
                   }
                 }
+
                 StorytellerItem(
                   uiModel = item,
                   navController = navController,
                   roundTheme = config?.roundTheme,
                   squareTheme = config?.squareTheme,
-                  state = innerListState,
-                ) {
-                  viewModel.hideStorytellerItem(item.itemId)
-                }
+                  state = state,
+                  onDataLoadComplete = {
+                    reloadStates[item.itemId] = null
+                  }
+                )
               }
 
               is ImageItemUiModel -> {
