@@ -298,6 +298,7 @@ fun MainScreen(
             collection = collection,
             startClip = clipId,
             sharedViewModel = viewModel,
+            viewModel = hiltViewModel(),
             onSetTopBarVisible = {
               topBarVisible = it
             },

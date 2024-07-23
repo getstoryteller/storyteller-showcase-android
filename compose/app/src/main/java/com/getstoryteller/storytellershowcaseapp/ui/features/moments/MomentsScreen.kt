@@ -21,6 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.KeepScreenOn
 import com.getstoryteller.storytellershowcaseapp.ui.features.main.MainViewModel
 import com.storyteller.domain.entities.Error
@@ -40,6 +43,7 @@ fun MomentsScreen(
   collection: String,
   startClip: String?,
   sharedViewModel: MainViewModel,
+  viewModel: MomentsViewModel,
   onSetTopBarVisible: (Boolean) -> Unit,
   onMomentsTabLoading: (Boolean) -> Unit,
   onLocationChanged: (String) -> Unit,
@@ -64,6 +68,25 @@ fun MomentsScreen(
   DisposableEffect(Unit) {
     onDispose {
       sharedViewModel.momentsDisposed()
+    }
+  }
+
+  val lifecycleOwner = LocalLifecycleOwner.current
+  DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event ->
+      if (event == Lifecycle.Event.ON_STOP) {
+        viewModel.scheduleMomentsRefresh()
+      }
+      if (event == Lifecycle.Event.ON_RESUME) {
+        if (viewModel.shouldReloadMomentsData()) {
+          sharedViewModel.triggerMomentsReloadData()
+        }
+      }
+    }
+
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose {
+      lifecycleOwner.lifecycle.removeObserver(observer)
     }
   }
 

@@ -66,8 +66,8 @@ class MainViewModel @Inject constructor(
         false
       } else {
         val timeElapsed = System.currentTimeMillis() - it
-        val tenMinutesInMillis = 10 * 60 * 1000
-        timeElapsed > tenMinutesInMillis
+        val thirtyMinutesInMillis = 2 * 60 * 1000
+        timeElapsed > thirtyMinutesInMillis
       }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(7000), false)
 
