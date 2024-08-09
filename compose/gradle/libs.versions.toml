@@ -23,7 +23,7 @@ gms = "23.2.0"
 runtime = "1.6.8"
 timber = "5.0.1"
 
-storyteller = "10.4.0"
+storyteller = "10.4.1"
 
 [libraries]
 android-sdk = { module = "com.amplitude:analytics-android", version.ref = "amplitude" }
