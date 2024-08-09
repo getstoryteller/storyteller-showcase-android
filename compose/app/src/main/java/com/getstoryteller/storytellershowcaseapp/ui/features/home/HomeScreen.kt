@@ -184,7 +184,7 @@ fun HomeScreen(
                   state = state,
                   onDataLoadComplete = {
                     reloadStates[item.itemId] = null
-                  }
+                  },
                 )
               }
 
